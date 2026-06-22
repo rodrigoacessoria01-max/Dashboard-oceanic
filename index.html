@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Oceanic — Navegador de Prospecção</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --navy:        #061020;
+    --navy2:       #0a1a34;
+    --navy3:       #112240;
+    --ocean:       #185FA5;
+    --ocean-lt:    #378ADD;
+    --ocean-pale:  #B5D4F4;
+    --teal:        #1D9E75;
+    --teal-lt:     #5DCAA5;
+    --teal-pale:   #9FE1CB;
+    --amber:       #BA7517;
+    --red:         #A32D2D;
+    --green:       #3B6D11;
+    --white:       #F8FBFF;
+    --text1:       #E8F4FD;
+    --text2:       rgba(181,212,244,0.75);
+    --text3:       rgba(181,212,244,0.45);
+    --border:      rgba(55,138,221,0.18);
+    --border2:     rgba(55,138,221,0.32);
+    --card:        rgba(10,26,52,0.7);
+    --card2:       rgba(17,34,64,0.85);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--navy);
+    color: var(--text1);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── BACKGROUND ── */
+  .bg-wrap {
+    position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  }
+  .bg-gradient {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 20% 10%, rgba(24,95,165,0.18) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 80% 80%, rgba(29,158,117,0.12) 0%, transparent 60%),
+                linear-gradient(160deg, #061020 0%, #0a1a34 50%, #061020 100%);
+  }
+  .bg-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(55,138,221,0.04) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(55,138,221,0.04) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+  .bg-wave {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 240px;
+    background: radial-gradient(ellipse at 50% 120%, rgba(29,158,117,0.07) 0%, transparent 70%);
+  }
+
+  /* ── LAYOUT ── */
+  .page { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 24px 28px 48px; }
+
+  /* ── HEADER ── */
+  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+  .brand { display: flex; align-items: center; gap: 13px; }
+  .brand-logo {
+    width: 42px; height: 42px; border-radius: 11px;
+    background: linear-gradient(135deg, var(--ocean), var(--teal));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .brand-name { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: 0.08em; color: var(--white); }
+  .brand-tagline { font-size: 11px; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+
+  /* pills */
+  .pill-group { display: flex; background: rgba(255,255,255,0.05); border-radius: 9px; padding: 3px; gap: 2px; }
+  .pill { padding: 5px 14px; font-size: 12px; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: var(--text2); font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+  .pill.active, .pill:hover { background: var(--ocean); color: #E6F1FB; }
+
+  /* ── CSV BAR ── */
+  .csv-section { margin-bottom: 20px; }
+  .csv-bar {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--card2); border: 1px solid var(--border2);
+    border-radius: 12px; padding: 10px 14px;
+  }
+  .csv-bar input {
+    flex: 1; background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text1); font-size: 12px; font-family: 'DM Sans', sans-serif;
+    padding: 7px 12px; outline: none; transition: border-color 0.2s;
+  }
+  .csv-bar input:focus { border-color: var(--ocean-lt); }
+  .csv-bar input::placeholder { color: var(--text3); }
+  .csv-btn {
+    padding: 7px 18px; background: var(--ocean); color: #E6F1FB;
+    border: none; border-radius: 8px; font-size: 12px; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; font-weight: 500; transition: background 0.2s; white-space: nowrap;
+  }
+  .csv-btn:hover { background: var(--ocean-lt); }
+  .csv-status { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 11px; color: var(--text3); padding-left: 4px; }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); flex-shrink: 0; }
+  .status-dot.ok  { background: var(--green); box-shadow: 0 0 5px var(--green); }
+  .status-dot.err { background: var(--red); }
+  .csv-help { font-size: 11px; color: var(--text3); margin-top: 8px; line-height: 1.6; padding-left: 4px; }
+  .csv-help a { color: var(--ocean-lt); }
+  .csv-help code { background: rgba(255,255,255,0.07); padding: 1px 5px; border-radius: 4px; font-size: 10px; }
+
+  /* ── KPI GRID ── */
+  .kpi-grid { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 10px; margin-bottom: 18px; }
+  .kpi {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 12px; position: relative; overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .kpi::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--ocean), var(--teal)); opacity: 0.5;
+  }
+  .kpi:hover { border-color: var(--border2); }
+  .kpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); margin-bottom: 5px; }
+  .kpi-val { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: 500; }
+  .b-ok  { background: rgba(59,109,17,0.25); color: #9FE1CB; }
+  .b-warn{ background: rgba(186,117,23,0.25); color: #FAC775; }
+  .b-bad { background: rgba(163,45,45,0.25);  color: #F7C1C1; }
+
+  /* ── DOIS COLS ── */
+  .two-col { display: grid; grid-template-columns: 1fr 300px; gap: 16px; margin-bottom: 16px; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 18px;
+  }
+  .card-title {
+    font-size: 11px; font-weight: 500; text-transform: uppercase;
+    letter-spacing: 0.09em; color: var(--text2); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .ct-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── FUNIL ── */
+  .funnel { display: flex; flex-direction: column; gap: 0; }
+  .f-row { display: flex; align-items: center; gap: 10px; }
+  .f-lbl { font-size: 12px; color: var(--text2); min-width: 148px; }
+  .f-bar-wrap { flex: 1; height: 38px; background: rgba(255,255,255,0.04); border-radius: 7px; overflow: hidden; }
+  .f-bar {
+    height: 100%; border-radius: 7px; display: flex; align-items: center;
+    padding: 0 12px; transition: width 0.8s cubic-bezier(.4,0,.2,1);
+  }
+  .f-num { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: rgba(230,241,251,0.95); }
+  .f-pct { font-size: 10px; color: rgba(230,241,251,0.5); margin-left: 6px; }
+  .f-rate { font-size: 11px; color: var(--text3); min-width: 42px; text-align: right; }
+  .f-conn { height: 7px; width: 1px; background: var(--border2); margin: 0 auto; margin-left: 157px; }
+
+  /* ── DIAG ── */
+  .diag { display: flex; flex-direction: column; gap: 7px; }
+  .diag-item {
+    padding: 9px 11px; border-radius: 8px; border-left: 3px solid;
+    background: rgba(255,255,255,0.02); cursor: pointer; transition: background 0.15s;
+    border-right: none; border-top: none; border-bottom: none;
+  }
+  .diag-item:hover { background: rgba(255,255,255,0.05); }
+  .diag-item.dc { border-left-color: #E24B4A; }
+  .diag-item.dw { border-left-color: #BA7517; }
+  .diag-item.dok{ border-left-color: #3B6D11; }
+  .dt { font-size: 11px; font-weight: 500; margin-bottom: 3px; }
+  .dc .dt  { color: #F7C1C1; }
+  .dw .dt  { color: #FAC775; }
+  .dok .dt { color: #9FE1CB; }
+  .dd { font-size: 10px; color: var(--text3); line-height: 1.45; }
+
+  /* ── TRÊS COLS ── */
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+  /* ── OBJEÇÕES ── */
+  .obj-list { display: flex; flex-direction: column; gap: 6px; }
+  .obj-item {
+    display: flex; align-items: center; gap: 9px; padding: 8px 10px;
+    background: rgba(255,255,255,0.03); border-radius: 8px;
+    border: 1px solid transparent; cursor: pointer; transition: all 0.15s; font-size: 12px;
+  }
+  .obj-item:hover { background: rgba(255,255,255,0.06); border-color: var(--border); }
+  .obj-rank { font-size: 10px; font-weight: 700; color: var(--ocean-lt); min-width: 18px; }
+  .obj-text { flex: 1; color: var(--text1); }
+  .obj-bar-bg { width: 56px; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+  .obj-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--ocean), var(--teal)); }
+  .obj-n { font-size: 11px; color: var(--text3); min-width: 24px; text-align: right; }
+
+  /* ── METAS EDIT ── */
+  .meta-form { display: flex; flex-direction: column; gap: 10px; }
+  .mf-row { display: flex; align-items: center; gap: 10px; }
+  .mf-lbl { font-size: 12px; color: var(--text2); min-width: 172px; }
+  .mf-slider { flex: 1; accent-color: var(--ocean-lt); }
+  .mf-val {
+    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600;
+    color: var(--text1); min-width: 38px; text-align: right;
+  }
+  .mf-min, .mf-ideal { font-size: 10px; color: var(--text3); min-width: 28px; }
+
+  .apply-btn {
+    margin-top: 14px; width: 100%; padding: 10px;
+    background: linear-gradient(135deg, var(--ocean), var(--teal));
+    border: none; border-radius: 9px; color: var(--white);
+    font-size: 13px; font-family: 'Syne', sans-serif; font-weight: 600;
+    cursor: pointer; letter-spacing: 0.05em; transition: opacity 0.2s;
+  }
+  .apply-btn:hover { opacity: 0.88; }
+
+  /* ── LEGEND PROJEÇÃO ── */
+  .proj-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+  .pl-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text2); }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--navy2); }
+  ::-webkit-scrollbar-thumb { background: var(--ocean); border-radius: 3px; }
+
+  .mf-header {
+    display: grid; grid-template-columns: 172px 1fr 38px;
+    gap: 10px; font-size: 10px; color: var(--text3);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    padding-bottom: 6px; border-bottom: 1px solid var(--border); margin-bottom: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-wrap">
+  <div class="bg-gradient"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-wave"></div>
+</div>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="brand">
+      <div class="brand-logo">🌊</div>
+      <div>
+        <div class="brand-name">OCEANIC</div>
+        <div class="brand-tagline">Navegador de Prospecção</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="pill-group" id="week-pills"></div>
+    </div>
+  </header>
+
+  <!-- CSV CONNECTION -->
+  <section class="csv-section">
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 14px;background:var(--card2);border:1px solid var(--border);border-radius:12px;">
+      <span style="font-size:16px">🌊</span>
+      <span class="status-dot" id="csv-dot"></span>
+      <span id="csv-msg" style="font-size:12px;color:var(--text2)">Carregando dados da planilha...</span>
+      <button onclick="loadCSVAuto()" style="margin-left:auto;padding:5px 12px;background:rgba(24,95,165,0.3);border:1px solid var(--border2);border-radius:7px;color:var(--ocean-pale);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">↻ Atualizar agora</button>
+    </div>
+    <input type="hidden" id="csv-url" value="">
+  </section>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid" id="kpi-grid"></div>
+
+  <!-- FUNIL + DIAGNÓSTICO -->
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">
+        <span class="ct-dot" style="background:var(--teal)"></span>
+        Funil de prospecção
+      </div>
+      <div class="funnel" id="funnel"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">
+        <span class="ct-dot" style="background:var(--amber)"></span>
+        Diagnóstico de gargalos
+      </div>
+      <div class="diag" id="diag"></div>
+    </div>
+  </div>
+
+  <!-- RADAR + PROJEÇÃO + OBJEÇÕES -->
+  <div class="three-col">
+
+    <div class="card">
+      <div class="card-title">
+        <span class="ct-dot" style="background:#9b59b6"></span>
+        Radar de performance
+      </div>
+      <div style="position:relative;height:230px">
+        <canvas id="radarC" role="img" aria-label="Radar comparando performance real vs ideal em cada etapa do funil"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="ct-dot" style="background:var(--ocean-lt)"></span>
+        Projeção: meta vs realidade
+      </div>
+      <div style="position:relative;height:200px">
+        <canvas id="projC" role="img" aria-label="Gráfico de linha com 4 séries: meta execução (círculo/sólido), meta resultado (quadrado/tracejado), realidade execução (triângulo/sólido), realidade resultado (triângulo invertido/tracejado)"></canvas>
+      </div>
+      <div class="proj-legend" id="proj-legend">
+        <div class="pl-item">
+          <svg width="30" height="12"><line x1="0" y1="6" x2="30" y2="6" stroke="#185FA5" stroke-width="2"/><circle cx="15" cy="6" r="4" fill="#185FA5"/></svg>
+          Meta execução
+        </div>
+        <div class="pl-item">
+          <svg width="30" height="12"><line x1="0" y1="6" x2="30" y2="6" stroke="#378ADD" stroke-width="2" stroke-dasharray="5,3"/><rect x="11" y="2" width="8" height="8" fill="#378ADD"/></svg>
+          Meta resultado
+        </div>
+        <div class="pl-item">
+          <svg width="30" height="12"><line x1="0" y1="6" x2="30" y2="6" stroke="#1D9E75" stroke-width="2"/><polygon points="15,2 19,10 11,10" fill="#1D9E75"/></svg>
+          Real. execução
+        </div>
+        <div class="pl-item">
+          <svg width="30" height="12"><line x1="0" y1="6" x2="30" y2="6" stroke="#5DCAA5" stroke-width="2" stroke-dasharray="5,3"/><polygon points="15,10 19,2 11,2" fill="#5DCAA5"/></svg>
+          Real. resultado
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="ct-dot" style="background:var(--red)"></span>
+        Objeções mais frequentes
+      </div>
+      <div class="obj-list" id="obj-list"></div>
+      <button onclick="alert('Funcionalidade: copie as objeções e peça ao assistente para gerar respostas!')"
+        style="margin-top:12px;width:100%;padding:8px;background:rgba(163,45,45,0.15);border:1px solid rgba(163,45,45,0.3);border-radius:8px;color:#F7C1C1;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">
+        ↗ Gerar respostas para objeções
+      </button>
+    </div>
+  </div>
+
+  <!-- METAS EDITÁVEIS -->
+  <div class="card">
+    <div class="card-title">
+      <span class="ct-dot" style="background:var(--ocean-lt)"></span>
+      Controle de metas — ajuste os valores e clique em "Aplicar" para recalcular diagnóstico e projeção
+    </div>
+
+    <div class="mf-header">
+      <span>Etapa</span>
+      <span>Meta semanal</span>
+      <span>Valor</span>
+    </div>
+
+    <div class="meta-form" id="meta-form"></div>
+    <button class="apply-btn" onclick="applyMetas()">Aplicar metas e recalcular →</button>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+// ─── CONFIGURAÇÃO ─────────────────────────────────────────
+// Cole abaixo os links CSV publicados das abas DASHBOARD_METRICAS e OBJECOES.
+// O tutorial entregue junto explica exatamente como gerar esses dois links.
+const METRICS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmp7XPUIaGXBj8OzytBlUmBybmRftoG2J2Iwfpn1ShSv5XBSkncbdpNeMDB_5-DuSRIgTQ-DXz0Rp2/pub?gid=548398166&single=true&output=csv";
+const OBJECTIONS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmp7XPUIaGXBj8OzytBlUmBybmRftoG2J2Iwfpn1ShSv5XBSkncbdpNeMDB_5-DuSRIgTQ-DXz0Rp2/pub?gid=71232552&single=true&output=csv";
+
+const DEFAULT_METAS = { lig:80, con:30, dec:0, rmk:0, rre:2, ven:1 };
+let WEEKS = {};
+let OBJECTIONS_BY_WEEK = {};
+let metas = { ...DEFAULT_METAS };
+let curWeek = null;
+let radarCh = null, projCh = null;
+let secondsLeft = 300;
+
+const CONV_RULES = {
+  con: { min: 0.20, ideal: 0.50, label: 'Lig→Conexão' },
+  dec: { min: 0.20, ideal: 0.50, label: 'Con→Decisor' },
+  rmk: { min: 0.05, ideal: 0.10, label: 'Dec→R.Marc.' },
+  rre: { min: 0.30, ideal: 0.50, label: 'Marc→Real.' },
+  ven: { min: 0.10, ideal: 0.15, label: 'Real→Venda' }
+};
+
+const DIAG_MSGS = {
+  lig: { 1: 'Volume crítico. Estruture um bloco fixo de prospecção na agenda. Sem volume, nada funciona.', 2: 'Abaixo da meta. Revise quanto tempo está dedicando por dia à prospecção ativa.', 3: 'Volume ok. Mantenha o ritmo.' },
+  con: { 1: 'Problema com a lista. Qualifique melhor o ICP e teste horários entre 8–9h e 17–18h.', 2: 'Aumente o número de ligações ou ajuste horários de contato.', 3: 'Mantenha o ritmo.' },
+  dec: { 1: 'Melhore a argumentação com a atendente. Use autoridade, senso de urgência e peça o nome do decisor logo.', 2: 'Crie urgência e autoridade na abordagem. Pratique o script de contorno de gatekeeper.', 3: 'Mantenha o ritmo.' },
+  rmk: { 1: 'Melhore sua argumentação e clareza da dor. O pitch está gerando interesse? Teste diferentes CTAs.', 2: 'Crie maior urgência e micro-compromisso. Pergunte: “Você tem 20 min na quinta às 10h?”', 3: 'Mantenha o ritmo.' },
+  rre: { 1: 'Ajuste argumento na prospecção e faça follow-up. Confirme a reunião 24h antes.', 2: 'Otimize follow-up e confirmações. Adicione lembrete no dia com breve reforço de valor.', 3: 'Mantenha o ritmo.' },
+  ven: { 1: 'Analise reuniões e melhore o diagnóstico. O decisor está presente? A dor está mapeada?', 2: 'Ajuste proposta, ancoragem de valor e CTA. Qual é o próximo passo claro ao final da reunião?', 3: 'Mantenha o ritmo.' }
+};
+
+// ─── UTILITÁRIOS ───────────────────────────────────────────
+function pct(v) { return Math.round((Number(v) || 0) * 100) + '%'; }
+function zeroTotals() { return { lig:0, con:0, dec:0, rmk:0, rre:0, ven:0 }; }
+function getLevel(rate, min, ideal) { return rate >= ideal ? 3 : rate >= min ? 2 : 1; }
+function escapeHTML(value) {
+  return String(value ?? '').replace(/[&<>'"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#039;', '"':'&quot;' }[c]));
+}
+function normalKey(value) {
+  return String(value ?? '').trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+}
+function numeric(value) {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
+  let v = String(value ?? '').trim().replace(/\s/g, '');
+  if (!v) return 0;
+  if (v.includes(',') && v.includes('.')) {
+    v = v.lastIndexOf(',') > v.lastIndexOf('.') ? v.replace(/\./g, '').replace(',', '.') : v.replace(/,/g, '');
+  } else if (v.includes(',')) {
+    v = v.replace(',', '.');
+  }
+  const parsed = Number(v.replace(/[^0-9.-]/g, ''));
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+function field(row, ...names) {
+  for (const name of names) {
+    const value = row[normalKey(name)];
+    if (value !== undefined && value !== null && String(value).trim() !== '') return value;
+  }
+  return '';
+}
+
+function parseCSV(text) {
+  const firstLine = text.split(/\r?\n/).find(line => /semana_id/i.test(line)) || (text.match(/^.*$/m) || [''])[0];
+  const delimiter = (firstLine.split(';').length > firstLine.split(',').length) ? ';' : ',';
+  const rows = [];
+  let row = [], cell = '', quoted = false;
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const next = text[i + 1];
+    if (char === '"') {
+      if (quoted && next === '"') { cell += '"'; i++; }
+      else quoted = !quoted;
+    } else if (char === delimiter && !quoted) {
+      row.push(cell.trim()); cell = '';
+    } else if ((char === '\n' || char === '\r') && !quoted) {
+      if (char === '\r' && next === '\n') i++;
+      row.push(cell.trim());
+      if (row.some(v => v !== '')) rows.push(row);
+      row = []; cell = '';
+    } else {
+      cell += char;
+    }
+  }
+  row.push(cell.trim());
+  if (row.some(v => v !== '')) rows.push(row);
+  if (!rows.length) return [];
+  // As abas do modelo têm título nas linhas 1–2; procura automaticamente a linha real de cabeçalhos.
+  const headerIndex = rows.findIndex(row => row.map(normalKey).includes('semana_id'));
+  if (headerIndex < 0) return [];
+  const headers = rows[headerIndex].map(normalKey);
+  return rows.slice(headerIndex + 1).map(values => Object.fromEntries(headers.map((header, index) => [header, values[index] ?? ''])));
+}
+
+async function fetchRows(url) {
+  const separator = url.includes('?') ? '&' : '?';
+  const response = await fetch(url + separator + 't=' + Date.now(), { cache: 'no-store' });
+  if (!response.ok) throw new Error('HTTP ' + response.status);
+  return parseCSV(await response.text());
+}
+function configured(url) { return /^https:\/\//i.test(url); }
+function weekSort(a, b) {
+  const aa = WEEKS[a]?.start || a;
+  const bb = WEEKS[b]?.start || b;
+  return String(aa).localeCompare(String(bb));
+}
+
+// ─── LEITURA DA PLANILHA ───────────────────────────────────
+function ingestMetrics(rows) {
+  WEEKS = {};
+  rows.forEach(row => {
+    const id = String(field(row, 'semana_id', 'inicio')).trim();
+    if (!id) return;
+    const totals = {
+      lig: numeric(field(row, 'ligacoes')),
+      con: numeric(field(row, 'conexoes')),
+      dec: numeric(field(row, 'decisores')),
+      rmk: numeric(field(row, 'reunioes_marcadas')),
+      rre: numeric(field(row, 'reunioes_realizadas')),
+      ven: numeric(field(row, 'vendas'))
+    };
+    const weekMetas = {
+      lig: numeric(field(row, 'meta_ligacoes')),
+      con: numeric(field(row, 'meta_conexoes')),
+      dec: numeric(field(row, 'meta_decisores')),
+      rmk: numeric(field(row, 'meta_reunioes_marcadas')),
+      rre: numeric(field(row, 'meta_reunioes_realizadas')),
+      ven: numeric(field(row, 'meta_vendas'))
+    };
+    WEEKS[id] = {
+      id,
+      label: String(field(row, 'semana_label') || id),
+      start: String(field(row, 'inicio') || id),
+      totals,
+      metas: { ...DEFAULT_METAS, ...weekMetas }
+    };
+  });
+  const ids = Object.keys(WEEKS).sort(weekSort);
+  if (!curWeek || !WEEKS[curWeek]) curWeek = ids.at(-1) || null;
+}
+
+function ingestObjections(rows) {
+  OBJECTIONS_BY_WEEK = {};
+  rows.forEach(row => {
+    const week = String(field(row, 'semana_id')).trim();
+    const objection = String(field(row, 'objecao', 'objecoes', 'objeção', 'objeções')).trim();
+    const quantity = numeric(field(row, 'quantidade')) || 1;
+    if (!week || !objection) return;
+    if (!OBJECTIONS_BY_WEEK[week]) OBJECTIONS_BY_WEEK[week] = {};
+    OBJECTIONS_BY_WEEK[week][objection] = (OBJECTIONS_BY_WEEK[week][objection] || 0) + quantity;
+  });
+}
+
+function setWeek(weekId) {
+  if (!WEEKS[weekId]) return;
+  curWeek = weekId;
+  render();
+}
+
+function renderWeekSelector() {
+  const holder = document.getElementById('week-pills');
+  const ids = Object.keys(WEEKS).sort(weekSort);
+  if (!ids.length) {
+    holder.innerHTML = '<span style="font-size:11px;color:var(--text3);padding:6px 8px">Sem semanas sincronizadas</span>';
+    return;
+  }
+  if (ids.length > 6) {
+    holder.innerHTML = `<select aria-label="Selecionar semana" onchange="setWeek(this.value)" style="padding:5px 10px;border-radius:7px;border:0;background:var(--ocean);color:#E6F1FB;font:12px 'DM Sans',sans-serif;outline:none;cursor:pointer">
+      ${ids.map(id => `<option value="${escapeHTML(id)}" ${id === curWeek ? 'selected' : ''}>${escapeHTML(WEEKS[id].label)}</option>`).join('')}
+    </select>`;
+  } else {
+    holder.innerHTML = ids.map(id => `<button class="pill ${id === curWeek ? 'active' : ''}" onclick="setWeek('${escapeHTML(id)}')">${escapeHTML(WEEKS[id].label)}</button>`).join('');
+  }
+}
+
+// ─── RENDER ────────────────────────────────────────────────
+function render() {
+  const current = WEEKS[curWeek];
+  const t = current ? current.totals : zeroTotals();
+  metas = current ? current.metas : { ...DEFAULT_METAS };
+  const { lig, con, dec, rmk, rre, ven } = t;
+  const rCL = lig > 0 ? con / lig : 0;
+  const rCD = con > 0 ? dec / con : 0;
+  const rMM = dec > 0 ? rmk / dec : 0;
+  const rMR = rmk > 0 ? rre / rmk : 0;
+  const rVR = rre > 0 ? ven / rre : 0;
+
+  renderWeekSelector();
+  renderKPIs(t, rCL, rCD, rMM, rMR, rVR);
+  renderFunnel(t, rCL, rCD, rMM, rMR, rVR);
+  renderDiag(t, rCL, rCD, rMM, rMR, rVR);
+  renderRadar(t, rCL, rCD, rMM, rMR, rVR);
+  renderProj(t);
+  renderObjList();
+  renderMetaForm();
+}
+
+function renderKPIs(t, rCL, rCD, rMM, rMR, rVR) {
+  const pLig = metas.lig > 0 ? t.lig / metas.lig : 0;
+  const kpis = [
+    { lbl:'Ligações', val:t.lig, cls:pLig>=1?'ok':pLig>=0.7?'warn':'bad', sub:metas.lig>0?(t.lig>=metas.lig?'Meta ✓':`${Math.max(0, metas.lig-t.lig)} p/ meta`):'—' },
+    { lbl:'Conexões', val:t.con, cls:rCL>=0.5?'ok':rCL>=0.2?'warn':'bad', sub:pct(rCL)+' conv.' },
+    { lbl:'C. c/ Decisor', val:t.dec, cls:rCD>=0.5?'ok':rCD>=0.2?'warn':'bad', sub:pct(rCD)+' conv.' },
+    { lbl:'R. Marcadas', val:t.rmk, cls:rMM>=0.1?'ok':rMM>=0.05?'warn':'bad', sub:pct(rMM)+' conv.' },
+    { lbl:'R. Realizadas', val:t.rre, cls:rMR>=0.5?'ok':rMR>=0.3?'warn':'bad', sub:pct(rMR)+' comp.' },
+    { lbl:'Vendas', val:t.ven, cls:rVR>=0.15?'ok':rVR>=0.1?'warn':'bad', sub:pct(rVR)+' fecha.' }
+  ];
+  document.getElementById('kpi-grid').innerHTML = kpis.map(k => `
+    <div class="kpi"><div class="kpi-label">${k.lbl}</div><div class="kpi-val">${k.val}</div><span class="badge b-${k.cls}">${k.sub}</span></div>`).join('');
+}
+
+function renderFunnel(t, rCL, rCD, rMM, rMR, rVR) {
+  const base = t.lig || 1;
+  const colors = ['#0C447C','#185FA5','#1D9E75','#0F6E56','#085041','#04342C'];
+  const steps = [
+    { lbl:'Ligações', val:t.lig, pct:100, rate:null },
+    { lbl:'Conexões', val:t.con, pct:Math.round(t.con/base*100), rate:pct(rCL) },
+    { lbl:'C. c/ Decisor', val:t.dec, pct:Math.round(t.dec/base*100), rate:pct(rCD) },
+    { lbl:'R. Marcadas', val:t.rmk, pct:Math.round(t.rmk/base*100), rate:pct(rMM) },
+    { lbl:'R. Realizadas', val:t.rre, pct:Math.round(t.rre/base*100), rate:pct(rMR) },
+    { lbl:'Vendas', val:t.ven, pct:Math.round(t.ven/base*100), rate:pct(rVR) }
+  ];
+  document.getElementById('funnel').innerHTML = steps.map((s, i) => `
+    ${i > 0 ? '<div class="f-conn"></div>' : ''}
+    <div class="f-row"><div class="f-lbl">${s.lbl}</div><div class="f-bar-wrap"><div class="f-bar" style="width:${Math.max(s.pct,3)}%;background:${colors[i]}"><span class="f-num">${s.val}</span>${s.pct>7?`<span class="f-pct">${s.pct}%</span>`:''}</div></div><div class="f-rate">${s.rate?'→ '+s.rate:''}</div></div>`).join('');
+}
+
+function renderDiag(t, rCL, rCD, rMM, rMR, rVR) {
+  const pLig = metas.lig > 0 ? t.lig / metas.lig : 1;
+  const items = [
+    { key:'lig', rate:pLig, min:0.7, ideal:1.0, lbl:'Volume de ligações' },
+    { key:'con', rate:rCL, min:CONV_RULES.con.min, ideal:CONV_RULES.con.ideal, lbl:'Taxa de conexão' },
+    { key:'dec', rate:rCD, min:CONV_RULES.dec.min, ideal:CONV_RULES.dec.ideal, lbl:'Taxa chegar ao decisor' },
+    { key:'rmk', rate:rMM, min:CONV_RULES.rmk.min, ideal:CONV_RULES.rmk.ideal, lbl:'Taxa reuniões marcadas' },
+    { key:'rre', rate:rMR, min:CONV_RULES.rre.min, ideal:CONV_RULES.rre.ideal, lbl:'Taxa de comparecimento' },
+    { key:'ven', rate:rVR, min:CONV_RULES.ven.min, ideal:CONV_RULES.ven.ideal, lbl:'Taxa de fechamento' }
+  ];
+  document.getElementById('diag').innerHTML = items.map(item => {
+    const level = getLevel(item.rate, item.min, item.ideal);
+    const cls = level === 1 ? 'dc' : level === 2 ? 'dw' : 'dok';
+    const icon = level === 1 ? '🔴' : level === 2 ? '🟡' : '🟢';
+    return `<div class="diag-item ${cls}"><div class="dt">${icon} ${item.lbl} — ${pct(item.rate)}</div><div class="dd">${DIAG_MSGS[item.key][level]}</div></div>`;
+  }).join('');
+}
+
+function renderRadar(t, rCL, rCD, rMM, rMR, rVR) {
+  const pLig = metas.lig > 0 ? Math.min(1, t.lig / metas.lig) : 0;
+  const scores = [
+    Math.round(pLig*100), Math.round(pLig*100),
+    Math.round(Math.min(1, rCL/CONV_RULES.con.ideal)*100),
+    Math.round(Math.min(1, rCD/CONV_RULES.dec.ideal)*100),
+    Math.round(Math.min(1, rMM/CONV_RULES.rmk.ideal)*100),
+    Math.round(Math.min(1, rMR/CONV_RULES.rre.ideal)*100),
+    Math.round(Math.min(1, rVR/CONV_RULES.ven.ideal)*100)
+  ];
+  if (radarCh) radarCh.destroy();
+  radarCh = new Chart(document.getElementById('radarC'), {
+    type:'radar',
+    data:{ labels:['Lista/Qualif.','Volume Lig.','Conexões','Decisor','R. Marcadas','R. Realizadas','Vendas'], datasets:[
+      { label:'Ideal', data:[100,100,100,100,100,100,100], borderColor:'rgba(55,138,221,0.3)', backgroundColor:'rgba(55,138,221,0.05)', borderWidth:1.5, pointRadius:2, borderDash:[4,4] },
+      { label:'Performance', data:scores, borderColor:'#1D9E75', backgroundColor:'rgba(29,158,117,0.12)', borderWidth:2, pointRadius:4, pointBackgroundColor:'#1D9E75' }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{ r:{ min:0, max:100, ticks:{ stepSize:25, color:'rgba(181,212,244,0.35)', font:{size:9}, backdropColor:'transparent' }, grid:{ color:'rgba(55,138,221,0.12)' }, angleLines:{ color:'rgba(55,138,221,0.1)' }, pointLabels:{ color:'rgba(181,212,244,0.65)', font:{size:10, family:"'DM Sans',sans-serif"} } } } }
+  });
+}
+
+function renderProj(t) {
+  const labels = ['Ligações','Conexões','Decisor','R.Marc.','R.Real.','Vendas'];
+  const mE = [metas.lig, metas.con, metas.dec || 12, metas.rmk || 3, metas.rre, metas.ven];
+  const mR = [
+    Math.round(metas.lig),
+    Math.round(metas.lig * CONV_RULES.con.ideal),
+    Math.round((metas.con || 0) * CONV_RULES.dec.ideal),
+    Math.round((metas.dec || 12) * CONV_RULES.rmk.ideal),
+    Math.round((metas.rmk || 3) * CONV_RULES.rre.ideal),
+    Math.round((metas.rre || 0) * CONV_RULES.ven.ideal)
+  ];
+  const rE = [t.lig, t.con, t.dec, t.rmk, t.rre, t.ven];
+  const rR = rE.map(v => Math.round(v * 0.9));
+  if (projCh) projCh.destroy();
+  projCh = new Chart(document.getElementById('projC'), {
+    type:'line',
+    data:{ labels, datasets:[
+      { label:'Meta execução', data:mE, borderColor:'#185FA5', backgroundColor:'#185FA5', borderWidth:2, tension:0.3, pointStyle:'circle', pointRadius:5, pointBorderColor:'#185FA5', pointBackgroundColor:'#185FA5' },
+      { label:'Meta resultado', data:mR, borderColor:'#378ADD', backgroundColor:'#378ADD', borderWidth:2, tension:0.3, borderDash:[5,4], pointStyle:'rect', pointRadius:5, pointBorderColor:'#378ADD', pointBackgroundColor:'#378ADD' },
+      { label:'Real. execução', data:rE, borderColor:'#1D9E75', backgroundColor:'#1D9E75', borderWidth:2, tension:0.3, pointStyle:'triangle', pointRadius:6, pointBorderColor:'#1D9E75', pointBackgroundColor:'#1D9E75' },
+      { label:'Real. resultado', data:rR, borderColor:'#5DCAA5', backgroundColor:'#5DCAA5', borderWidth:2, tension:0.3, borderDash:[5,4], pointStyle:'triangle', pointRotation:180, pointRadius:6, pointBorderColor:'#5DCAA5', pointBackgroundColor:'#5DCAA5' }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{ x:{ ticks:{ color:'rgba(181,212,244,0.5)', font:{size:10} }, grid:{ color:'rgba(55,138,221,0.08)' }, border:{ color:'transparent' } }, y:{ ticks:{ color:'rgba(181,212,244,0.5)', font:{size:10} }, grid:{ color:'rgba(55,138,221,0.08)' }, border:{ color:'transparent' } } } }
+  });
+}
+
+function renderObjList() {
+  const entries = Object.entries(OBJECTIONS_BY_WEEK[curWeek] || {}).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const target = document.getElementById('obj-list');
+  if (!entries.length) {
+    target.innerHTML = '<div style="font-size:12px;color:var(--text3);padding:10px 2px">Nenhuma objeção registrada nesta semana.</div>';
+    return;
+  }
+  const top = entries[0][1] || 1;
+  target.innerHTML = entries.map(([text, count], index) => `
+    <div class="obj-item"><span class="obj-rank">#${index+1}</span><span class="obj-text">${escapeHTML(text)}</span><div class="obj-bar-bg"><div class="obj-bar-fill" style="width:${Math.round(count/top*100)}%"></div></div><span class="obj-n">${count}x</span></div>`).join('');
+}
+
+function renderMetaForm() {
+  const fields = [
+    { key:'lig', lbl:'Meta de ligações / semana' }, { key:'con', lbl:'Meta de conexões' },
+    { key:'dec', lbl:'Meta conexões c/ decisor' }, { key:'rmk', lbl:'Meta reuniões marcadas' },
+    { key:'rre', lbl:'Meta reuniões realizadas' }, { key:'ven', lbl:'Meta de vendas' }
+  ];
+  document.querySelector('.mf-header').innerHTML = '<span>Etapa</span><span>Origem</span><span>Valor</span>';
+  document.getElementById('meta-form').innerHTML = fields.map(f => `
+    <div class="mf-row"><div class="mf-lbl">${f.lbl}</div><div style="flex:1;font-size:11px;color:var(--text3)">METAS_SEMANAIS</div><div class="mf-val">${metas[f.key] || 0}</div></div>`).join('');
+}
+
+function configureMetaPanel() {
+  const button = document.querySelector('.apply-btn');
+  if (!button) return;
+  button.textContent = 'Edite as metas na aba METAS_SEMANAIS';
+  button.onclick = () => alert('As metas do dashboard são lidas da aba METAS_SEMANAIS. Edite a semana desejada e aguarde a sincronização.');
+}
+
+// ─── SINCRONIZAÇÃO ─────────────────────────────────────────
+async function loadCSV() { return loadCSVAuto(); }
+async function loadCSVAuto() {
+  const dot = document.getElementById('csv-dot');
+  const msg = document.getElementById('csv-msg');
+  if (!configured(METRICS_CSV_URL)) {
+    dot.className = 'status-dot err';
+    msg.textContent = 'Configure METRICS_CSV_URL no arquivo HTML antes de publicar.';
+    render();
+    return;
+  }
+  dot.className = 'status-dot';
+  msg.textContent = 'Sincronizando dados da planilha...';
+  try {
+    const metricsPromise = fetchRows(METRICS_CSV_URL);
+    const objectionsPromise = configured(OBJECTIONS_CSV_URL) ? fetchRows(OBJECTIONS_CSV_URL) : Promise.resolve([]);
+    const [metricRows, objectionRows] = await Promise.all([metricsPromise, objectionsPromise]);
+    ingestMetrics(metricRows);
+    ingestObjections(objectionRows);
+    dot.className = 'status-dot ok';
+    const now = new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+    msg.textContent = `Sincronizado às ${now} — próxima atualização em 5min`;
+    secondsLeft = 300;
+    render();
+  } catch (error) {
+    dot.className = 'status-dot err';
+    msg.textContent = 'Erro ao sincronizar: ' + error.message + '. Confira as URLs CSV e a publicação das abas.';
+  }
+}
+
+function init() {
+  configureMetaPanel();
+  render();
+  loadCSVAuto();
+  setInterval(loadCSVAuto, 5 * 60 * 1000);
+  setInterval(() => {
+    secondsLeft = Math.max(0, secondsLeft - 1);
+    if (secondsLeft === 0) secondsLeft = 300;
+    const el = document.getElementById('csv-msg');
+    if (el && el.textContent.includes('Sincronizado')) {
+      const minutes = Math.floor(secondsLeft / 60);
+      const seconds = String(secondsLeft % 60).padStart(2, '0');
+      const prefix = el.textContent.split(' — ')[0];
+      el.textContent = `${prefix} — próxima atualização em ${minutes}m${seconds}s`;
+    }
+  }, 1000);
+}
+
+init();
+
+</script>
+</body>
+</html>
