@@ -1,5 +1,7 @@
 
 
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -202,6 +204,49 @@
   .dok .dt { color: #9FE1CB; }
   .dd { font-size: 10px; color: var(--text3); line-height: 1.45; }
 
+  /* ── RETORNOS AO DECISOR ── */
+  .followup-card { margin-bottom: 16px; }
+  .followup-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; margin-bottom: 14px;
+  }
+  .followup-head .card-title { margin-bottom: 0; }
+  .followup-grid {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px;
+  }
+  .followup-metric {
+    position: relative; overflow: hidden;
+    padding: 13px 14px; border-radius: 10px;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  }
+  .followup-metric::before {
+    content: ''; position: absolute; inset: 0 auto 0 0; width: 2px;
+    background: linear-gradient(180deg, var(--ocean-lt), var(--teal)); opacity: 0.72;
+  }
+  .followup-label {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.065em;
+    color: var(--text3); margin-bottom: 5px;
+  }
+  .followup-value {
+    font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700;
+    line-height: 1.05; color: var(--text1);
+  }
+  .followup-sub { margin-top: 5px; font-size: 10px; color: var(--text3); }
+  .followup-insight {
+    margin-top: 10px; padding: 9px 11px; border-radius: 8px;
+    background: rgba(255,255,255,0.025); border: 1px solid var(--border);
+    font-size: 11px; color: var(--text2); line-height: 1.45;
+  }
+  .b-neutral { background: rgba(121,165,209,0.12); color: var(--ocean-pale); }
+
+  @media (max-width: 900px) {
+    .followup-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 560px) {
+    .followup-grid { grid-template-columns: 1fr; }
+    .followup-head { align-items: flex-start; }
+  }
+
   /* ── TRÊS COLS ── */
   .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
 
@@ -313,6 +358,21 @@
     </div>
   </div>
 
+  <!-- RETORNOS AO DECISOR -->
+  <div class="card followup-card">
+    <div class="followup-head">
+      <div class="card-title">
+        <span class="ct-dot" style="background:var(--teal)"></span>
+        Retornos ao decisor
+      </div>
+      <span class="badge b-neutral" id="followup-badge">Sem base</span>
+    </div>
+    <div class="followup-grid" id="followup-grid"></div>
+    <div class="followup-insight" id="followup-insight">
+      Aguardando dados de follow-up da planilha.
+    </div>
+  </div>
+
   <!-- RADAR + PROJEÇÃO + OBJEÇÕES -->
   <div class="three-col">
 
@@ -421,8 +481,14 @@ const DIAG_MSGS = {
 
 // ─── UTILITÁRIOS ───────────────────────────────────────────
 function pct(v) { return Math.round((Number(v) || 0) * 100) + '%'; }
-function zeroTotals() { return { lig:0, con:0, dec:0, rmk:0, rre:0, ven:0 }; }
+function zeroTotals() { return { lig:0, con:0, dec:0, rmk:0, rre:0, ven:0, fuPrev:0, fuDone:0, fuDec:0 }; }
 function getLevel(rate, min, ideal) { return rate >= ideal ? 3 : rate >= min ? 2 : 1; }
+function getFollowupStatus(rate, hasBase) {
+  if (!hasBase) return { level:0, cls:'neutral', icon:'⚪', label:'Sem base' };
+  if (rate >= 0.80) return { level:3, cls:'ok', icon:'🟢', label:'Bom' };
+  if (rate >= 0.50) return { level:2, cls:'warn', icon:'🟡', label:'Médio' };
+  return { level:1, cls:'bad', icon:'🔴', label:'Baixo' };
+}
 function escapeHTML(value) {
   return String(value ?? '').replace(/[&<>'"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#039;', '"':'&quot;' }[c]));
 }
@@ -508,7 +574,10 @@ function ingestMetrics(rows) {
       dec: numeric(field(row, 'decisores')),
       rmk: numeric(field(row, 'reunioes_marcadas')),
       rre: numeric(field(row, 'reunioes_realizadas')),
-      ven: numeric(field(row, 'vendas'))
+      ven: numeric(field(row, 'vendas')),
+      fuPrev: numeric(field(row, 'followups_previstos', 'follow_ups_previstos', 'retornos_previstos')),
+      fuDone: numeric(field(row, 'followups_realizados', 'follow_ups_realizados', 'retornos_realizados')),
+      fuDec: numeric(field(row, 'decisores_via_followup', 'decisores_via_follow_up', 'decisores_via_retorno'))
     };
     const weekMetas = {
       lig: numeric(field(row, 'meta_ligacoes')),
@@ -570,17 +639,20 @@ function render() {
   const current = WEEKS[curWeek];
   const t = current ? current.totals : zeroTotals();
   metas = current ? current.metas : { ...DEFAULT_METAS };
-  const { lig, con, dec, rmk, rre, ven } = t;
+  const { lig, con, dec, rmk, rre, ven, fuPrev, fuDone, fuDec } = t;
   const rCL = lig > 0 ? con / lig : 0;
   const rCD = con > 0 ? dec / con : 0;
   const rMM = dec > 0 ? rmk / dec : 0;
   const rMR = rmk > 0 ? rre / rmk : 0;
   const rVR = rre > 0 ? ven / rre : 0;
+  const rFU = fuPrev > 0 ? fuDone / fuPrev : 0;
+  const rFUD = fuDone > 0 ? fuDec / fuDone : 0;
 
   renderWeekSelector();
   renderKPIs(t, rCL, rCD, rMM, rMR, rVR);
   renderFunnel(t, rCL, rCD, rMM, rMR, rVR);
-  renderDiag(t, rCL, rCD, rMM, rMR, rVR);
+  renderFollowups(t, rFU, rFUD);
+  renderDiag(t, rCL, rCD, rMM, rMR, rVR, rFU, rFUD);
   renderRadar(t, rCL, rCD, rMM, rMR, rVR);
   renderProj(t);
   renderObjList();
@@ -660,7 +732,76 @@ function renderFunnel(t, rCL, rCD, rMM, rMR, rVR) {
     <div class="f-row"><div class="f-lbl">${s.lbl}</div><div class="f-bar-wrap"><div class="f-bar" style="width:${Math.max(s.pct,3)}%;background:${colors[i]}"><span class="f-num" data-funnel-counter-key="${s.key}">${s.val}</span>${s.pct>7?`<span class="f-pct">${s.pct}%</span>`:''}</div></div><div class="f-rate">${s.rate?'→ '+s.rate:''}</div></div>`).join('');
 }
 
-function renderDiag(t, rCL, rCD, rMM, rMR, rVR) {
+function renderFollowups(t, rFU, rFUD) {
+  const hasBase = t.fuPrev > 0;
+  const status = getFollowupStatus(rFU, hasBase);
+  const badge = document.getElementById('followup-badge');
+  badge.className = `badge b-${status.cls}`;
+  badge.textContent = hasBase ? `${status.icon} ${status.label} — ${pct(rFU)}` : '⚪ Sem base';
+
+  const metrics = [
+    { key:'fuPrev', label:'Previstos', value:t.fuPrev, sub:'retornos que venceram na semana' },
+    { key:'fuDone', label:'Realizados', value:t.fuDone, sub:'retornos realmente executados' },
+    { key:null, label:'Execução', value:hasBase ? pct(rFU) : '—', sub:'realizados ÷ previstos' },
+    { key:'fuDec', label:'Decisores via retorno', value:t.fuDec, sub:t.fuDone > 0 ? `${pct(rFUD)} dos retornos` : 'nenhum retorno executado' }
+  ];
+
+  document.getElementById('followup-grid').innerHTML = metrics.map(item => `
+    <div class="followup-metric">
+      <div class="followup-label">${item.label}</div>
+      <div class="followup-value" ${item.key ? `data-counter-key="${item.key}"` : ''}>${item.value}</div>
+      <div class="followup-sub">${item.sub}</div>
+    </div>`).join('');
+
+  let insight;
+  if (!hasBase) {
+    insight = t.con > t.dec
+      ? 'Nenhum retorno foi previsto, apesar de existirem conexões sem acesso ao decisor. Verifique se você está saindo da conversa com nome, número direto ou horário definido.'
+      : 'Nenhum retorno estava previsto nesta semana. A execução fica sem classificação até existir pelo menos um retorno devido.';
+  } else if (status.level === 1) {
+    insight = `Execução baixa: ${t.fuDone} de ${t.fuPrev} retornos realizados. O principal ajuste é cumprir os retornos antes de mudar o roteiro.`;
+  } else if (status.level === 2) {
+    insight = `Execução média: ${t.fuDone} de ${t.fuPrev} retornos realizados. Há oportunidades abertas, mas parte delas ainda está ficando na mesa.`;
+  } else {
+    insight = t.fuDone > 0
+      ? `Execução boa: ${t.fuDone} de ${t.fuPrev} retornos realizados. ${t.fuDec} decisor(es) foram alcançados por esse caminho.`
+      : 'Execução boa, mas ainda sem retornos registrados como realizados.';
+  }
+  document.getElementById('followup-insight').textContent = insight;
+}
+
+function getDecisorDiagnosis(level, t, rCD, rFU) {
+  if (t.con <= 0) return DIAG_MSGS.dec[level];
+
+  if (level === 3) {
+    return t.fuDec > 0
+      ? `Boa taxa de acesso ao decisor. ${t.fuDec} contato(s) vieram de follow-up; mantenha a disciplina de retorno.`
+      : 'Boa taxa de acesso ao decisor. Mantenha a abordagem e continue registrando os retornos para medir a contribuição deles.';
+  }
+
+  if (t.fuPrev <= 0) {
+    return `Você teve ${t.con} conexão(ões) e chegou a ${t.dec} decisor(es), mas não registrou retornos previstos. O gargalo pode estar em encerrar a conversa com a gatekeeper sem nome, número direto ou horário definido.`;
+  }
+
+  if (rFU < 0.50) {
+    return `Gargalo principal: falta de follow-up. Você tinha ${t.fuPrev} retorno(s) previsto(s), mas executou ${t.fuDone} (${pct(rFU)}). Antes de mudar a argumentação com a atendente, cumpra os retornos combinados.`;
+  }
+
+  if (rFU < 0.80) {
+    return `A execução de follow-up está em ${pct(rFU)}. Você está retornando, mas ainda deixa parte das oportunidades sem tentativa. Complete os retornos antes de concluir que o problema é o roteiro.`;
+  }
+
+  return `A execução de follow-up está boa (${pct(rFU)}), então a falta de retorno não parece ser o gargalo principal. Revise a qualidade dos horários e números obtidos e a abertura usada no retorno. Foram ${t.fuDec} decisor(es) alcançados em ${t.fuDone} retorno(s).`;
+}
+
+function getFollowupDiagnosis(t, rFU) {
+  const status = getFollowupStatus(rFU, t.fuPrev > 0);
+  if (status.level === 1) return `Você executou ${t.fuDone} de ${t.fuPrev} retornos. Prioridade: zerar os retornos vencidos antes de aumentar o volume de novas ligações.`;
+  if (status.level === 2) return `Você executou ${t.fuDone} de ${t.fuPrev} retornos. A disciplina está parcial; leve a execução para pelo menos 80%.`;
+  return `Boa disciplina de follow-up: ${t.fuDone} de ${t.fuPrev} retornos executados. Agora acompanhe quantos realmente levam ao decisor.`;
+}
+
+function renderDiag(t, rCL, rCD, rMM, rMR, rVR, rFU, rFUD) {
   const pLig = metas.lig > 0 ? t.lig / metas.lig : 1;
   const items = [
     { key:'lig', rate:pLig, min:0.7, ideal:1.0, lbl:'Volume de ligações' },
@@ -670,11 +811,19 @@ function renderDiag(t, rCL, rCD, rMM, rMR, rVR) {
     { key:'rre', rate:rMR, min:CONV_RULES.rre.min, ideal:CONV_RULES.rre.ideal, lbl:'Taxa de comparecimento' },
     { key:'ven', rate:rVR, min:CONV_RULES.ven.min, ideal:CONV_RULES.ven.ideal, lbl:'Taxa de fechamento' }
   ];
+
+  if (t.fuPrev > 0) {
+    items.splice(3, 0, { key:'fup', rate:rFU, min:0.50, ideal:0.80, lbl:'Execução de follow-ups' });
+  }
+
   document.getElementById('diag').innerHTML = items.map(item => {
     const level = getLevel(item.rate, item.min, item.ideal);
     const cls = level === 1 ? 'dc' : level === 2 ? 'dw' : 'dok';
     const icon = level === 1 ? '🔴' : level === 2 ? '🟡' : '🟢';
-    return `<div class="diag-item ${cls}"><div class="dt">${icon} ${item.lbl} — ${pct(item.rate)}</div><div class="dd">${DIAG_MSGS[item.key][level]}</div></div>`;
+    let message = DIAG_MSGS[item.key]?.[level] || '';
+    if (item.key === 'dec') message = getDecisorDiagnosis(level, t, rCD, rFU);
+    if (item.key === 'fup') message = getFollowupDiagnosis(t, rFU);
+    return `<div class="diag-item ${cls}"><div class="dt">${icon} ${item.lbl} — ${pct(item.rate)}</div><div class="dd">${message}</div></div>`;
   }).join('');
 }
 
