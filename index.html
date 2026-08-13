@@ -72,16 +72,16 @@
   /* ── HEADER / MARCA ── */
   .overview-shell {
     margin-bottom: 18px;
-    background: linear-gradient(180deg, rgba(33,59,96,0.94) 0%, rgba(18,36,61,0.95) 100%);
-    border: 1px solid rgba(181,212,244,0.14);
-    border-radius: 20px;
-    box-shadow: 0 16px 38px rgba(0,0,0,0.22);
-    overflow: hidden;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
   }
   .header {
-    display: flex; align-items: center; justify-content: space-between; gap: 18px;
-    margin-bottom: 0; padding: 14px 16px 12px;
-    background: linear-gradient(118deg, #233F66 0%, #1B3458 52%, #142845 100%);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 18px;
+    margin-bottom: 0; padding: 2px 0 0;
+    background: transparent;
     border: 0; border-radius: 0;
     box-shadow: none;
   }
@@ -98,10 +98,10 @@
     line-height: 0.94; letter-spacing: 0.045em; color: var(--white); text-transform: lowercase;
   }
   .brand-tagline { margin-top: 5px; font-size: 10px; color: rgba(248,251,255,0.70); letter-spacing: 0.13em; text-transform: uppercase; }
-  .header-right { display: flex; align-items: center; gap: 10px; min-width: 0; max-width: 72%; }
+  .header-right { display: flex; align-items: flex-end; gap: 10px; min-width: 0; max-width: 72%; padding-top: 8px; }
 
   /* ── SELETOR DE PERÍODO ── */
-  .period-control { min-width: 0; width: 100%; display: flex; flex-direction: column; gap: 6px; }
+  .period-control { min-width: 0; width: 100%; display: flex; flex-direction: column; gap: 7px; }
   .period-caption {
     display: flex; align-items: center; gap: 6px; padding-left: 3px;
     font-size: 9px; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase;
@@ -109,9 +109,9 @@
   }
   .period-caption svg { width: 13px; height: 13px; flex: 0 0 13px; opacity: 0.9; }
   .pill-group {
-    display: flex; align-items: stretch; min-width: 0;
-    background: rgba(4,14,30,0.20); border: 1px solid rgba(255,255,255,0.11);
-    border-radius: 11px; padding: 3px 3px 10px; gap: 2px; overflow-x: auto; overflow-y: hidden;
+    display: flex; align-items: flex-end; min-width: 0;
+    background: transparent; border: 0;
+    border-radius: 0; padding: 0 2px 0 0; gap: 8px; overflow-x: auto; overflow-y: hidden;
     scrollbar-width: thin;
     scrollbar-color: rgba(255,255,255,0.9) transparent;
     scrollbar-gutter: stable;
@@ -130,29 +130,36 @@
     background-clip: padding-box;
   }
   .pill {
-    min-width: 92px; padding: 7px 13px; font-size: 12px; line-height: 1.25;
-    border: none; border-radius: 8px; cursor: pointer; background: transparent;
-    color: rgba(248,251,255,0.75); font-family: 'DM Sans', sans-serif;
+    min-width: 132px; min-height: 52px; padding: 11px 16px 14px; font-size: 12px; line-height: 1.2;
+    border: 1px solid transparent; border-radius: 14px 14px 0 0; cursor: pointer; background: transparent;
+    color: rgba(248,251,255,0.78); font-family: 'DM Sans', sans-serif; font-weight: 600;
     transition: all 0.22s ease; white-space: normal; text-align: center; flex: 0 0 auto;
   }
-  .pill.active, .pill:hover {
-    background: var(--white); color: var(--brand-blue-deep);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.16);
+  .pill:hover {
+    background: rgba(255,255,255,0.05); color: rgba(248,251,255,0.94);
   }
-
   .pill.active {
     position: relative;
-    z-index: 2;
+    z-index: 3;
+    background: rgba(248,251,255,0.97);
+    color: var(--brand-blue-deep);
+    border-color: rgba(181,212,244,0.26);
+    border-bottom-color: transparent;
+    box-shadow: 0 -1px 0 rgba(255,255,255,0.03), 0 0 0 1px rgba(255,255,255,0.02);
+    transform: translateY(1px);
   }
 
   .kpi-stage {
-    padding: 4px 12px 14px;
-    background: linear-gradient(180deg, rgba(5,14,26,0.24) 0%, rgba(2,8,17,0.06) 100%);
-    border-top: 1px solid rgba(255,255,255,0.08);
+    position: relative;
+    margin-top: -1px;
+    padding: 12px 12px 14px;
+    background: transparent;
+    border: 1px solid rgba(181,212,244,0.18);
+    border-radius: 18px;
   }
   .kpi-stage-caption {
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    padding: 6px 4px 12px;
+    padding: 0 4px 12px;
   }
   .kpi-stage-title {
     font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
@@ -172,6 +179,7 @@
   @media (max-width: 760px) {
     .header { align-items: flex-start; flex-direction: column; }
     .header-right, .period-control, .pill-group { width: 100%; max-width: none; }
+    .header-right { padding-top: 0; }
   }
 
   /* ── CSV BAR ── */
@@ -478,18 +486,18 @@
   @media (max-width: 760px) {
     body { overflow-x: hidden; }
     .page { padding: 14px 12px 32px; }
-    .overview-shell { margin-bottom: 14px; border-radius: 18px; }
-    .header { margin-bottom: 0; padding: 12px; gap: 12px; }
+    .overview-shell { margin-bottom: 14px; }
+    .header { margin-bottom: 0; padding: 0; gap: 12px; }
     .brand-logo { width: 46px; height: 46px; flex-basis: 46px; border-radius: 12px; }
     .brand-name { font-size: 25px; }
     .brand-tagline { font-size: 9px; }
     .header-right, .period-control, .pill-group { width: 100%; max-width: none; }
     .period-caption { font-size: 9px; margin-top: 1px; }
-    .pill-group { overflow: visible; padding-bottom: 3px; }
+    .pill-group { overflow: visible; padding-bottom: 0; }
     .week-select { width: 100%; }
     .csv-section { margin-bottom: 12px; }
-    .kpi-stage { padding: 4px 8px 10px; }
-    .kpi-stage-caption { flex-direction: column; align-items: flex-start; gap: 2px; padding: 4px 2px 10px; }
+    .kpi-stage { margin-top: 0; padding: 10px 8px 10px; border-radius: 16px; }
+    .kpi-stage-caption { flex-direction: column; align-items: flex-start; gap: 2px; padding: 0 2px 10px; }
     .sync-bar { grid-template-columns: auto auto minmax(0, 1fr); padding: 10px 12px; }
     .sync-btn { grid-column: 1 / -1; width: 100%; }
     .card { padding: 14px; }
