@@ -70,12 +70,20 @@
   .page { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 24px 28px 48px; }
 
   /* ── HEADER / MARCA ── */
+  .overview-shell {
+    margin-bottom: 18px;
+    background: linear-gradient(180deg, rgba(33,59,96,0.94) 0%, rgba(18,36,61,0.95) 100%);
+    border: 1px solid rgba(181,212,244,0.14);
+    border-radius: 20px;
+    box-shadow: 0 16px 38px rgba(0,0,0,0.22);
+    overflow: hidden;
+  }
   .header {
     display: flex; align-items: center; justify-content: space-between; gap: 18px;
-    margin-bottom: 22px; padding: 14px 16px;
+    margin-bottom: 0; padding: 14px 16px 12px;
     background: linear-gradient(118deg, #233F66 0%, #1B3458 52%, #142845 100%);
-    border: 1px solid rgba(181,212,244,0.16); border-radius: 17px;
-    box-shadow: 0 14px 34px rgba(0,0,0,0.20);
+    border: 0; border-radius: 0;
+    box-shadow: none;
   }
   .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
   .brand-logo {
@@ -132,6 +140,28 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.16);
   }
 
+  .pill.active {
+    position: relative;
+    z-index: 2;
+  }
+
+  .kpi-stage {
+    padding: 4px 12px 14px;
+    background: linear-gradient(180deg, rgba(5,14,26,0.24) 0%, rgba(2,8,17,0.06) 100%);
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .kpi-stage-caption {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 6px 4px 12px;
+  }
+  .kpi-stage-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+    color: rgba(248,251,255,0.72);
+  }
+  .kpi-stage-subtitle {
+    font-size: 11px; color: rgba(183,213,242,0.64);
+  }
+
   /* ── TRANSIÇÕES DE SEMANA ── */
   .kpi-val, .f-num { font-variant-numeric: tabular-nums; }
   .kpi.metric-pop { animation: metricPop 0.58s cubic-bezier(.2,.75,.25,1) both; }
@@ -145,7 +175,7 @@
   }
 
   /* ── CSV BAR ── */
-  .csv-section { margin-bottom: 20px; }
+  .csv-section { margin-bottom: 16px; }
   .csv-bar {
     display: flex; align-items: center; gap: 10px;
     background: var(--card2); border: 1px solid var(--border2);
@@ -173,7 +203,7 @@
   .csv-help code { background: rgba(255,255,255,0.07); padding: 1px 5px; border-radius: 4px; font-size: 10px; }
 
   /* ── KPI GRID ── */
-  .kpi-grid { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 10px; margin-bottom: 18px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 10px; margin-bottom: 0; }
   .kpi {
     background: var(--card2); border: 1px solid var(--border);
     border-radius: 12px; padding: 16px 12px 14px; position: relative; overflow: hidden;
@@ -448,7 +478,8 @@
   @media (max-width: 760px) {
     body { overflow-x: hidden; }
     .page { padding: 14px 12px 32px; }
-    .header { margin-bottom: 14px; padding: 12px; gap: 12px; }
+    .overview-shell { margin-bottom: 14px; border-radius: 18px; }
+    .header { margin-bottom: 0; padding: 12px; gap: 12px; }
     .brand-logo { width: 46px; height: 46px; flex-basis: 46px; border-radius: 12px; }
     .brand-name { font-size: 25px; }
     .brand-tagline { font-size: 9px; }
@@ -456,7 +487,9 @@
     .period-caption { font-size: 9px; margin-top: 1px; }
     .pill-group { overflow: visible; padding-bottom: 3px; }
     .week-select { width: 100%; }
-    .csv-section { margin-bottom: 14px; }
+    .csv-section { margin-bottom: 12px; }
+    .kpi-stage { padding: 4px 8px 10px; }
+    .kpi-stage-caption { flex-direction: column; align-items: flex-start; gap: 2px; padding: 4px 2px 10px; }
     .sync-bar { grid-template-columns: auto auto minmax(0, 1fr); padding: 10px 12px; }
     .sync-btn { grid-column: 1 / -1; width: 100%; }
     .card { padding: 14px; }
@@ -508,6 +541,18 @@
 
 <div class="page">
 
+  <!-- CSV CONNECTION -->
+  <section class="csv-section">
+    <div class="sync-bar">
+      <span class="sync-icon">🌊</span>
+      <span class="status-dot" id="csv-dot"></span>
+      <span class="sync-message" id="csv-msg">Carregando dados da planilha...</span>
+      <button class="sync-btn" onclick="loadCSVAuto()">↻ Atualizar agora</button>
+    </div>
+    <input type="hidden" id="csv-url" value="">
+  </section>
+
+  <section class="overview-shell">
   <!-- HEADER -->
   <header class="header">
     <div class="brand">
@@ -533,19 +578,15 @@
     </div>
   </header>
 
-  <!-- CSV CONNECTION -->
-  <section class="csv-section">
-    <div class="sync-bar">
-      <span class="sync-icon">🌊</span>
-      <span class="status-dot" id="csv-dot"></span>
-      <span class="sync-message" id="csv-msg">Carregando dados da planilha...</span>
-      <button class="sync-btn" onclick="loadCSVAuto()">↻ Atualizar agora</button>
+  <div class="kpi-stage">
+    <div class="kpi-stage-caption">
+      <div class="kpi-stage-title">Métricas do período selecionado</div>
+      <div class="kpi-stage-subtitle">As 7 métricas abaixo mudam conforme a semana escolhida.</div>
     </div>
-    <input type="hidden" id="csv-url" value="">
+    <!-- KPI CARDS -->
+    <div class="kpi-grid" id="kpi-grid"></div>
+  </div>
   </section>
-
-  <!-- KPI CARDS -->
-  <div class="kpi-grid" id="kpi-grid"></div>
 
   <!-- FUNIL + DIAGNÓSTICO -->
   <div class="two-col">
