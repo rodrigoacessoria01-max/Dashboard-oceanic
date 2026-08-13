@@ -2,7 +2,6 @@
 
 
 
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -104,8 +103,23 @@
   .pill-group {
     display: flex; align-items: stretch; min-width: 0;
     background: rgba(4,14,30,0.20); border: 1px solid rgba(255,255,255,0.11);
-    border-radius: 11px; padding: 3px; gap: 2px; overflow-x: auto; overflow-y: hidden;
+    border-radius: 11px; padding: 3px 3px 10px; gap: 2px; overflow-x: auto; overflow-y: hidden;
     scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.9) transparent;
+    scrollbar-gutter: stable;
+  }
+  .pill-group::-webkit-scrollbar {
+    height: 8px;
+  }
+  .pill-group::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 0 8px 2px;
+  }
+  .pill-group::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.88);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
   }
   .pill {
     min-width: 92px; padding: 7px 13px; font-size: 12px; line-height: 1.25;
@@ -440,7 +454,7 @@
     .brand-tagline { font-size: 9px; }
     .header-right, .period-control, .pill-group { width: 100%; max-width: none; }
     .period-caption { font-size: 9px; margin-top: 1px; }
-    .pill-group { overflow: visible; }
+    .pill-group { overflow: visible; padding-bottom: 3px; }
     .week-select { width: 100%; }
     .csv-section { margin-bottom: 14px; }
     .sync-bar { grid-template-columns: auto auto minmax(0, 1fr); padding: 10px 12px; }
@@ -790,13 +804,32 @@ function setWeek(weekId) {
   render();
 }
 
+function isIgnorableWeekLabel(label) {
+  const text = String(label || '').trim().toLowerCase();
+  if (!text) return true;
+  return text.includes('esta aba e calculada automaticamente')
+    || text.includes('esta aba é calculada automaticamente')
+    || text.includes('publique-a como csv')
+    || text.includes('publique como csv')
+    || text.includes('mas nao a edite')
+    || text.includes('mas não a edite');
+}
+
+function getVisibleWeekIds() {
+  return Object.keys(WEEKS)
+    .filter(id => !isIgnorableWeekLabel(WEEKS[id]?.label || id))
+    .sort(weekSort);
+}
+
 function renderWeekSelector() {
   const holder = document.getElementById('week-pills');
-  const ids = Object.keys(WEEKS).sort(weekSort);
+  const ids = getVisibleWeekIds();
   if (!ids.length) {
     holder.innerHTML = '<span style="font-size:11px;color:var(--text3);padding:7px 9px">Sem períodos sincronizados</span>';
     return;
   }
+
+  if (!ids.includes(curWeek)) curWeek = ids[ids.length - 1];
 
   const isMobile = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
   if (isMobile) {
@@ -811,6 +844,10 @@ function renderWeekSelector() {
 
 // ─── RENDER ────────────────────────────────────────────────
 function render() {
+  const visibleWeekIds = getVisibleWeekIds();
+  if (visibleWeekIds.length && !visibleWeekIds.includes(curWeek)) {
+    curWeek = visibleWeekIds[visibleWeekIds.length - 1];
+  }
   const current = WEEKS[curWeek];
   const t = current ? current.totals : zeroTotals();
   metas = current ? current.metas : { ...DEFAULT_METAS };
