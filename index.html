@@ -2,6 +2,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -140,20 +141,81 @@
   .csv-help code { background: rgba(255,255,255,0.07); padding: 1px 5px; border-radius: 4px; font-size: 10px; }
 
   /* ── KPI GRID ── */
-  .kpi-grid { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 10px; margin-bottom: 18px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 10px; margin-bottom: 18px; }
   .kpi {
     background: var(--card2); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px 12px; position: relative; overflow: hidden;
+    border-radius: 12px; padding: 16px 12px 14px; position: relative; overflow: hidden;
     transition: border-color 0.2s;
+    min-height: 228px;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    text-align: center;
   }
   .kpi::after {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
     background: linear-gradient(90deg, var(--ocean), var(--teal)); opacity: 0.5;
   }
   .kpi:hover { border-color: var(--border2); }
-  .kpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); margin-bottom: 5px; }
-  .kpi-val { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
-  .badge { display: inline-block; padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: 500; }
+  .kpi-label { width: 100%; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--white); margin-bottom: 10px; text-align: center; line-height: 1.35; min-height: 26px; display:flex; align-items:center; justify-content:center; }
+  .kpi-val {
+    font-family: 'DM Sans', sans-serif; font-size: 31px; font-weight: 700;
+    letter-spacing: -0.015em; line-height: 1; margin: 0;
+    text-align: center; color: var(--text1); font-variant-numeric: lining-nums tabular-nums;
+  }
+  .badge { display: inline-block; padding: 5px 10px; border-radius: 7px; font-size: 10px; font-weight: 600; line-height: 1.25; }
+
+  .metric-dial {
+    --dial-fill: var(--ocean-lt);
+    --dial-rest: rgba(255,255,255,0.12);
+    --dial-size: 104px;
+    position: relative;
+    width: var(--dial-size);
+    aspect-ratio: 1 / 1;
+    margin: 0 auto 14px;
+    display: grid;
+    place-items: center;
+    flex: 1 0 auto;
+    border-radius: 50%;
+  }
+  .metric-dial-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+  }
+  .metric-dial-bg {
+    fill: rgba(255,255,255,0.015);
+    stroke: rgba(255,255,255,0.055);
+    stroke-width: 1.25;
+  }
+  .metric-dial-tick {
+    stroke: var(--dial-rest);
+    stroke-width: 6;
+    stroke-linecap: round;
+  }
+  .metric-dial-tick.active {
+    stroke: var(--dial-fill);
+  }
+  .metric-dial-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .metric-dial .kpi-val,
+  .metric-dial .followup-value {
+    position: relative;
+    z-index: 2;
+  }
+  .kpi-footer,
+  .followup-footer {
+    width: 100%;
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    padding-top: 4px;
+  }
   .b-ok  { background: rgba(59,109,17,0.25); color: #9FE1CB; }
   .b-warn{ background: rgba(186,117,23,0.25); color: #FAC775; }
   .b-bad { background: rgba(163,45,45,0.25);  color: #F7C1C1; }
@@ -212,26 +274,30 @@
   }
   .followup-head .card-title { margin-bottom: 0; }
   .followup-grid {
-    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px;
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px;
   }
   .followup-metric {
     position: relative; overflow: hidden;
-    padding: 13px 14px; border-radius: 10px;
+    padding: 18px 14px 14px; border-radius: 10px; min-height: 230px;
     background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    text-align: center;
   }
   .followup-metric::before {
     content: ''; position: absolute; inset: 0 auto 0 0; width: 2px;
     background: linear-gradient(180deg, var(--ocean-lt), var(--teal)); opacity: 0.72;
   }
   .followup-label {
-    font-size: 10px; text-transform: uppercase; letter-spacing: 0.065em;
-    color: var(--text3); margin-bottom: 5px;
+    width: 100%; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.065em;
+    color: var(--white); margin-bottom: 10px; text-align: center; line-height: 1.35; min-height: 28px;
+    display:flex; align-items:center; justify-content:center;
   }
   .followup-value {
-    font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700;
-    line-height: 1.05; color: var(--text1);
+    font-family: 'DM Sans', sans-serif; font-size: 29px; font-weight: 700;
+    letter-spacing: -0.015em; line-height: 1; color: var(--text1);
+    text-align: center; font-variant-numeric: lining-nums tabular-nums;
   }
-  .followup-sub { margin-top: 5px; font-size: 10px; color: var(--text3); }
+  .followup-sub { width: 100%; font-size: 10px; color: var(--text3); text-align: center; line-height: 1.35; }
   .followup-insight {
     margin-top: 10px; padding: 9px 11px; border-radius: 8px;
     background: rgba(255,255,255,0.025); border: 1px solid var(--border);
@@ -264,7 +330,8 @@
   .obj-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--ocean), var(--teal)); }
   .obj-n { font-size: 11px; color: var(--text3); min-width: 24px; text-align: right; }
 
-  /* ── METAS EDIT ── */
+  /* ── METAS EDIT (mantido no código, oculto no frontend) ── */
+  .meta-panel { display: none !important; }
   .meta-form { display: flex; flex-direction: column; gap: 10px; }
   .mf-row { display: flex; align-items: center; gap: 10px; }
   .mf-lbl { font-size: 12px; color: var(--text2); min-width: 172px; }
@@ -299,6 +366,94 @@
     text-transform: uppercase; letter-spacing: 0.06em;
     padding-bottom: 6px; border-bottom: 1px solid var(--border); margin-bottom: 4px;
   }
+
+  /* ── CONTROLES RESPONSIVOS ── */
+  .week-select {
+    width: auto; max-width: 100%; padding: 7px 10px; border-radius: 7px; border: 0;
+    background: var(--ocean); color: #E6F1FB; font: 12px 'DM Sans', sans-serif;
+    outline: none; cursor: pointer;
+  }
+  .sync-bar {
+    display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; align-items: center; gap: 10px;
+    padding: 8px 14px; background: var(--card2); border: 1px solid var(--border); border-radius: 12px;
+  }
+  .sync-icon { font-size: 16px; }
+  .sync-message { min-width: 0; font-size: 12px; color: var(--text2); overflow-wrap: anywhere; }
+  .sync-btn {
+    padding: 6px 12px; background: rgba(24,95,165,0.3); border: 1px solid var(--border2);
+    border-radius: 7px; color: var(--ocean-pale); font-size: 11px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; white-space: nowrap;
+  }
+
+  @media (max-width: 1100px) {
+    .kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .kpi { min-height: 220px; }
+    .followup-metric { min-height: 222px; }
+    .three-col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three-col > .card:last-child { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 900px) {
+    .two-col { grid-template-columns: 1fr; }
+    .kpi { min-height: 214px; }
+    .followup-metric { min-height: 216px; }
+    .three-col { grid-template-columns: 1fr; }
+    .three-col > .card:last-child { grid-column: auto; }
+    .kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .followup-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 760px) {
+    body { overflow-x: hidden; }
+    .page { padding: 14px 12px 32px; }
+    .header { margin-bottom: 14px; padding: 12px; gap: 12px; }
+    .brand-logo { width: 46px; height: 46px; flex-basis: 46px; border-radius: 12px; }
+    .brand-name { font-size: 25px; }
+    .brand-tagline { font-size: 9px; }
+    .header-right, .pill-group { width: 100%; }
+    .pill-group { overflow: visible; }
+    .week-select { width: 100%; }
+    .csv-section { margin-bottom: 14px; }
+    .sync-bar { grid-template-columns: auto auto minmax(0, 1fr); padding: 10px 12px; }
+    .sync-btn { grid-column: 1 / -1; width: 100%; }
+    .card { padding: 14px; }
+  }
+
+  @media (max-width: 620px) {
+    .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .kpi { min-height: 206px; padding: 16px 10px 12px; }
+    .kpi-label { font-size: 9px; line-height: 1.35; min-height: 24px; margin-bottom: 8px; }
+    .kpi-val { font-size: 27px; }
+    .metric-dial { --dial-size: 88px; margin-bottom: 11px; }
+    .badge { max-width: 100%; white-space: normal; line-height: 1.25; }
+    .followup-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .followup-head { align-items: flex-start; flex-direction: column; gap: 8px; }
+    .followup-metric { min-height: 206px; padding: 16px 10px 12px; }
+    .followup-value { font-size: 26px; }
+    .f-row { display: grid; grid-template-columns: 86px minmax(0, 1fr) 38px; gap: 7px; }
+    .f-lbl { min-width: 0; font-size: 11px; line-height: 1.2; }
+    .f-rate { min-width: 0; font-size: 10px; }
+    .f-bar-wrap { height: 36px; }
+    .f-bar { padding: 0 8px; }
+    .f-conn { margin-left: 94px; }
+    .mf-header { display: none; }
+    .mf-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .mf-row:last-child { border-bottom: 0; }
+    .mf-lbl { min-width: 0; grid-column: 1 / -1; }
+    .mf-row > :nth-child(2) { grid-column: 1; min-width: 0; overflow-wrap: anywhere; }
+    .mf-val { grid-column: 2; min-width: 32px; }
+  }
+
+  @media (max-width: 390px) {
+    .page { padding-left: 10px; padding-right: 10px; }
+    .kpi-grid { gap: 7px; }
+    .kpi { min-height: 198px; padding: 15px 8px 12px; }
+    .metric-dial { --dial-size: 82px; }
+    .followup-metric { min-height: 198px; }
+    .f-row { grid-template-columns: 76px minmax(0, 1fr) 34px; gap: 6px; }
+    .f-conn { margin-left: 82px; }
+  }
+
 </style>
 </head>
 <body>
@@ -328,11 +483,11 @@
 
   <!-- CSV CONNECTION -->
   <section class="csv-section">
-    <div style="display:flex;align-items:center;gap:10px;padding:8px 14px;background:var(--card2);border:1px solid var(--border);border-radius:12px;">
-      <span style="font-size:16px">🌊</span>
+    <div class="sync-bar">
+      <span class="sync-icon">🌊</span>
       <span class="status-dot" id="csv-dot"></span>
-      <span id="csv-msg" style="font-size:12px;color:var(--text2)">Carregando dados da planilha...</span>
-      <button onclick="loadCSVAuto()" style="margin-left:auto;padding:5px 12px;background:rgba(24,95,165,0.3);border:1px solid var(--border2);border-radius:7px;color:var(--ocean-pale);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">↻ Atualizar agora</button>
+      <span class="sync-message" id="csv-msg">Carregando dados da planilha...</span>
+      <button class="sync-btn" onclick="loadCSVAuto()">↻ Atualizar agora</button>
     </div>
     <input type="hidden" id="csv-url" value="">
   </section>
@@ -420,28 +575,7 @@
         Objeções mais frequentes
       </div>
       <div class="obj-list" id="obj-list"></div>
-      <button onclick="alert('Funcionalidade: copie as objeções e peça ao assistente para gerar respostas!')"
-        style="margin-top:12px;width:100%;padding:8px;background:rgba(163,45,45,0.15);border:1px solid rgba(163,45,45,0.3);border-radius:8px;color:#F7C1C1;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">
-        ↗ Gerar respostas para objeções
-      </button>
     </div>
-  </div>
-
-  <!-- METAS EDITÁVEIS -->
-  <div class="card">
-    <div class="card-title">
-      <span class="ct-dot" style="background:var(--ocean-lt)"></span>
-      Controle de metas — ajuste os valores e clique em "Aplicar" para recalcular diagnóstico e projeção
-    </div>
-
-    <div class="mf-header">
-      <span>Etapa</span>
-      <span>Meta semanal</span>
-      <span>Valor</span>
-    </div>
-
-    <div class="meta-form" id="meta-form"></div>
-    <button class="apply-btn" onclick="applyMetas()">Aplicar metas e recalcular →</button>
   </div>
 
 </div><!-- /page -->
@@ -625,8 +759,9 @@ function renderWeekSelector() {
     holder.innerHTML = '<span style="font-size:11px;color:var(--text3);padding:6px 8px">Sem semanas sincronizadas</span>';
     return;
   }
-  if (ids.length > 6) {
-    holder.innerHTML = `<select aria-label="Selecionar semana" onchange="setWeek(this.value)" style="padding:5px 10px;border-radius:7px;border:0;background:var(--ocean);color:#E6F1FB;font:12px 'DM Sans',sans-serif;outline:none;cursor:pointer">
+  const compactSelector = ids.length > 6 || (window.matchMedia && window.matchMedia('(max-width: 760px)').matches);
+  if (compactSelector) {
+    holder.innerHTML = `<select class="week-select" aria-label="Selecionar semana" onchange="setWeek(this.value)">
       ${ids.map(id => `<option value="${escapeHTML(id)}" ${id === curWeek ? 'selected' : ''}>${escapeHTML(WEEKS[id].label)}</option>`).join('')}
     </select>`;
   } else {
@@ -702,18 +837,67 @@ function animateDashboardCounters(targetTotals) {
   previousTotals = { ...targetTotals };
 }
 
+function clamp01(value) {
+  return Math.max(0, Math.min(1, Number(value) || 0));
+}
+
+function getDialColors(cls) {
+  if (cls === 'ok') return { fill: '#58C8FF', rest: 'rgba(88,200,255,0.14)' };
+  if (cls === 'warn') return { fill: '#FAC775', rest: 'rgba(250,199,117,0.14)' };
+  if (cls === 'bad') return { fill: '#F08C98', rest: 'rgba(240,140,152,0.14)' };
+  return { fill: '#79A5D1', rest: 'rgba(121,165,209,0.14)' };
+}
+
+function buildMetricDial(valueHtml, progress, cls, extraClass = '') {
+  const colors = getDialColors(cls);
+  const totalTicks = 18;
+  const activeTicks = Math.round(clamp01(progress) * totalTicks);
+  const size = 120;
+  const center = size / 2;
+  const radiusOuter = 49;
+  const radiusInner = 39;
+  const step = 360 / totalTicks;
+  let ticks = '';
+
+  for (let index = 0; index < totalTicks; index++) {
+    const angle = (index * step) * Math.PI / 180;
+    const x1 = center + Math.cos(angle) * radiusInner;
+    const y1 = center + Math.sin(angle) * radiusInner;
+    const x2 = center + Math.cos(angle) * radiusOuter;
+    const y2 = center + Math.sin(angle) * radiusOuter;
+    const active = index < activeTicks;
+    ticks += `<line x1="${x1.toFixed(2)}" y1="${y1.toFixed(2)}" x2="${x2.toFixed(2)}" y2="${y2.toFixed(2)}" class="metric-dial-tick${active ? ' active' : ''}" ${active ? `style="stroke:${colors.fill}"` : ''} />`;
+  }
+
+  return `<div class="metric-dial ${extraClass}" style="--dial-fill:${colors.fill}; --dial-rest:${colors.rest};">
+    <svg class="metric-dial-svg" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+      <circle class="metric-dial-bg" cx="60" cy="60" r="57"></circle>
+      ${ticks}
+    </svg>
+    <div class="metric-dial-content">${valueHtml}</div>
+  </div>`;
+}
+
 function renderKPIs(t, rCL, rCD, rMM, rMR, rVR) {
   const pLig = metas.lig > 0 ? t.lig / metas.lig : 0;
+  const hasFollowupBase = t.fuPrev > 0;
+  const rFU = hasFollowupBase ? t.fuDone / t.fuPrev : 0;
+  const fuStatus = getFollowupStatus(rFU, hasFollowupBase);
   const kpis = [
-    { key:'lig', lbl:'Ligações', val:t.lig, cls:pLig>=1?'ok':pLig>=0.7?'warn':'bad', sub:metas.lig>0?(t.lig>=metas.lig?'Meta ✓':`${Math.max(0, metas.lig-t.lig)} p/ meta`):'—' },
-    { key:'con', lbl:'Conexões', val:t.con, cls:rCL>=0.5?'ok':rCL>=0.2?'warn':'bad', sub:pct(rCL)+' conv.' },
-    { key:'dec', lbl:'C. c/ Decisor', val:t.dec, cls:rCD>=0.5?'ok':rCD>=0.2?'warn':'bad', sub:pct(rCD)+' conv.' },
-    { key:'rmk', lbl:'R. Marcadas', val:t.rmk, cls:rMM>=0.1?'ok':rMM>=0.05?'warn':'bad', sub:pct(rMM)+' conv.' },
-    { key:'rre', lbl:'R. Realizadas', val:t.rre, cls:rMR>=0.5?'ok':rMR>=0.3?'warn':'bad', sub:pct(rMR)+' comp.' },
-    { key:'ven', lbl:'Vendas', val:t.ven, cls:rVR>=0.15?'ok':rVR>=0.1?'warn':'bad', sub:pct(rVR)+' fecha.' }
+    { key:'lig', lbl:'Ligações', val:t.lig, cls:pLig>=1?'ok':pLig>=0.7?'warn':'bad', sub:metas.lig>0?(t.lig>=metas.lig?'Meta ✓':`${Math.max(0, metas.lig-t.lig)} p/ meta`):'—', progress: metas.lig > 0 ? t.lig / metas.lig : 0 },
+    { key:'con', lbl:'Conexões', val:t.con, cls:rCL>=0.5?'ok':rCL>=0.2?'warn':'bad', sub:metas.con>0?`${t.con}/${metas.con} da meta`:pct(rCL)+' conv.', progress: metas.con > 0 ? t.con / metas.con : rCL / 0.5 },
+    { key:'dec', lbl:'C. c/ Decisor', val:t.dec, cls:rCD>=0.5?'ok':rCD>=0.2?'warn':'bad', sub:metas.dec>0?`${t.dec}/${metas.dec} da meta`:pct(rCD)+' conv.', progress: metas.dec > 0 ? t.dec / metas.dec : rCD / 0.5 },
+    { key:'fuDone', lbl:'Follow-ups feitos', val:t.fuDone, cls:fuStatus.cls, sub:hasFollowupBase?`${t.fuDone}/${t.fuPrev} • ${pct(rFU)}`:'Sem base', progress: hasFollowupBase ? rFU : 0 },
+    { key:'rmk', lbl:'R. Marcadas', val:t.rmk, cls:rMM>=0.1?'ok':rMM>=0.05?'warn':'bad', sub:metas.rmk>0?`${t.rmk}/${metas.rmk} da meta`:pct(rMM)+' conv.', progress: metas.rmk > 0 ? t.rmk / metas.rmk : rMM / 0.1 },
+    { key:'rre', lbl:'R. Realizadas', val:t.rre, cls:rMR>=0.5?'ok':rMR>=0.3?'warn':'bad', sub:metas.rre>0?`${t.rre}/${metas.rre} da meta`:pct(rMR)+' comp.', progress: metas.rre > 0 ? t.rre / metas.rre : rMR / 0.5 },
+    { key:'ven', lbl:'Vendas', val:t.ven, cls:rVR>=0.15?'ok':rVR>=0.1?'warn':'bad', sub:metas.ven>0?`${t.ven}/${metas.ven} da meta`:pct(rVR)+' fecha.', progress: metas.ven > 0 ? t.ven / metas.ven : rVR / 0.15 }
   ];
   document.getElementById('kpi-grid').innerHTML = kpis.map(k => `
-    <div class="kpi"><div class="kpi-label">${k.lbl}</div><div class="kpi-val" data-counter-key="${k.key}">${k.val}</div><span class="badge b-${k.cls}">${k.sub}</span></div>`).join('');
+    <div class="kpi">
+      <div class="kpi-label">${k.lbl}</div>
+      ${buildMetricDial(`<div class="kpi-val" data-counter-key="${k.key}">${k.val}</div>`, k.progress, k.cls, 'kpi-dial')}
+      <div class="kpi-footer"><span class="badge b-${k.cls}">${k.sub}</span></div>
+    </div>`).join('');
 }
 
 function renderFunnel(t, rCL, rCD, rMM, rMR, rVR) {
@@ -739,19 +923,26 @@ function renderFollowups(t, rFU, rFUD) {
   badge.className = `badge b-${status.cls}`;
   badge.textContent = hasBase ? `${status.icon} ${status.label} — ${pct(rFU)}` : '⚪ Sem base';
 
+  const pending = Math.max(0, t.fuPrev - t.fuDone);
   const metrics = [
-    { key:'fuPrev', label:'Previstos', value:t.fuPrev, sub:'retornos que venceram na semana' },
-    { key:'fuDone', label:'Realizados', value:t.fuDone, sub:'retornos realmente executados' },
-    { key:null, label:'Execução', value:hasBase ? pct(rFU) : '—', sub:'realizados ÷ previstos' },
-    { key:'fuDec', label:'Decisores via retorno', value:t.fuDec, sub:t.fuDone > 0 ? `${pct(rFUD)} dos retornos` : 'nenhum retorno executado' }
+    { key:'fuPrev', label:'Retornos previstos', value:t.fuPrev, sub:'base total da semana', cls:'neutral', progress: hasBase ? 1 : 0, isText:false },
+    { key:'fuDone', label:'Todos realizados', value:t.fuDone, sub:'retornos executados', cls:status.cls, progress: hasBase ? rFU : 0, isText:false },
+    { key:null, label:'Retornos pendentes', value:pending, sub:pending === 1 ? '1 retorno ainda em aberto' : `${pending} retornos ainda em aberto`, cls:pending === 0 ? 'ok' : pending <= Math.max(1, Math.ceil(t.fuPrev * 0.2)) ? 'warn' : 'bad', progress: hasBase ? pending / Math.max(t.fuPrev, 1) : 0, isText:false },
+    { key:null, label:'Execução', value:hasBase ? pct(rFU) : '—', sub:'realizados ÷ previstos', cls:status.cls, progress: hasBase ? rFU : 0, isText:true },
+    { key:'fuDec', label:'Decisores via retorno', value:t.fuDec, sub:t.fuDone > 0 ? `${pct(rFUD)} dos retornos` : 'nenhum retorno executado', cls:t.fuDone > 0 ? (rFUD >= 0.4 ? 'ok' : rFUD >= 0.2 ? 'warn' : 'bad') : 'neutral', progress:t.fuDone > 0 ? rFUD : 0, isText:false }
   ];
 
-  document.getElementById('followup-grid').innerHTML = metrics.map(item => `
+  document.getElementById('followup-grid').innerHTML = metrics.map(item => {
+    const valueHtml = item.isText
+      ? `<div class="followup-value">${item.value}</div>`
+      : `<div class="followup-value" ${item.key ? `data-counter-key="${item.key}"` : ''}>${item.value}</div>`;
+    return `
     <div class="followup-metric">
       <div class="followup-label">${item.label}</div>
-      <div class="followup-value" ${item.key ? `data-counter-key="${item.key}"` : ''}>${item.value}</div>
-      <div class="followup-sub">${item.sub}</div>
-    </div>`).join('');
+      ${buildMetricDial(valueHtml, item.progress, item.cls, 'followup-dial')}
+      <div class="followup-footer"><div class="followup-sub">${item.sub}</div></div>
+    </div>`;
+  }).join('');
 
   let insight;
   if (!hasBase) {
@@ -887,13 +1078,18 @@ function renderObjList() {
 }
 
 function renderMetaForm() {
+  // As metas continuam sendo lidas da planilha, mas o painel visual foi removido do frontend.
+  const header = document.querySelector('.mf-header');
+  const target = document.getElementById('meta-form');
+  if (!header || !target) return;
+
   const fields = [
     { key:'lig', lbl:'Meta de ligações / semana' }, { key:'con', lbl:'Meta de conexões' },
     { key:'dec', lbl:'Meta conexões c/ decisor' }, { key:'rmk', lbl:'Meta reuniões marcadas' },
     { key:'rre', lbl:'Meta reuniões realizadas' }, { key:'ven', lbl:'Meta de vendas' }
   ];
-  document.querySelector('.mf-header').innerHTML = '<span>Etapa</span><span>Origem</span><span>Valor</span>';
-  document.getElementById('meta-form').innerHTML = fields.map(f => `
+  header.innerHTML = '<span>Etapa</span><span>Origem</span><span>Valor</span>';
+  target.innerHTML = fields.map(f => `
     <div class="mf-row"><div class="mf-lbl">${f.lbl}</div><div style="flex:1;font-size:11px;color:var(--text3)">METAS_SEMANAIS</div><div class="mf-val">${metas[f.key] || 0}</div></div>`).join('');
 }
 
@@ -933,6 +1129,15 @@ async function loadCSVAuto() {
     msg.textContent = 'Erro ao sincronizar: ' + error.message + '. Confira as URLs CSV e a publicação das abas.';
   }
 }
+
+let lastCompactWeekSelector = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
+window.addEventListener('resize', () => {
+  const isCompact = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
+  if (isCompact !== lastCompactWeekSelector) {
+    lastCompactWeekSelector = isCompact;
+    renderWeekSelector();
+  }
+});
 
 function init() {
   configureMetaPanel();
