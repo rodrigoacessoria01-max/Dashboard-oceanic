@@ -91,12 +91,32 @@
     line-height: 0.94; letter-spacing: 0.045em; color: var(--white); text-transform: lowercase;
   }
   .brand-tagline { margin-top: 5px; font-size: 10px; color: rgba(248,251,255,0.70); letter-spacing: 0.13em; text-transform: uppercase; }
-  .header-right { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .header-right { display: flex; align-items: center; gap: 10px; min-width: 0; max-width: 72%; }
 
-  /* pills */
-  .pill-group { display: flex; align-items: center; background: rgba(4,14,30,0.20); border: 1px solid rgba(255,255,255,0.11); border-radius: 10px; padding: 3px; gap: 2px; }
-  .pill { padding: 6px 13px; font-size: 12px; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: rgba(248,251,255,0.75); font-family: 'DM Sans', sans-serif; transition: all 0.22s ease; }
-  .pill.active, .pill:hover { background: var(--white); color: var(--brand-blue-deep); box-shadow: 0 2px 8px rgba(0,0,0,0.16); }
+  /* ── SELETOR DE PERÍODO ── */
+  .period-control { min-width: 0; width: 100%; display: flex; flex-direction: column; gap: 6px; }
+  .period-caption {
+    display: flex; align-items: center; gap: 6px; padding-left: 3px;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase;
+    color: rgba(248,251,255,0.68);
+  }
+  .period-caption svg { width: 13px; height: 13px; flex: 0 0 13px; opacity: 0.9; }
+  .pill-group {
+    display: flex; align-items: stretch; min-width: 0;
+    background: rgba(4,14,30,0.20); border: 1px solid rgba(255,255,255,0.11);
+    border-radius: 11px; padding: 3px; gap: 2px; overflow-x: auto; overflow-y: hidden;
+    scrollbar-width: thin;
+  }
+  .pill {
+    min-width: 92px; padding: 7px 13px; font-size: 12px; line-height: 1.25;
+    border: none; border-radius: 8px; cursor: pointer; background: transparent;
+    color: rgba(248,251,255,0.75); font-family: 'DM Sans', sans-serif;
+    transition: all 0.22s ease; white-space: normal; text-align: center; flex: 0 0 auto;
+  }
+  .pill.active, .pill:hover {
+    background: var(--white); color: var(--brand-blue-deep);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.16);
+  }
 
   /* ── TRANSIÇÕES DE SEMANA ── */
   .kpi-val, .f-num { font-variant-numeric: tabular-nums; }
@@ -107,9 +127,7 @@
   }
   @media (max-width: 760px) {
     .header { align-items: flex-start; flex-direction: column; }
-    .header-right, .pill-group { width: 100%; }
-    .pill-group { overflow-x: auto; }
-    .pill { white-space: nowrap; }
+    .header-right, .period-control, .pill-group { width: 100%; max-width: none; }
   }
 
   /* ── CSV BAR ── */
@@ -368,11 +386,21 @@
   }
 
   /* ── CONTROLES RESPONSIVOS ── */
-  .week-select {
-    width: auto; max-width: 100%; padding: 7px 10px; border-radius: 7px; border: 0;
-    background: var(--ocean); color: #E6F1FB; font: 12px 'DM Sans', sans-serif;
-    outline: none; cursor: pointer;
+  .week-select-wrap {
+    position: relative; width: 100%; display: flex; align-items: center;
   }
+  .week-select-wrap::after {
+    content: '⌄'; position: absolute; right: 13px; top: 50%; transform: translateY(-56%);
+    color: rgba(248,251,255,0.92); font-size: 17px; line-height: 1; pointer-events: none;
+  }
+  .week-select {
+    width: 100%; max-width: 100%; padding: 10px 38px 10px 12px; border-radius: 9px;
+    border: 1px solid rgba(255,255,255,0.16);
+    background: rgba(27,92,155,0.78); color: #F8FBFF; font: 600 13px 'DM Sans', sans-serif;
+    outline: none; cursor: pointer; appearance: none; -webkit-appearance: none;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .week-select:focus { border-color: rgba(183,213,242,0.55); }
   .sync-bar {
     display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; align-items: center; gap: 10px;
     padding: 8px 14px; background: var(--card2); border: 1px solid var(--border); border-radius: 12px;
@@ -410,7 +438,8 @@
     .brand-logo { width: 46px; height: 46px; flex-basis: 46px; border-radius: 12px; }
     .brand-name { font-size: 25px; }
     .brand-tagline { font-size: 9px; }
-    .header-right, .pill-group { width: 100%; }
+    .header-right, .period-control, .pill-group { width: 100%; max-width: none; }
+    .period-caption { font-size: 9px; margin-top: 1px; }
     .pill-group { overflow: visible; }
     .week-select { width: 100%; }
     .csv-section { margin-bottom: 14px; }
@@ -477,7 +506,16 @@
       </div>
     </div>
     <div class="header-right">
-      <div class="pill-group" id="week-pills"></div>
+      <div class="period-control">
+        <div class="period-caption">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M7 3v4M17 3v4M3 10h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <span>Período analisado</span>
+        </div>
+        <div class="pill-group" id="week-pills"></div>
+      </div>
     </div>
   </header>
 
@@ -756,16 +794,18 @@ function renderWeekSelector() {
   const holder = document.getElementById('week-pills');
   const ids = Object.keys(WEEKS).sort(weekSort);
   if (!ids.length) {
-    holder.innerHTML = '<span style="font-size:11px;color:var(--text3);padding:6px 8px">Sem semanas sincronizadas</span>';
+    holder.innerHTML = '<span style="font-size:11px;color:var(--text3);padding:7px 9px">Sem períodos sincronizados</span>';
     return;
   }
-  const compactSelector = ids.length > 6 || (window.matchMedia && window.matchMedia('(max-width: 760px)').matches);
-  if (compactSelector) {
-    holder.innerHTML = `<select class="week-select" aria-label="Selecionar semana" onchange="setWeek(this.value)">
+
+  const isMobile = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
+  if (isMobile) {
+    holder.innerHTML = `<div class="week-select-wrap"><select class="week-select" aria-label="Selecionar período analisado" onchange="setWeek(this.value)">
       ${ids.map(id => `<option value="${escapeHTML(id)}" ${id === curWeek ? 'selected' : ''}>${escapeHTML(WEEKS[id].label)}</option>`).join('')}
-    </select>`;
+    </select></div>`;
   } else {
-    holder.innerHTML = ids.map(id => `<button class="pill ${id === curWeek ? 'active' : ''}" onclick="setWeek('${escapeHTML(id)}')">${escapeHTML(WEEKS[id].label)}</button>`).join('');
+    holder.innerHTML = ids.map(id => `<button class="pill ${id === curWeek ? 'active' : ''}" type="button" aria-pressed="${id === curWeek ? 'true' : 'false'}" onclick="setWeek('${escapeHTML(id)}')">${escapeHTML(WEEKS[id].label)}</button>`).join('');
+    requestAnimationFrame(() => holder.querySelector('.pill.active')?.scrollIntoView({behavior:'smooth', block:'nearest', inline:'nearest'}));
   }
 }
 
