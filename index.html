@@ -643,7 +643,7 @@
       <li><code>OBJECOES</code> — objeções registradas</li>
       <li><code>PARAMETROS_DIAGNOSTICO</code> — taxas mínima/ideal de cada etapa</li>
     </ol>
-    <p>A URL da aba <code>LANÇAMENTOS</code> já está configurada neste arquivo. Não crie nem publique uma aba <code>DASHBOARD_DIARIO</code> adicional.</p>
+    <p>A aba <code>LANÇAMENTOS</code> usa o gid <code>889640336</code> e já está configurada neste arquivo. Não crie nem publique uma aba <code>DASHBOARD_DIARIO</code> adicional.</p>
     <button class="btn btn-ghost modal-close" onclick="closeHelp()">Fechar</button>
   </div>
 </div>
@@ -654,9 +654,9 @@
 // ============================================================================
 
 // ── COLE AQUI AS 4 URLs PUBLICADAS COMO CSV (veja "Ver instruções" no menu) ──
-const LANCAMENTOS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmp7XPUIaGXBj8OzytBlUmBybmRftoG2J2Iwfpn1ShSv5XBSkncbdpNeMDB_5-DuSRIgTQ-DXz0Rp2/pub?output=csv&sheet=LAN%C3%87AMENTOS";
-const METRICAS_CSV_URL   = "";
-const OBJECTIONS_CSV_URL = "";
+const LANCAMENTOS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmp7XPUIaGXBj8OzytBlUmBybmRftoG2J2Iwfpn1ShSv5XBSkncbdpNeMDB_5-DuSRIgTQ-DXz0Rp2/pub?gid=889640336&single=true&output=csv";
+const METRICAS_CSV_URL   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmp7XPUIaGXBj8OzytBlUmBybmRftoG2J2Iwfpn1ShSv5XBSkncbdpNeMDB_5-DuSRIgTQ-DXz0Rp2/pub?gid=548398166&single=true&output=csv";
+const OBJECTIONS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmp7XPUIaGXBj8OzytBlUmBybmRftoG2J2Iwfpn1ShSv5XBSkncbdpNeMDB_5-DuSRIgTQ-DXz0Rp2/pub?gid=71232552&single=true&output=csv";
 const PARAMETROS_CSV_URL = "";
 
 // Faixas padrão (usadas até você configurar a aba PARAMETROS_DIAGNOSTICO)
@@ -1439,6 +1439,7 @@ async function loadCSVAuto(){
   } catch (err) {
     dot.className = 'sync-dot err';
     msg.textContent = 'Erro ao sincronizar: ' + err.message;
+    console.error('Falha na sincronização do dashboard:', err);
   }
 }
 
