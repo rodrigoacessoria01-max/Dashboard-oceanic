@@ -299,7 +299,7 @@
   .funnel-label{font-size:10.5px;color:var(--ink-soft);font-weight:600;text-align:center;line-height:1.25;}
   .funnel-rate{font-size:9.5px;color:var(--ink-faint);font-weight:700;}
 
-  /* ── consistência (dias prospectados / dias de trabalho) ── */
+  /* ── consistência (dias prospectados no(s) mês(es) do período) ── */
   .consistency-wrap{margin-top:18px;padding-top:15px;border-top:1px solid var(--line-soft);}
   .consistency-block + .consistency-block{margin-top:16px;}
   .consistency-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px;}
@@ -598,7 +598,7 @@
         <div class="consistency-wrap" id="consistency-wrap">
           <div class="consistency-block">
             <div class="consistency-head">
-              <div class="consistency-title">Dias prospectados</div>
+              <div class="consistency-title" id="prospected-title">Dias prospectados</div>
               <div class="consistency-meta" id="prospected-meta">0 dias</div>
             </div>
             <div class="heatmap-scroll">
@@ -607,20 +607,6 @@
             <div class="consistency-legend">
               <span>Não prospectado</span><span class="sw"></span>
               <span class="sw fill"></span><span>Prospectado</span>
-            </div>
-          </div>
-
-          <div class="consistency-block">
-            <div class="consistency-head">
-              <div class="consistency-title">Dias de trabalho</div>
-              <div class="consistency-meta" id="work-meta">0 dias</div>
-            </div>
-            <div class="heatmap-scroll">
-              <div class="heatmap-main" id="work-heatmap"></div>
-            </div>
-            <div class="consistency-legend">
-              <span>Sem registro</span><span class="sw"></span>
-              <span class="sw work"></span><span>Dia trabalhado</span>
             </div>
           </div>
         </div>
@@ -761,7 +747,7 @@ const DEFAULT_PARAMS = {
 
 const STAGE_LABELS = {
   lig:'Ligações', con:'Conexões', dec:'C. c/ Decisor',
-  rmk:'R. Marcadas', rre:'R. Realizadas', ven:'Vendas'
+  rmk:'Reuniões marcadas', rre:'Reuniões realizadas', ven:'Vendas'
 };
 const MONTHS = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 const DOW = ['S','T','Q','Q','S','S','D'];
@@ -1118,10 +1104,10 @@ function renderKPIs(t, prevT, metas, hasGoals, rCL, rCD, rMM, rMR, rVR){
     { key:'dec', lbl:'C. c/ Decisor', val:t.dec,
       status:getLevel(rCD, PARAMS.dec.min, PARAMS.dec.ideal), progress: rCD/PARAMS.dec.ideal,
       sub: `${pct(rCD)} de conversão` },
-    { key:'rmk', lbl:'R. Marcadas', val:t.rmk,
+    { key:'rmk', lbl:'Reuniões marcadas', val:t.rmk,
       status:getLevel(rMM, PARAMS.rmk.min, PARAMS.rmk.ideal), progress: rMM/PARAMS.rmk.ideal,
       sub: `${pct(rMM)} de conversão` },
-    { key:'rre', lbl:'R. Realizadas', val:t.rre,
+    { key:'rre', lbl:'Reuniões realizadas', val:t.rre,
       status:getLevel(rMR, PARAMS.rre.min, PARAMS.rre.ideal), progress: rMR/PARAMS.rre.ideal,
       sub: `${pct(rMR)} de comparecimento` },
     { key:'ven', lbl:'Vendas', val:t.ven,
@@ -1161,8 +1147,8 @@ function renderFunnel(t, rCL, rCD, rMM, rMR, rVR){
     { key:'lig', lbl:'Ligações', val:t.lig, cls:'top', rate:null },
     { key:'con', lbl:'Conexões', val:t.con, cls:'filled', rate:pct(rCL) },
     { key:'dec', lbl:'C/ Decisor', val:t.dec, cls:'filled', rate:pct(rCD) },
-    { key:'rmk', lbl:'Marcadas', val:t.rmk, cls:'filled', rate:pct(rMM) },
-    { key:'rre', lbl:'Realizadas', val:t.rre, cls:'filled', rate:pct(rMR) },
+    { key:'rmk', lbl:'Reuniões marcadas', val:t.rmk, cls:'filled', rate:pct(rMM) },
+    { key:'rre', lbl:'Reuniões realizadas', val:t.rre, cls:'filled', rate:pct(rMR) },
     { key:'ven', lbl:'Vendas', val:t.ven, cls:'filled', rate:pct(rVR) }
   ];
   document.getElementById('funnel').innerHTML = steps.map(s => {
@@ -1273,12 +1259,23 @@ function buildHeatmap(targetId, start, end, mode){
 
 function renderConsistency(){
   if (!selStart || !selEnd) return;
-  const p = buildHeatmap('prospected-heatmap', selStart, selEnd, 'prospected') || {activeCount:0, totalDays:0};
-  const w = buildHeatmap('work-heatmap', selStart, selEnd, 'work') || {daysWithRecord:0, totalDays:0};
+
+  // A consistência acompanha o(s) mês(es) que contêm o período selecionado.
+  // Ex.: seleção de 16–19/09 => mostramos o mês inteiro de setembro (01–30).
+  const monthStart = new Date(selStart.getFullYear(), selStart.getMonth(), 1);
+  const monthEnd = new Date(selEnd.getFullYear(), selEnd.getMonth() + 1, 0);
+
+  const p = buildHeatmap('prospected-heatmap', monthStart, monthEnd, 'prospected') || {activeCount:0, totalDays:0};
   const pMeta = document.getElementById('prospected-meta');
-  const wMeta = document.getElementById('work-meta');
+  const pTitle = document.getElementById('prospected-title');
+
   if (pMeta) pMeta.textContent = `${p.activeCount} de ${p.totalDays} dias`;
-  if (wMeta) wMeta.textContent = `${w.daysWithRecord} de ${w.totalDays} dias`;
+  if (pTitle) {
+    const sameMonth = selStart.getFullYear() === selEnd.getFullYear() && selStart.getMonth() === selEnd.getMonth();
+    const startLabel = `${MONTHS[selStart.getMonth()]} de ${selStart.getFullYear()}`;
+    const endLabel = `${MONTHS[selEnd.getMonth()]} de ${selEnd.getFullYear()}`;
+    pTitle.textContent = sameMonth ? `Dias prospectados — ${startLabel}` : `Dias prospectados — ${startLabel} até ${endLabel}`;
+  }
 }
 
 function renderGauge(t, metas, hasGoals){
@@ -1318,7 +1315,7 @@ function renderRadar(t, metas, hasGoals, rCL, rCD, rMM, rMR, rVR){
   radarChart = new Chart(canvas, {
     type:'radar',
     data:{
-      labels:['Volume ligações','Conexões','Decisor','R. Marcadas','R. Realizadas','Vendas'],
+      labels:['Volume ligações','Conexões','Decisor','Reuniões marcadas','Reuniões realizadas','Vendas'],
       datasets:[
         { label:'Ideal', data:[100,100,100,100,100,100], borderColor:'rgba(199,214,228,0.9)', backgroundColor:'rgba(199,214,228,0.08)', borderWidth:1.5, borderDash:[4,4], pointRadius:0 },
         { label:'Performance real', data:scores, borderColor:'#1B5C9B', backgroundColor:'rgba(27,92,155,0.14)', borderWidth:2.5, pointRadius:4, pointBackgroundColor:'#1B5C9B' }
