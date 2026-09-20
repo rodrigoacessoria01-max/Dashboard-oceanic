@@ -423,7 +423,12 @@
   <aside class="sidebar">
     <div class="side-brand">
       <div class="side-logo">
-        <img alt="Oceanic" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAA6wklEQVR42u19eZhcV3Xn71a3dtnansYtWZI3vI09YMdmC5ux8QIz9pcBYobBfCyBAQYwOJPJEHtmssgOJmPvhoAxCAgxuxljExsvhCAvkm1JVrfW7pZa3ep9r+p6+/2m6r3W6+p6VfWqu1uSm/7O93XL3f1e3XvvOfeec845Q34AACAgIBAQEBAICAgEBAQEBAICAgIBAQEBgYCAQEBAICAgEBAQEAgICAQEBAQCAgIBAQGBgIBAQEAgICAQEBAQCAgIBAQEBAICAgEBgYCAQEBAICAgIBAQCAgIBAICAgEBAQGBgIBAQCAgIBAQEAgICAgEBAQCAgIBAQGBgIBAQCAgIBAQEAgICAQEBAICAgEBgYCAQEBAICAgIBAQCAgIBAQEAgICAYGAgEBAQCAgIBAQCAgIBAQEAgICAQGBgIBAQCAgIBAQCAgIBAQEAgICAQGBgIBAQCAgIBAQCAgIBAQEAgICAYGAgEBAQCAgIBAQCAgIBAQEAgICAYGAgEBAQCAgIBAQEAgICAQEAgICAQGBgIBAQCAgIBAQEAgICAQEBAICAgEBgYCAQEBAICAgEBAQCAgIBAQEBAQCAgIBgYCAQEBAICAgEBAQCAgIBAQEAgICAQGBgIBAQEAgICAQEAgICAQEBAICAgGBgIBAQEAgICAQEAgICAgEBAQCAgIBAYGAgEBAQCAgIBAQEAgICAQEAgKCJv8HXKjbAGxlqLYAAAAASUVORK5CYII=">
+        <svg viewBox="0 0 40 40" aria-hidden="true" style="width:100%;height:100%;display:block;">
+          <circle cx="20" cy="20" r="19" fill="none" stroke="#fff" stroke-width="1.6" opacity="0.55"/>
+          <path d="M4 22c4-5 8 5 12 0s8-5 12 0s7 4 8 1" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M4 27c4-5 8 5 12 0s8-5 12 0s7 4 8 1" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity="0.55"/>
+          <circle cx="20" cy="13" r="3.4" fill="#fff"/>
+        </svg>
       </div>
       <div class="side-brand-text">
         <div class="side-brand-name">oceanic</div>
@@ -645,6 +650,824 @@
 </div>
 
 <script>
+// ============================================================================
+// OCEANIC — Navegador de Prospecção | lógica do dashboard
+// ============================================================================
+
+// ── COLE AQUI AS 4 URLs PUBLICADAS COMO CSV (veja "Ver instruções" no menu) ──
+const DIARIO_CSV_URL     = "";
+const METRICAS_CSV_URL   = "";
+const OBJECTIONS_CSV_URL = "";
+const PARAMETROS_CSV_URL = "";
+
+// Faixas padrão (usadas até você configurar a aba PARAMETROS_DIAGNOSTICO)
+const DEFAULT_PARAMS = {
+  lig: { min:0.70, ideal:1.00, label:'Cobertura da meta de ligações' },
+  con: { min:0.20, ideal:0.30, label:'Ligações → Conexão' },
+  dec: { min:0.20, ideal:0.50, label:'Conexão → Decisor' },
+  rmk: { min:0.05, ideal:0.10, label:'Decisor → Reunião marcada' },
+  rre: { min:0.30, ideal:0.50, label:'Marcada → Realizada' },
+  ven: { min:0.10, ideal:0.15, label:'Realizada → Venda' }
+};
+
+const STAGE_LABELS = {
+  lig:'Ligações', con:'Conexões', dec:'C. c/ Decisor',
+  rmk:'R. Marcadas', rre:'R. Realizadas', ven:'Vendas'
+};
+const MONTHS = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+const DOW = ['S','T','Q','Q','S','S','D'];
+
+// ── ESTADO ──────────────────────────────────────────────────────────────────
+let DAILY = [];        // [{date, lig,con,dec,rmk,rre,ven,fuPrev,fuDone,fuDec,nicho,cidade}]
+let WEEK_GOALS = [];   // [{start,end,label,metas:{...}}]
+let OBJECTIONS = [];   // [{date, text, qty}]
+let PARAMS = JSON.parse(JSON.stringify(DEFAULT_PARAMS));
+
+let selStart = null, selEnd = null;     // período aplicado
+let pendStart = null, pendEnd = null;   // seleção em andamento no calendário
+let calView = new Date();               // mês exibido no calendário
+let activePreset = null;
+let prevTotals = zeroTotals();
+let radarChart = null;
+let refreshTimer = null;
+
+// ── UTILITÁRIOS DE DATA ─────────────────────────────────────────────────────
+function stripTime(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+function addDays(d, n){ const r = new Date(d); r.setDate(r.getDate()+n); return r; }
+function dateKey(d){
+  const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+function sameDay(a,b){ return a && b && dateKey(a) === dateKey(b); }
+function fmtShort(d){ return d ? `${String(d.getDate()).padStart(2,'0')} ${MONTHS[d.getMonth()].slice(0,3)}` : ''; }
+function fmtDayMonth(d){ return `${d.getDate()} de ${MONTHS[d.getMonth()]}`; }
+function daysBetweenInclusive(a,b){ return Math.round((stripTime(b)-stripTime(a))/86400000) + 1; }
+
+function parseFlexibleDate(raw){
+  const s = String(raw ?? '').trim();
+  if (!s) return null;
+  let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (m) return new Date(+m[1], +m[2]-1, +m[3]);
+  m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (m) {
+    let d1 = +m[1], d2 = +m[2], y = +m[3];
+    // Google Sheets normalmente publica no formato mês/dia/ano (EUA)
+    if (d1 > 12 && d2 <= 12) return new Date(y, d2-1, d1);      // veio dia/mês
+    if (d2 > 12 && d1 <= 12) return new Date(y, d1-1, d2);      // mês/dia (padrão)
+    return new Date(y, d1-1, d2);
+  }
+  const d = new Date(s);
+  return isNaN(d) ? null : stripTime(d);
+}
+
+// ── UTILITÁRIOS GERAIS ───────────────────────────────────────────────────────
+function pct(v){ return Math.round((Number(v)||0)*100) + '%'; }
+function clamp01(v){ return Math.max(0, Math.min(1, Number(v)||0)); }
+function zeroTotals(){ return { lig:0,con:0,dec:0,rmk:0,rre:0,ven:0, fuPrev:0,fuDone:0,fuDec:0 }; }
+function escapeHTML(v){
+  return String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
+}
+function normalKey(v){
+  return String(v ?? '').trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+}
+function numeric(v){
+  if (typeof v === 'number') return Number.isFinite(v) ? v : 0;
+  let s = String(v ?? '').trim().replace(/\s/g,'');
+  if (!s) return 0;
+  if (s.includes(',') && s.includes('.')) {
+    s = s.lastIndexOf(',') > s.lastIndexOf('.') ? s.replace(/\./g,'').replace(',', '.') : s.replace(/,/g,'');
+  } else if (s.includes(',')) {
+    s = s.replace(',', '.');
+  }
+  const n = Number(s.replace(/[^0-9.-]/g,''));
+  return Number.isFinite(n) ? n : 0;
+}
+function field(row, ...names){
+  for (const n of names) {
+    const v = row[normalKey(n)];
+    if (v !== undefined && v !== null && String(v).trim() !== '') return v;
+  }
+  return '';
+}
+function configured(url){ return /^https:\/\//i.test(String(url||'')); }
+
+function parseCSV(text){
+  const delimiter = (text.split('\n')[0].split(';').length > text.split('\n')[0].split(',').length) ? ';' : ',';
+  const rows = [];
+  let row = [], cell = '', quoted = false;
+  for (let i=0;i<text.length;i++){
+    const ch = text[i], next = text[i+1];
+    if (ch === '"') {
+      if (quoted && next === '"') { cell += '"'; i++; }
+      else quoted = !quoted;
+    } else if (ch === delimiter && !quoted) {
+      row.push(cell.trim()); cell = '';
+    } else if ((ch === '\n' || ch === '\r') && !quoted) {
+      if (ch === '\r' && next === '\n') i++;
+      row.push(cell.trim());
+      if (row.some(v => v !== '')) rows.push(row);
+      row = []; cell = '';
+    } else {
+      cell += ch;
+    }
+  }
+  row.push(cell.trim());
+  if (row.some(v => v !== '')) rows.push(row);
+  if (!rows.length) return [];
+  const headerIdx = rows.findIndex(r => r.some(v => normalKey(v).length > 0 && /^(data|semana_id|etapa)/.test(normalKey(v))));
+  const idx = headerIdx >= 0 ? headerIdx : 0;
+  const headers = rows[idx].map(normalKey);
+  return rows.slice(idx+1).map(vals => Object.fromEntries(headers.map((h,i) => [h, vals[i] ?? ''])));
+}
+
+async function fetchRows(url){
+  const sep = url.includes('?') ? '&' : '?';
+  const res = await fetch(url + sep + 't=' + Date.now(), { cache:'no-store' });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return parseCSV(await res.text());
+}
+
+// ── INGESTÃO ─────────────────────────────────────────────────────────────────
+function ingestDaily(rows){
+  const list = [];
+  rows.forEach(row => {
+    const raw = field(row, 'data_iso', 'data');
+    const d = parseFlexibleDate(raw);
+    if (!d) return;
+    list.push({
+      date: d,
+      lig: numeric(field(row,'ligacoes')),
+      con: numeric(field(row,'conexoes')),
+      dec: numeric(field(row,'decisores')),
+      rmk: numeric(field(row,'reunioes_marcadas')),
+      rre: numeric(field(row,'reunioes_realizadas')),
+      ven: numeric(field(row,'vendas')),
+      fuPrev: numeric(field(row,'followups_previstos','follow_ups_previstos')),
+      fuDone: numeric(field(row,'followups_realizados','follow_ups_realizados')),
+      fuDec: numeric(field(row,'decisores_via_followup','decisores_via_follow_up')),
+      nicho: String(field(row,'nicho')||''),
+      cidade: String(field(row,'cidade_regiao','cidade/regiao','cidade')||'')
+    });
+  });
+  list.sort((a,b) => a.date - b.date);
+  DAILY = list;
+}
+
+function ingestGoals(rows){
+  const list = [];
+  rows.forEach(row => {
+    const startRaw = field(row,'inicio_iso','inicio','semana_id_iso','semana_id');
+    const start = parseFlexibleDate(startRaw);
+    if (!start) return;
+    const endRaw = field(row,'fim_iso','fim');
+    const end = parseFlexibleDate(endRaw) || addDays(start,4);
+    list.push({
+      start, end,
+      label: String(field(row,'semana_label')||''),
+      metas: {
+        lig: numeric(field(row,'meta_ligacoes')),
+        con: numeric(field(row,'meta_conexoes')),
+        dec: numeric(field(row,'meta_decisores')),
+        rmk: numeric(field(row,'meta_reunioes_marcadas')),
+        rre: numeric(field(row,'meta_reunioes_realizadas')),
+        ven: numeric(field(row,'meta_vendas'))
+      }
+    });
+  });
+  list.sort((a,b) => a.start - b.start);
+  WEEK_GOALS = list;
+}
+
+function ingestObjections(rows){
+  const list = [];
+  rows.forEach(row => {
+    const d = parseFlexibleDate(field(row,'data_iso','data'));
+    const text = String(field(row,'objecao','objecoes','objeção','objeções')||'').trim();
+    const qty = numeric(field(row,'quantidade')) || 1;
+    if (!d || !text) return;
+    list.push({ date:d, text, qty });
+  });
+  OBJECTIONS = list;
+}
+
+function ingestParams(rows){
+  const next = JSON.parse(JSON.stringify(DEFAULT_PARAMS));
+  rows.forEach(row => {
+    const key = normalKey(field(row,'etapa'));
+    if (!next[key]) return;
+    const mn = numeric(field(row,'meta_minima'));
+    const id = numeric(field(row,'meta_ideal'));
+    const label = String(field(row,'etapa_label')||'').trim();
+    if (mn > 0 || id > 0) {
+      next[key] = {
+        min: mn > 0 ? (mn > 1 ? mn/100 : mn) : next[key].min,
+        ideal: id > 0 ? (id > 1 ? id/100 : id) : next[key].ideal,
+        label: label || next[key].label
+      };
+    }
+  });
+  PARAMS = next;
+}
+
+// ── AGREGAÇÃO DO PERÍODO SELECIONADO ────────────────────────────────────────
+function totalsForRange(start, end){
+  const t = zeroTotals();
+  DAILY.forEach(d => {
+    if (d.date >= start && d.date <= end) {
+      t.lig += d.lig; t.con += d.con; t.dec += d.dec;
+      t.rmk += d.rmk; t.rre += d.rre; t.ven += d.ven;
+      t.fuPrev += d.fuPrev; t.fuDone += d.fuDone; t.fuDec += d.fuDec;
+    }
+  });
+  return t;
+}
+
+function goalsForRange(start, end){
+  const metas = { lig:0, con:0, dec:0, rmk:0, rre:0, ven:0 };
+  let hasAny = false;
+  WEEK_GOALS.forEach(w => {
+    const overlapStart = w.start > start ? w.start : start;
+    const overlapEnd = w.end < end ? w.end : end;
+    if (overlapStart > overlapEnd) return;
+    const overlapDays = daysBetweenInclusive(overlapStart, overlapEnd);
+    const weekDays = daysBetweenInclusive(w.start, w.end) || 1;
+    const frac = overlapDays / weekDays;
+    hasAny = true;
+    Object.keys(metas).forEach(k => { metas[k] += (w.metas[k] || 0) * frac; });
+  });
+  Object.keys(metas).forEach(k => { metas[k] = Math.round(metas[k]); });
+  return { metas, hasAny };
+}
+
+function objectionsForRange(start, end){
+  const map = {};
+  OBJECTIONS.forEach(o => {
+    if (o.date >= start && o.date <= end) map[o.text] = (map[o.text]||0) + o.qty;
+  });
+  return map;
+}
+
+function recentLogsForRange(start, end, limit=8){
+  return DAILY.filter(d => d.date >= start && d.date <= end)
+    .slice()
+    .sort((a,b) => b.date - a.date)
+    .slice(0, limit);
+}
+
+function previousEquivalentRange(start, end){
+  const len = daysBetweenInclusive(start, end);
+  const prevEnd = addDays(start, -1);
+  const prevStart = addDays(prevEnd, -(len-1));
+  return { start: prevStart, end: prevEnd };
+}
+
+// ── STATUS HELPERS ───────────────────────────────────────────────────────────
+function getLevel(rate, min, ideal){ return rate >= ideal ? 'ok' : rate >= min ? 'warn' : 'bad'; }
+function levelIcon(l){ return l==='ok' ? '🟢' : l==='warn' ? '🟡' : '🔴'; }
+function getFollowupStatus(rate, hasBase){
+  if (!hasBase) return { cls:'neutral', label:'Sem base', icon:'⚪' };
+  if (rate >= 0.80) return { cls:'ok', label:'Bom', icon:'🟢' };
+  if (rate >= 0.50) return { cls:'warn', label:'Médio', icon:'🟡' };
+  return { cls:'bad', label:'Baixo', icon:'🔴' };
+}
+
+// ── ANIMAÇÃO DE CONTADORES ───────────────────────────────────────────────────
+function animateCounter(el, from, to, duration=820){
+  if (!el) return;
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced || from === to) { el.textContent = Number(to||0).toLocaleString('pt-BR'); return; }
+  const t0 = performance.now();
+  const ease = p => 1 - Math.pow(1-p, 4);
+  function tick(now){
+    const p = Math.min(1, (now-t0)/duration);
+    el.textContent = Math.round(from + (to-from)*ease(p)).toLocaleString('pt-BR');
+    if (p < 1) requestAnimationFrame(tick);
+    else el.textContent = Number(to||0).toLocaleString('pt-BR');
+  }
+  requestAnimationFrame(tick);
+}
+
+// ── DIAL (anel de círculos, reaproveitado nos KPIs e nos retornos) ─────────
+function buildDial(valueHtml, progress, statusCls, extraClass=''){
+  const totalTicks = 18;
+  const active = Math.round(clamp01(progress) * totalTicks);
+  const size = 120, center = size/2, rOuter = 49, rInner = 39;
+  const step = 360/totalTicks;
+  let ticks = '';
+  for (let i=0;i<totalTicks;i++){
+    const a = (i*step) * Math.PI/180;
+    const x1 = center + Math.cos(a)*rInner, y1 = center + Math.sin(a)*rInner;
+    const x2 = center + Math.cos(a)*rOuter, y2 = center + Math.sin(a)*rOuter;
+    const isActive = i < active;
+    ticks += `<line x1="${x1.toFixed(2)}" y1="${y1.toFixed(2)}" x2="${x2.toFixed(2)}" y2="${y2.toFixed(2)}" class="dial-tick${isActive?' active status-'+statusCls:''}"/>`;
+  }
+  return `<div class="dial ${extraClass}">
+    <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="dial-bg" cx="60" cy="60" r="57"/>${ticks}</svg>
+    <div class="dial-content">${valueHtml}</div>
+  </div>`;
+}
+
+// ============================================================================
+// RENDER
+// ============================================================================
+function render(){
+  if (!selStart || !selEnd) return;
+  const t = totalsForRange(selStart, selEnd);
+  const { metas, hasAny: hasGoals } = goalsForRange(selStart, selEnd);
+  const prevRange = previousEquivalentRange(selStart, selEnd);
+  const prevT = totalsForRange(prevRange.start, prevRange.end);
+
+  const rCL = t.lig > 0 ? t.con/t.lig : 0;
+  const rCD = t.con > 0 ? t.dec/t.con : 0;
+  const rMM = t.dec > 0 ? t.rmk/t.dec : 0;
+  const rMR = t.rmk > 0 ? t.rre/t.rmk : 0;
+  const rVR = t.rre > 0 ? t.ven/t.rre : 0;
+  const rFU = t.fuPrev > 0 ? t.fuDone/t.fuPrev : 0;
+  const rFUD = t.fuDone > 0 ? t.fuDec/t.fuDone : 0;
+
+  renderRangeLabel();
+  renderKPIs(t, prevT, metas, hasGoals, rCL, rCD, rMM, rMR, rVR);
+  renderFunnel(t, rCL, rCD, rMM, rMR, rVR);
+  renderGauge(t, metas, hasGoals);
+  renderRadar(t, metas, hasGoals, rCL, rCD, rMM, rMR, rVR);
+  renderDiagnostics(t, metas, hasGoals, rCL, rCD, rMM, rMR, rVR, rFU);
+  renderFollowups(t, rFU, rFUD);
+  renderLogs();
+  renderObjections();
+
+  document.querySelectorAll('[data-counter]').forEach(el => {
+    const key = el.dataset.counter;
+    animateCounter(el, Number(prevTotals[key]||0), Number(t[key]||0));
+  });
+  document.querySelectorAll('.kpi, .followup-metric').forEach(card => {
+    card.classList.remove('pop'); void card.offsetWidth; card.classList.add('pop');
+  });
+  prevTotals = { ...t };
+}
+
+function renderRangeLabel(){
+  const label = document.getElementById('range-label');
+  if (!label) return;
+  if (activePreset) { label.textContent = activePreset; return; }
+  if (sameDay(selStart, selEnd)) label.textContent = fmtShort(selStart);
+  else label.textContent = `${fmtShort(selStart)} – ${fmtShort(selEnd)}`;
+}
+
+function renderKPIs(t, prevT, metas, hasGoals, rCL, rCD, rMM, rMR, rVR){
+  const pLig = metas.lig > 0 ? t.lig/metas.lig : null;
+  const cards = [
+    { key:'lig', lbl:'Ligações', val:t.lig, hero:true,
+      status: pLig===null?'neutral':getLevel(pLig, PARAMS.lig.min, PARAMS.lig.ideal),
+      progress: pLig===null?0:pLig,
+      sub: hasGoals ? `${t.lig}/${metas.lig} da meta` : 'sem meta no período' },
+    { key:'con', lbl:'Conexões', val:t.con,
+      status:getLevel(rCL, PARAMS.con.min, PARAMS.con.ideal), progress: rCL/PARAMS.con.ideal,
+      sub: `${pct(rCL)} de conversão` },
+    { key:'dec', lbl:'C. c/ Decisor', val:t.dec,
+      status:getLevel(rCD, PARAMS.dec.min, PARAMS.dec.ideal), progress: rCD/PARAMS.dec.ideal,
+      sub: `${pct(rCD)} de conversão` },
+    { key:'rmk', lbl:'R. Marcadas', val:t.rmk,
+      status:getLevel(rMM, PARAMS.rmk.min, PARAMS.rmk.ideal), progress: rMM/PARAMS.rmk.ideal,
+      sub: `${pct(rMM)} de conversão` },
+    { key:'rre', lbl:'R. Realizadas', val:t.rre,
+      status:getLevel(rMR, PARAMS.rre.min, PARAMS.rre.ideal), progress: rMR/PARAMS.rre.ideal,
+      sub: `${pct(rMR)} de comparecimento` },
+    { key:'ven', lbl:'Vendas', val:t.ven,
+      status:getLevel(rVR, PARAMS.ven.min, PARAMS.ven.ideal), progress: rVR/PARAMS.ven.ideal,
+      sub: `${pct(rVR)} de fechamento` },
+    { key:'fuDone', lbl:'Follow-ups feitos', val:t.fuDone,
+      status: getFollowupStatus(t.fuPrev>0 ? t.fuDone/t.fuPrev : 0, t.fuPrev>0).cls,
+      progress: t.fuPrev>0 ? t.fuDone/t.fuPrev : 0,
+      sub: t.fuPrev>0 ? `${t.fuDone}/${t.fuPrev} previstos` : 'sem base no período' }
+  ];
+
+  document.getElementById('kpi-strip').innerHTML = cards.map(c => {
+    const trend = trendFor(c.key, t, prevT);
+    return `
+    <div class="kpi${c.hero?' hero':''}">
+      <span class="kpi-trend ${trend.cls}">${trend.arrow} ${trend.text}</span>
+      <div class="kpi-label">${c.lbl}</div>
+      ${buildDial(`<div class="kpi-val" data-counter="${c.key}">${c.val}</div>`, clamp01(c.progress), c.status)}
+      <div class="kpi-footer"><div class="kpi-sub">${c.sub}</div></div>
+    </div>`;
+  }).join('');
+}
+
+function trendFor(key, t, prevT){
+  const cur = Number(t[key]||0), prev = Number(prevT[key]||0);
+  if (prev <= 0 && cur <= 0) return { cls:'flat', arrow:'—', text:'sem histórico' };
+  if (prev <= 0) return { cls:'up', arrow:'↑', text:'novo no período' };
+  const diff = Math.round(((cur-prev)/prev)*100);
+  if (diff > 0) return { cls:'up', arrow:'↑', text:`${diff}% vs período anterior` };
+  if (diff < 0) return { cls:'down', arrow:'↓', text:`${Math.abs(diff)}% vs período anterior` };
+  return { cls:'flat', arrow:'→', text:'igual ao período anterior' };
+}
+
+function renderFunnel(t, rCL, rCD, rMM, rMR, rVR){
+  const base = t.lig || 1;
+  const steps = [
+    { key:'lig', lbl:'Ligações', val:t.lig, cls:'top', rate:null },
+    { key:'con', lbl:'Conexões', val:t.con, cls:'filled', rate:pct(rCL) },
+    { key:'dec', lbl:'C/ Decisor', val:t.dec, cls:'filled', rate:pct(rCD) },
+    { key:'rmk', lbl:'Marcadas', val:t.rmk, cls:'filled', rate:pct(rMM) },
+    { key:'rre', lbl:'Realizadas', val:t.rre, cls:'filled', rate:pct(rMR) },
+    { key:'ven', lbl:'Vendas', val:t.ven, cls:'filled', rate:pct(rVR) }
+  ];
+  document.getElementById('funnel').innerHTML = steps.map(s => {
+    const h = Math.max(6, Math.round((s.val/base)*150));
+    const isEmpty = base <= 0;
+    return `
+    <div class="funnel-col">
+      <div class="funnel-capsule-wrap">
+        ${s.val>0 ? `<div class="funnel-badge">${s.val.toLocaleString('pt-BR')}</div>`:''}
+        <div class="funnel-capsule ${isEmpty?'empty':s.cls}" style="height:${isEmpty?150:h}px"></div>
+      </div>
+      <div class="funnel-value">${s.val.toLocaleString('pt-BR')}</div>
+      <div class="funnel-label">${s.lbl}</div>
+      ${s.rate?`<div class="funnel-rate">${s.rate}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function renderGauge(t, metas, hasGoals){
+  const meta = metas.ven || 0;
+  const rate = meta > 0 ? clamp01(t.ven/meta) : (t.ven>0 ? 1 : 0);
+  const circumference = 2*Math.PI*85;
+  const offset = circumference * (1-rate);
+  const ring = document.getElementById('gauge-fg');
+  if (ring) {
+    ring.style.strokeDasharray = `${circumference}`;
+    ring.style.transition = 'stroke-dashoffset .9s cubic-bezier(.3,.8,.3,1)';
+    ring.style.strokeDashoffset = `${offset}`;
+    ring.style.stroke = rate>=1 ? 'var(--good)' : rate>=0.5 ? 'var(--brand)' : 'var(--warn)';
+  }
+  document.getElementById('gauge-pct').textContent = meta>0 ? pct(rate) : (t.ven>0 ? '—' : '0%');
+  document.getElementById('gauge-ven').textContent = t.ven.toLocaleString('pt-BR');
+  document.getElementById('gauge-rest').textContent = Math.max(0, meta - t.ven).toLocaleString('pt-BR');
+  const note = document.getElementById('gauge-note');
+  if (!hasGoals || meta<=0) note.textContent = 'Nenhuma meta de vendas cadastrada para este período (aba METAS_SEMANAIS).';
+  else if (t.ven >= meta) note.textContent = `Meta batida! ${t.ven} venda(s) contra uma meta de ${meta} no período.`;
+  else note.textContent = `Faltam ${meta - t.ven} venda(s) para bater a meta de ${meta} do período.`;
+}
+
+function renderRadar(t, metas, hasGoals, rCL, rCD, rMM, rMR, rVR){
+  const pLig = (hasGoals && metas.lig>0) ? clamp01(t.lig/metas.lig) : (t.lig>0 ? 1 : 0);
+  const scores = [
+    Math.round(pLig*100),
+    Math.round(clamp01(rCL/PARAMS.con.ideal)*100),
+    Math.round(clamp01(rCD/PARAMS.dec.ideal)*100),
+    Math.round(clamp01(rMM/PARAMS.rmk.ideal)*100),
+    Math.round(clamp01(rMR/PARAMS.rre.ideal)*100),
+    Math.round(clamp01(rVR/PARAMS.ven.ideal)*100)
+  ];
+  const canvas = document.getElementById('radarC');
+  if (!canvas || typeof Chart === 'undefined') return;
+  if (radarChart) radarChart.destroy();
+  radarChart = new Chart(canvas, {
+    type:'radar',
+    data:{
+      labels:['Volume ligações','Conexões','Decisor','R. Marcadas','R. Realizadas','Vendas'],
+      datasets:[
+        { label:'Ideal', data:[100,100,100,100,100,100], borderColor:'rgba(199,214,228,0.9)', backgroundColor:'rgba(199,214,228,0.08)', borderWidth:1.5, borderDash:[4,4], pointRadius:0 },
+        { label:'Performance real', data:scores, borderColor:'#1B5C9B', backgroundColor:'rgba(27,92,155,0.14)', borderWidth:2.5, pointRadius:4, pointBackgroundColor:'#1B5C9B' }
+      ]
+    },
+    options:{
+      animation:{ duration:800, easing:'easeOutQuart' },
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ display:false } },
+      scales:{ r:{ min:0, max:100, ticks:{ stepSize:25, color:'#93A7B9', font:{size:9}, backdropColor:'transparent' },
+        grid:{ color:'#E7EEF5' }, angleLines:{ color:'#E7EEF5' },
+        pointLabels:{ color:'#5B7185', font:{ size:10.5, family:"'Plus Jakarta Sans',sans-serif", weight:'600' } } } }
+    }
+  });
+}
+
+function diagnosisText(key, level, rate, t){
+  const messages = {
+    lig: { bad:'Volume de ligações abaixo do ideal. Bloqueie um horário fixo na agenda só para prospectar.',
+           warn:'Está perto da meta de ligações, mas ainda dá para aumentar o volume diário.',
+           ok:'Bom volume de ligações. Mantenha a constância.' },
+    con: { bad:'Poucas conexões por ligação. Revise a lista/ICP e teste horários entre 8h–9h e 17h–18h.',
+           warn:'Conexão mediana. Ajuste a lista ou os horários de contato para melhorar.',
+           ok:'Boa taxa de conexão. Mantenha a lista e os horários atuais.' },
+    dec: { bad:'Difícil chegar ao decisor. Use mais autoridade e urgência com quem atende, e peça o nome direto.',
+           warn:'Parte das conexões não chega ao decisor. Pratique o contorno de gatekeeper.',
+           ok:'Boa taxa de chegada ao decisor.' },
+    rmk: { bad:'Poucas reuniões marcadas mesmo falando com o decisor. Reforce a dor e o CTA no fim da ligação.',
+           warn:'Taxa de reuniões marcadas mediana. Teste um convite mais direto ("Você tem 20 min quinta às 10h?").',
+           ok:'Boa taxa de reuniões marcadas.' },
+    rre: { bad:'Muita reunião marcada não acontece. Confirme 24h antes e reforce o valor no lembrete.',
+           warn:'Parte das reuniões marcadas não comparece. Melhore a confirmação e o follow-up.',
+           ok:'Bom comparecimento às reuniões marcadas.' },
+    ven: { bad:'Poucas vendas nas reuniões realizadas. Revise diagnóstico da dor, proposta e próximo passo.',
+           warn:'Taxa de fechamento mediana. Reforce ancoragem de valor e CTA de fechamento.',
+           ok:'Boa taxa de fechamento nas reuniões.' }
+  };
+  return messages[key]?.[level] || '';
+}
+
+function renderDiagnostics(t, metas, hasGoals, rCL, rCD, rMM, rMR, rVR, rFU){
+  const pLig = (hasGoals && metas.lig>0) ? t.lig/metas.lig : (t.lig>0 ? 1 : 0);
+  const items = [
+    { key:'lig', rate:pLig },
+    { key:'con', rate:rCL },
+    { key:'dec', rate:rCD },
+    { key:'rmk', rate:rMM },
+    { key:'rre', rate:rMR },
+    { key:'ven', rate:rVR }
+  ];
+  if (t.fuPrev > 0) items.splice(2, 0, { key:'fup', rate:rFU, custom:{ min:0.5, ideal:0.8, label:'Execução de follow-ups' } });
+
+  document.getElementById('diag').innerHTML = items.map(it => {
+    const cfg = it.custom || PARAMS[it.key];
+    const level = getLevel(it.rate, cfg.min, cfg.ideal);
+    const cls = level==='bad'?'dc':level==='warn'?'dw':'dok';
+    const msg = it.key==='fup'
+      ? `Você executou ${t.fuDone} de ${t.fuPrev} retornos previstos (${pct(it.rate)}). ${level==='bad'?'Priorize zerar os retornos em aberto antes de mudar o roteiro.':level==='warn'?'Falta pouco para uma boa disciplina de follow-up.':'Disciplina de follow-up boa.'}`
+      : diagnosisText(it.key, level, it.rate, t);
+    const label = cfg.label || STAGE_LABELS[it.key];
+    return `<div class="diag-item ${cls}">
+      <div class="dt">${levelIcon(level)} ${label} — ${pct(it.rate)}</div>
+      <div class="dd">${msg}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderFollowups(t, rFU, rFUD){
+  const hasBase = t.fuPrev > 0;
+  const status = getFollowupStatus(rFU, hasBase);
+  const badge = document.getElementById('followup-badge');
+  badge.textContent = hasBase ? `${status.icon} ${status.label} — ${pct(rFU)}` : '⚪ Sem base no período';
+
+  const pending = Math.max(0, t.fuPrev - t.fuDone);
+  const metrics = [
+    { lbl:'Retornos previstos', val:t.fuPrev, sub:'base do período', key:'fuPrev', progress: hasBase?1:0, status:'neutral' },
+    { lbl:'Retornos feitos', val:t.fuDone, sub:'executados', key:'fuDone', progress: hasBase?rFU:0, status: status.cls },
+    { lbl:'Pendentes', val:pending, sub:'ainda em aberto', progress: hasBase? pending/Math.max(t.fuPrev,1):0,
+      status: pending===0?'ok':pending<=Math.max(1,Math.ceil(t.fuPrev*0.2))?'warn':'bad' },
+    { lbl:'Execução', val: hasBase?pct(rFU):'—', sub:'feitos ÷ previstos', progress: hasBase?rFU:0, status: status.cls, isText:true },
+    { lbl:'Decisores via retorno', val:t.fuDec, sub: t.fuDone>0?`${pct(rFUD)} dos retornos`:'sem retornos feitos', key:'fuDec',
+      progress: t.fuDone>0?rFUD:0, status: t.fuDone>0 ? (rFUD>=0.4?'ok':rFUD>=0.2?'warn':'bad') : 'neutral' }
+  ];
+  document.getElementById('followup-grid').innerHTML = metrics.map(m => `
+    <div class="followup-metric">
+      <div class="followup-label">${m.lbl}</div>
+      ${buildDial(`<div class="followup-val" ${m.key?`data-counter="${m.key}"`:''}>${m.val}</div>`, clamp01(m.progress), m.status, 'followup-dial')}
+      <div class="followup-sub">${m.sub}</div>
+    </div>`).join('');
+
+  let insight;
+  if (!hasBase) insight = 'Nenhum retorno previsto no período. Se você teve conexões que não chegaram ao decisor, considere sempre sair da ligação com um horário de retorno combinado.';
+  else if (status.cls==='bad') insight = `Execução baixa: ${t.fuDone} de ${t.fuPrev} retornos feitos. Antes de mudar o roteiro, cumpra os retornos combinados.`;
+  else if (status.cls==='warn') insight = `Execução mediana: ${t.fuDone} de ${t.fuPrev} retornos feitos. Ainda há oportunidades esfriando na mesa.`;
+  else insight = t.fuDone>0 ? `Boa execução: ${t.fuDone} de ${t.fuPrev} retornos feitos, com ${t.fuDec} decisor(es) alcançados por esse caminho.` : 'Boa execução, mas ainda sem decisores via retorno neste período.';
+  document.getElementById('followup-insight').textContent = insight;
+}
+
+function renderLogs(){
+  const logs = recentLogsForRange(selStart, selEnd, 8);
+  const el = document.getElementById('log-list');
+  if (!logs.length) { el.innerHTML = '<div class="log-empty">Nenhum lançamento no período selecionado.</div>'; return; }
+  el.innerHTML = logs.map(d => {
+    const tag = [d.nicho, d.cidade].filter(Boolean).join(' • ') || 'Sem detalhes registrados';
+    return `<div class="log-row">
+      <div class="log-date"><b>${d.date.getDate()}</b><span>${MONTHS[d.date.getMonth()].slice(0,3)}</span></div>
+      <div class="log-mid">
+        <div class="log-stats">${d.lig} lig · ${d.con} conex · ${d.dec} decisor</div>
+        <div class="log-tag">${escapeHTML(tag)}</div>
+      </div>
+      <div class="log-metric"><b>${d.ven}</b><div>vendas</div></div>
+    </div>`;
+  }).join('');
+}
+
+function renderObjections(){
+  const map = objectionsForRange(selStart, selEnd);
+  const entries = Object.entries(map).sort((a,b) => b[1]-a[1]).slice(0,6);
+  const el = document.getElementById('obj-list');
+  if (!entries.length) { el.innerHTML = '<div class="obj-empty">Nenhuma objeção registrada no período.</div>'; return; }
+  const top = entries[0][1] || 1;
+  el.innerHTML = entries.map(([text,count], i) => `
+    <div class="obj-item">
+      <span class="obj-rank">#${i+1}</span>
+      <span class="obj-text">${escapeHTML(text)}</span>
+      <div class="obj-bar-bg"><div class="obj-bar-fill" style="width:${Math.round(count/top*100)}%"></div></div>
+      <span class="obj-n">${count}x</span>
+    </div>`).join('');
+}
+
+// ============================================================================
+// SELETOR DE PERÍODO (calendário estilo Meta Ads Manager)
+// ============================================================================
+function presetRanges(){
+  const today = stripTime(new Date());
+  const dow = (today.getDay()+6)%7; // 0 = segunda
+  const mondayThisWeek = addDays(today, -dow);
+  const mondayLastWeek = addDays(mondayThisWeek, -7);
+  const sundayLastWeek = addDays(mondayThisWeek, -1);
+  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  const lastMonthEnd = addDays(monthStart, -1);
+  const lastMonthStart = new Date(lastMonthEnd.getFullYear(), lastMonthEnd.getMonth(), 1);
+  return [
+    { label:'Hoje', start:today, end:today },
+    { label:'Ontem', start:addDays(today,-1), end:addDays(today,-1) },
+    { label:'Últimos 7 dias', start:addDays(today,-6), end:today },
+    { label:'Últimos 14 dias', start:addDays(today,-13), end:today },
+    { label:'Esta semana', start:mondayThisWeek, end:today },
+    { label:'Semana passada', start:mondayLastWeek, end:sundayLastWeek },
+    { label:'Este mês', start:monthStart, end:today },
+    { label:'Mês passado', start:lastMonthStart, end:lastMonthEnd }
+  ];
+}
+
+function renderPresets(){
+  const holder = document.getElementById('range-presets');
+  holder.innerHTML = presetRanges().map(p => `<button class="preset-btn" data-label="${escapeHTML(p.label)}" onclick="applyPreset('${escapeHTML(p.label)}')">${escapeHTML(p.label)}</button>`).join('');
+}
+
+function applyPreset(label){
+  const preset = presetRanges().find(p => p.label === label);
+  if (!preset) return;
+  pendStart = stripTime(preset.start);
+  pendEnd = stripTime(preset.end);
+  activePreset = label;
+  calView = new Date(pendEnd);
+  renderCalendar();
+  updateRangeSummary();
+  markActivePreset();
+}
+
+function markActivePreset(){
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.label === activePreset);
+  });
+}
+
+function toggleRangePanel(){
+  const panel = document.getElementById('range-panel');
+  if (panel.classList.contains('open')) { closeRangePanel(); return; }
+  pendStart = selStart; pendEnd = selEnd;
+  calView = selEnd ? new Date(selEnd) : new Date();
+  renderPresets();
+  renderCalendar();
+  updateRangeSummary();
+  markActivePreset();
+  panel.classList.add('open');
+}
+function closeRangePanel(){ document.getElementById('range-panel').classList.remove('open'); }
+
+function calShiftMonth(n){
+  calView = new Date(calView.getFullYear(), calView.getMonth()+n, 1);
+  renderCalendar();
+}
+
+function renderCalendar(){
+  document.getElementById('cal-month-label').textContent = `${MONTHS[calView.getMonth()]} de ${calView.getFullYear()}`;
+  const dowHolder = document.getElementById('cal-dow');
+  dowHolder.innerHTML = DOW.map(d => `<div class="cal-dow">${d}</div>`).join('');
+
+  const first = new Date(calView.getFullYear(), calView.getMonth(), 1);
+  const startOffset = (first.getDay()+6)%7; // segunda = 0
+  const gridStart = addDays(first, -startOffset);
+  const today = stripTime(new Date());
+
+  let html = '';
+  for (let i=0;i<42;i++){
+    const d = addDays(gridStart, i);
+    const muted = d.getMonth() !== calView.getMonth();
+    let cls = 'cal-day';
+    if (muted) cls += ' muted';
+    if (sameDay(d, today)) cls += ' today';
+    if (pendStart && pendEnd) {
+      if (sameDay(pendStart, pendEnd) && sameDay(d, pendStart)) cls += ' single';
+      else if (sameDay(d, pendStart)) cls += ' range-start';
+      else if (sameDay(d, pendEnd)) cls += ' range-end';
+      else if (d > pendStart && d < pendEnd) cls += ' in-range';
+    } else if (pendStart && sameDay(d, pendStart)) {
+      cls += ' single';
+    }
+    html += `<div class="${cls}" onclick="pickCalDay(${d.getFullYear()},${d.getMonth()},${d.getDate()})">${d.getDate()}</div>`;
+  }
+  document.getElementById('cal-grid').innerHTML = html;
+}
+
+function pickCalDay(y,m,day){
+  const picked = new Date(y,m,day);
+  activePreset = null;
+  if (!pendStart || (pendStart && pendEnd)) {
+    pendStart = picked; pendEnd = null;
+  } else {
+    if (picked < pendStart) { pendEnd = pendStart; pendStart = picked; }
+    else pendEnd = picked;
+  }
+  if (pendStart && !pendEnd) pendEnd = null;
+  renderCalendar();
+  updateRangeSummary();
+  markActivePreset();
+}
+
+function updateRangeSummary(){
+  const el = document.getElementById('range-summary');
+  const applyBtn = document.getElementById('range-apply');
+  if (pendStart && pendEnd) {
+    const days = daysBetweenInclusive(pendStart, pendEnd);
+    el.textContent = sameDay(pendStart,pendEnd)
+      ? fmtDayMonth(pendStart)
+      : `${fmtDayMonth(pendStart)} – ${fmtDayMonth(pendEnd)} (${days} dia${days>1?'s':''})`;
+    applyBtn.disabled = false;
+  } else if (pendStart) {
+    el.textContent = `${fmtDayMonth(pendStart)} — selecione o fim do período`;
+    applyBtn.disabled = false;
+  } else {
+    el.textContent = 'Selecione um período';
+    applyBtn.disabled = true;
+  }
+}
+
+function applyPendingRange(){
+  if (!pendStart) return;
+  selStart = stripTime(pendStart);
+  selEnd = stripTime(pendEnd || pendStart);
+  if (selEnd < selStart) { const tmp = selStart; selStart = selEnd; selEnd = tmp; }
+  closeRangePanel();
+  render();
+}
+
+document.addEventListener('click', (e) => {
+  const wrap = document.getElementById('range-wrap');
+  if (wrap && !wrap.contains(e.target)) closeRangePanel();
+});
+
+// ============================================================================
+// SINCRONIZAÇÃO COM A PLANILHA
+// ============================================================================
+async function loadCSVAuto(){
+  const dot = document.getElementById('csv-dot');
+  const msg = document.getElementById('csv-msg');
+  if (!configured(DIARIO_CSV_URL)) {
+    dot.className = 'sync-dot err';
+    msg.textContent = 'Configure as URLs de CSV no arquivo (veja "Ver instruções")';
+    if (!selStart) { applyPreset('Últimos 7 dias'); applyPendingRange(); }
+    return;
+  }
+  dot.className = 'sync-dot';
+  msg.textContent = 'Sincronizando…';
+  try {
+    const [diario, metricas, objecoes, parametros] = await Promise.all([
+      fetchRows(DIARIO_CSV_URL),
+      configured(METRICAS_CSV_URL) ? fetchRows(METRICAS_CSV_URL) : Promise.resolve([]),
+      configured(OBJECTIONS_CSV_URL) ? fetchRows(OBJECTIONS_CSV_URL) : Promise.resolve([]),
+      configured(PARAMETROS_CSV_URL) ? fetchRows(PARAMETROS_CSV_URL) : Promise.resolve([])
+    ]);
+    ingestDaily(diario);
+    ingestGoals(metricas);
+    ingestObjections(objecoes);
+    ingestParams(parametros);
+    dot.className = 'sync-dot ok';
+    const now = new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+    msg.textContent = `Sincronizado às ${now}`;
+    if (!selStart) {
+      const last = DAILY.length ? DAILY[DAILY.length-1].date : stripTime(new Date());
+      applyPreset('Últimos 7 dias');
+      if (!(pendEnd >= last)) { /* mantém preset padrão mesmo se dados forem antigos */ }
+      applyPendingRange();
+    } else {
+      render();
+    }
+  } catch (err) {
+    dot.className = 'sync-dot err';
+    msg.textContent = 'Erro ao sincronizar: ' + err.message;
+  }
+}
+
+// ============================================================================
+// NAVEGAÇÃO LATERAL + MODAL DE AJUDA
+// ============================================================================
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('.side-link[data-target]');
+  if (!link) return;
+  e.preventDefault();
+  const target = document.querySelector(link.getAttribute('data-target'));
+  if (target) target.scrollIntoView({ behavior:'smooth', block:'start' });
+  document.querySelectorAll('.side-link').forEach(l => l.classList.remove('active'));
+  link.classList.add('active');
+});
+
+function openHelp(){ document.getElementById('help-veil').classList.add('open'); }
+function closeHelp(){ document.getElementById('help-veil').classList.remove('open'); }
+
+// ============================================================================
+// INIT
+// ============================================================================
+function init(){
+  loadCSVAuto();
+  refreshTimer = setInterval(loadCSVAuto, 5*60*1000);
+}
+init();
+
 </script>
 </body>
 </html>
