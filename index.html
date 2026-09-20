@@ -281,10 +281,11 @@
   .funnel-chart{display:flex;align-items:flex-end;gap:10px;height:220px;padding-top:42px;}
   .funnel-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:9px;min-width:0;}
   .funnel-capsule-wrap{position:relative;width:100%;height:150px;display:flex;align-items:flex-end;justify-content:center;}
-  .funnel-capsule{width:58%;min-width:14px;border-radius:999px;transition:height .85s cubic-bezier(.3,.8,.3,1);position:relative;overflow:visible;}
-  .funnel-capsule.filled{background:linear-gradient(180deg,var(--brand-light),var(--brand));}
-  .funnel-capsule.top{background:linear-gradient(180deg,#69B4F0,var(--brand-deep));}
-  .funnel-capsule.empty{background:repeating-linear-gradient(135deg,var(--line) 0 6px,transparent 6px 12px);}
+  .funnel-track{width:58%;min-width:14px;height:150px;border-radius:999px;background:#fff;border:1px solid var(--line);box-shadow:inset 0 1px 2px rgba(14,34,51,.03);position:relative;overflow:visible;}
+  .funnel-fill{position:absolute;left:-1px;right:-1px;bottom:-1px;border-radius:999px;transition:height .85s cubic-bezier(.3,.8,.3,1);overflow:visible;}
+  .funnel-fill.filled{background:linear-gradient(180deg,var(--brand-light),var(--brand));}
+  .funnel-fill.top{background:linear-gradient(180deg,#69B4F0,var(--brand-deep));}
+  .funnel-track-empty{position:absolute;inset:-1px;border-radius:999px;background:repeating-linear-gradient(135deg,#E8F0F7 0 6px,#fff 6px 12px);border:1px solid #E8F0F7;}
   .funnel-badge{
     position:absolute;top:-30px;left:50%;transform:translateX(-50%);white-space:nowrap;
     background:var(--ink);color:#fff;font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;
@@ -297,6 +298,25 @@
   .funnel-value{font-size:14px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;}
   .funnel-label{font-size:10.5px;color:var(--ink-soft);font-weight:600;text-align:center;line-height:1.25;}
   .funnel-rate{font-size:9.5px;color:var(--ink-faint);font-weight:700;}
+
+  /* ── consistência (dias prospectados / dias de trabalho) ── */
+  .consistency-wrap{margin-top:18px;padding-top:15px;border-top:1px solid var(--line-soft);}
+  .consistency-block + .consistency-block{margin-top:16px;}
+  .consistency-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px;}
+  .consistency-title{font-size:11.5px;font-weight:800;color:var(--ink);}
+  .consistency-meta{font-size:9.5px;font-weight:700;color:var(--ink-faint);white-space:nowrap;}
+  .heatmap-scroll{overflow-x:auto;padding:2px 0 5px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;}
+  .heatmap-main{display:grid;grid-auto-rows:14px;grid-template-columns:28px repeat(var(--weeks),14px);grid-template-rows:16px repeat(7,14px);gap:3px;width:max-content;min-width:100%;}
+  .heatmap-month{font-size:8.5px;color:var(--ink-faint);font-weight:700;align-self:end;text-transform:capitalize;}
+  .heatmap-dow{font-size:8px;color:var(--ink-faint);font-weight:700;display:flex;align-items:center;justify-content:flex-start;}
+  .heatmap-cell{width:14px;height:14px;border-radius:3px;border:1px solid var(--line);background:#fff;box-sizing:border-box;}
+  .heatmap-cell.active{background:var(--brand);border-color:var(--brand);}
+  .heatmap-cell.work{background:var(--brand-light);border-color:var(--brand-light);}
+  .heatmap-cell.outside{background:transparent;border-color:transparent;pointer-events:none;}
+  .consistency-legend{display:flex;align-items:center;gap:6px;margin-top:7px;font-size:8.5px;color:var(--ink-faint);font-weight:700;}
+  .consistency-legend .sw{width:11px;height:11px;border-radius:3px;border:1px solid var(--line);background:#fff;}
+  .consistency-legend .sw.fill{background:var(--brand);border-color:var(--brand);}
+  .consistency-legend .sw.work{background:var(--brand-light);border-color:var(--brand-light);}
 
   /* ── meta de fechamento (gauge donut) ── */
   .gauge-wrap{display:flex;flex-direction:column;align-items:center;}
@@ -443,7 +463,7 @@
     .range-presets{flex-direction:row;flex-wrap:wrap;border-right:none;border-bottom:1px solid var(--line-soft);padding-right:0;padding-bottom:10px;}
     .funnel-chart{height:218px;padding-top:44px;gap:8px;}
     .funnel-badge{font-size:10.5px;padding:3px 8px;top:-28px;}
-    .funnel-capsule{width:52%;}
+    .funnel-track{width:52%;}
     .followup-funnel{height:214px;gap:8px;}
     .followup-capsule{width:52%;}
     .followup-label{font-size:9.5px;max-width:68px;}
@@ -574,6 +594,36 @@
           </div>
         </div>
         <div class="funnel-chart" id="funnel"></div>
+
+        <div class="consistency-wrap" id="consistency-wrap">
+          <div class="consistency-block">
+            <div class="consistency-head">
+              <div class="consistency-title">Dias prospectados</div>
+              <div class="consistency-meta" id="prospected-meta">0 dias</div>
+            </div>
+            <div class="heatmap-scroll">
+              <div class="heatmap-main" id="prospected-heatmap"></div>
+            </div>
+            <div class="consistency-legend">
+              <span>Não prospectado</span><span class="sw"></span>
+              <span class="sw fill"></span><span>Prospectado</span>
+            </div>
+          </div>
+
+          <div class="consistency-block">
+            <div class="consistency-head">
+              <div class="consistency-title">Dias de trabalho</div>
+              <div class="consistency-meta" id="work-meta">0 dias</div>
+            </div>
+            <div class="heatmap-scroll">
+              <div class="heatmap-main" id="work-heatmap"></div>
+            </div>
+            <div class="consistency-legend">
+              <span>Sem registro</span><span class="sw"></span>
+              <span class="sw work"></span><span>Dia trabalhado</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="card followup-card" id="sec-retornos">
@@ -1029,6 +1079,7 @@ function render(){
   renderRangeLabel();
   renderKPIs(t, prevT, metas, hasGoals, rCL, rCD, rMM, rMR, rVR);
   renderFunnel(t, rCL, rCD, rMM, rMR, rVR);
+  renderConsistency();
   renderGauge(t, metas, hasGoals);
   renderRadar(t, metas, hasGoals, rCL, rCD, rMM, rMR, rVR);
   renderDiagnostics(t, metas, hasGoals, rCL, rCD, rMM, rMR, rVR, rFU);
@@ -1116,12 +1167,15 @@ function renderFunnel(t, rCL, rCD, rMM, rMR, rVR){
   ];
   document.getElementById('funnel').innerHTML = steps.map(s => {
     const isEmpty = s.val <= 0;
-    const h = isEmpty ? 150 : Math.max(6, Math.round((s.val/base)*150));
+    const fillH = isEmpty ? 0 : Math.max(8, Math.round((s.val/base)*150));
+    const tooltip = `${s.lbl}: ${s.val.toLocaleString('pt-BR')}${s.rate ? ` • ${s.rate}` : ''}`;
     return `
-    <div class="funnel-col">
+    <div class="funnel-col" title="${tooltip}">
       <div class="funnel-capsule-wrap">
-        <div class="funnel-capsule ${isEmpty?'empty':s.cls}" style="height:${h}px">
-          ${s.val>0 ? `<div class="funnel-badge">${s.val.toLocaleString('pt-BR')}</div>`:''}
+        <div class="funnel-track">
+          ${isEmpty
+            ? `<div class="funnel-track-empty" aria-hidden="true"></div>`
+            : `<div class="funnel-fill ${s.cls}" style="height:${fillH}px"><div class="funnel-badge">${s.val.toLocaleString('pt-BR')}</div></div>`}
         </div>
       </div>
       <div class="funnel-value">${s.val.toLocaleString('pt-BR')}</div>
@@ -1129,6 +1183,102 @@ function renderFunnel(t, rCL, rCD, rMM, rMR, rVR){
       ${s.rate?`<div class="funnel-rate">${s.rate}</div>`:''}
     </div>`;
   }).join('');
+}
+
+function aggregateDailyByDate(){
+  const map = new Map();
+  DAILY.forEach(d => {
+    const k = dateKey(d.date);
+    const cur = map.get(k) || { hasRecord:false, lig:0, activity:0 };
+    cur.hasRecord = true;
+    cur.lig += Number(d.lig||0);
+    cur.activity += Number(d.lig||0) + Number(d.con||0) + Number(d.dec||0) + Number(d.rmk||0) + Number(d.rre||0) + Number(d.ven||0) + Number(d.fuPrev||0) + Number(d.fuDone||0) + Number(d.fuDec||0);
+    map.set(k, cur);
+  });
+  return map;
+}
+
+function buildHeatmap(targetId, start, end, mode){
+  const el = document.getElementById(targetId);
+  if (!el || !start || !end) return;
+
+  const rangeStart = stripTime(start);
+  const rangeEnd = stripTime(end);
+  const startMonday = addDays(rangeStart, -((rangeStart.getDay()+6)%7));
+  const endSunday = addDays(rangeEnd, 6-((rangeEnd.getDay()+6)%7));
+  const weeks = Math.floor((endSunday - startMonday) / 604800000) + 1;
+  const data = aggregateDailyByDate();
+  const dows = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+  const parts = [];
+  const cols = Math.max(1, weeks);
+
+  el.style.setProperty('--weeks', cols);
+  el.innerHTML = '';
+
+  for (let w=0; w<weeks; w++) {
+    const monday = addDays(startMonday, w*7);
+    if (w===0 || monday.getMonth() !== addDays(startMonday,(w-1)*7).getMonth()) {
+      const month = document.createElement('div');
+      month.className = 'heatmap-month';
+      month.style.gridColumn = `${w+2}`;
+      month.style.gridRow = '1';
+      month.textContent = MONTHS[monday.getMonth()].slice(0,3);
+      el.appendChild(month);
+    }
+  }
+
+  dows.forEach((label, i) => {
+    const row = document.createElement('div');
+    row.className = 'heatmap-dow';
+    row.style.gridColumn = '1';
+    row.style.gridRow = `${i+2}`;
+    row.textContent = label;
+    el.appendChild(row);
+  });
+
+  let activeCount = 0;
+  let daysWithRecord = 0;
+  let totalDays = 0;
+
+  for (let w=0; w<weeks; w++) {
+    for (let dow=0; dow<7; dow++) {
+      const d = addDays(startMonday, w*7+dow);
+      const inRange = d >= rangeStart && d <= rangeEnd;
+      const info = data.get(dateKey(d));
+      const cell = document.createElement('div');
+      cell.className = 'heatmap-cell';
+      cell.style.gridColumn = `${w+2}`;
+      cell.style.gridRow = `${dow+2}`;
+
+      if (!inRange) {
+        cell.classList.add('outside');
+      } else {
+        totalDays++;
+        const isProspected = !!info && info.lig > 0;
+        const isWorked = !!info && (info.hasRecord || info.activity > 0);
+        const isActive = mode === 'prospected' ? isProspected : isWorked;
+        if (isProspected) activeCount++;
+        if (isWorked) daysWithRecord++;
+        if (isActive) cell.classList.add(mode === 'prospected' ? 'active' : 'work');
+        const titleDate = fmtDayMonth(d);
+        cell.title = mode === 'prospected'
+          ? `${titleDate}: ${isProspected ? 'prospectou' : 'não prospectou'}`
+          : `${titleDate}: ${isWorked ? 'dia trabalhado' : 'sem registro'}`;
+      }
+      el.appendChild(cell);
+    }
+  }
+  return { activeCount, daysWithRecord, totalDays };
+}
+
+function renderConsistency(){
+  if (!selStart || !selEnd) return;
+  const p = buildHeatmap('prospected-heatmap', selStart, selEnd, 'prospected') || {activeCount:0, totalDays:0};
+  const w = buildHeatmap('work-heatmap', selStart, selEnd, 'work') || {daysWithRecord:0, totalDays:0};
+  const pMeta = document.getElementById('prospected-meta');
+  const wMeta = document.getElementById('work-meta');
+  if (pMeta) pMeta.textContent = `${p.activeCount} de ${p.totalDays} dias`;
+  if (wMeta) wMeta.textContent = `${w.daysWithRecord} de ${w.totalDays} dias`;
 }
 
 function renderGauge(t, metas, hasGoals){
