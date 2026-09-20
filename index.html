@@ -282,6 +282,7 @@
   .funnel-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:9px;min-width:0;}
   .funnel-capsule-wrap{position:relative;width:100%;height:150px;display:flex;align-items:flex-end;justify-content:center;}
   .funnel-track{width:58%;min-width:14px;height:150px;border-radius:999px;background:#fff;border:1px solid var(--line);box-shadow:inset 0 1px 2px rgba(14,34,51,.03);position:relative;overflow:visible;}
+  .funnel-track.partial{background:repeating-linear-gradient(135deg,#E8F0F7 0 6px,#fff 6px 12px);border-color:#E8F0F7;}
   .funnel-fill{position:absolute;left:-1px;right:-1px;bottom:-1px;border-radius:999px;transition:height .85s cubic-bezier(.3,.8,.3,1);overflow:visible;}
   .funnel-fill.filled{background:linear-gradient(180deg,var(--brand-light),var(--brand));}
   .funnel-fill.top{background:linear-gradient(180deg,#69B4F0,var(--brand-deep));}
@@ -1153,12 +1154,15 @@ function renderFunnel(t, rCL, rCD, rMM, rMR, rVR){
   ];
   document.getElementById('funnel').innerHTML = steps.map(s => {
     const isEmpty = s.val <= 0;
-    const fillH = isEmpty ? 0 : Math.max(8, Math.round((s.val/base)*150));
+    const ratio = base > 0 ? s.val/base : 0;
+    const isComplete = s.key === 'lig' || ratio >= 0.999;
+    const fillH = isEmpty ? 0 : Math.max(8, Math.round(Math.min(1, ratio)*150));
     const tooltip = `${s.lbl}: ${s.val.toLocaleString('pt-BR')}${s.rate ? ` • ${s.rate}` : ''}`;
+    const trackCls = isEmpty ? '' : (isComplete ? '' : ' partial');
     return `
     <div class="funnel-col" title="${tooltip}">
       <div class="funnel-capsule-wrap">
-        <div class="funnel-track">
+        <div class="funnel-track${trackCls}">
           ${isEmpty
             ? `<div class="funnel-track-empty" aria-hidden="true"></div>`
             : `<div class="funnel-fill ${s.cls}" style="height:${fillH}px"><div class="funnel-badge">${s.val.toLocaleString('pt-BR')}</div></div>`}
