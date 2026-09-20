@@ -178,10 +178,13 @@
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
   .cal-dow{font-size:10px;font-weight:700;color:var(--ink-faint);text-align:center;padding:4px 0;text-transform:uppercase;}
   .cal-day{
-    aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;
-    border-radius:8px;cursor:pointer;color:var(--ink);font-weight:600;position:relative;
+    appearance:none;-webkit-appearance:none;
+    width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;
+    border:0;border-radius:8px;cursor:pointer;color:var(--ink);font-weight:600;position:relative;
+    background:transparent;font-family:inherit;padding:0;touch-action:manipulation;
   }
   .cal-day:hover{background:var(--brand-wash2);}
+  .cal-day:focus-visible{outline:2px solid var(--brand-light);outline-offset:1px;}
   .cal-day.muted{color:var(--ink-faint);opacity:0.4;pointer-events:none;}
   .cal-day.in-range{background:var(--brand-wash);border-radius:0;}
   .cal-day.range-start{background:var(--brand);color:#fff;border-radius:8px 0 0 8px;}
@@ -198,6 +201,7 @@
     padding-top:12px;border-top:1px solid var(--line-soft);
   }
   .range-summary{font-size:12px;color:var(--ink-soft);font-weight:600;}
+  .range-hint{font-size:9.5px;color:var(--ink-faint);font-weight:600;margin-top:2px;}
   .range-footer-btns{display:flex;gap:8px;}
   .range-footer-btns .btn{padding:7px 13px;font-size:12.5px;}
 
@@ -254,9 +258,10 @@
 
   /* ───────────────── ROWS / CARDS ───────────────── */
   .row{display:grid;gap:14px;margin-bottom:14px;}
-  .row-funnel{grid-template-columns:1.6fr 1fr;}
-  .row-radar{grid-template-columns:1.55fr 1fr;}
+  .row-funnel{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr) minmax(0,.92fr);align-items:stretch;}
+  .row-radar{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(0,.92fr);align-items:stretch;}
   .row-bottom{grid-template-columns:1fr;}
+  .row-funnel > .card,.row-radar > .card{min-width:0;}
 
   .card{
     background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);
@@ -274,14 +279,14 @@
   .funnel-chart{display:flex;align-items:flex-end;gap:10px;height:220px;padding-top:42px;}
   .funnel-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:9px;min-width:0;}
   .funnel-capsule-wrap{position:relative;width:100%;height:150px;display:flex;align-items:flex-end;justify-content:center;}
-  .funnel-capsule{width:58%;min-width:14px;border-radius:999px;transition:height .85s cubic-bezier(.3,.8,.3,1);position:relative;}
+  .funnel-capsule{width:58%;min-width:14px;border-radius:999px;transition:height .85s cubic-bezier(.3,.8,.3,1);position:relative;overflow:visible;}
   .funnel-capsule.filled{background:linear-gradient(180deg,var(--brand-light),var(--brand));}
   .funnel-capsule.top{background:linear-gradient(180deg,#69B4F0,var(--brand-deep));}
   .funnel-capsule.empty{background:repeating-linear-gradient(135deg,var(--line) 0 6px,transparent 6px 12px);}
   .funnel-badge{
-    position:absolute;top:-12px;left:50%;transform:translateX(-50%);white-space:nowrap;
-    background:var(--ink);color:#fff;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;
-    z-index:2;
+    position:absolute;top:-30px;left:50%;transform:translateX(-50%);white-space:nowrap;
+    background:var(--ink);color:#fff;font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;
+    line-height:1;z-index:3;box-shadow:0 4px 10px -6px rgba(14,34,51,0.45);
   }
   .funnel-badge::after{
     content:'';position:absolute;bottom:-3px;left:50%;transform:translateX(-50%) rotate(45deg);
@@ -293,10 +298,10 @@
 
   /* ── meta de fechamento (gauge donut) ── */
   .gauge-wrap{display:flex;flex-direction:column;align-items:center;}
-  .gauge-ring{position:relative;width:176px;height:176px;margin:4px auto 6px;}
+  .gauge-ring{position:relative;width:158px;height:158px;margin:2px auto 6px;}
   .gauge-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
   .gauge-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-  .gauge-pct{font-size:32px;font-weight:800;color:var(--ink);letter-spacing:-0.01em;}
+  .gauge-pct{font-size:31px;font-weight:800;color:var(--ink);letter-spacing:-0.01em;}
   .gauge-tag{font-size:10.5px;color:var(--ink-faint);font-weight:700;margin-top:2px;text-align:center;}
   .gauge-legend{display:flex;flex-direction:column;gap:8px;width:100%;margin-top:6px;}
   .gauge-legend-row{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:600;color:var(--ink-soft);}
@@ -306,7 +311,7 @@
   .gauge-note{font-size:11px;color:var(--ink-faint);text-align:center;margin-top:10px;line-height:1.5;}
 
   /* ── radar ── */
-  .radar-legend{display:flex;gap:14px;margin-top:10px;justify-content:center;flex-wrap:wrap;}
+  .radar-legend{display:flex;gap:10px;margin-top:8px;justify-content:center;flex-wrap:wrap;}
   .radar-legend span{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-soft);font-weight:600;}
   .radar-legend i{width:16px;height:2.5px;border-radius:2px;display:inline-block;}
 
@@ -314,6 +319,8 @@
   .diag-list{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;padding-right:2px;}
   .diag-stack{display:flex;flex-direction:column;gap:14px;min-width:0;}
   .diag-stack > .card{min-width:0;}
+  .diag-card{height:100%;display:flex;flex-direction:column;}
+  .diag-card .diag-list{flex:1;max-height:none;}
   .diag-item{padding:11px 12px;border-radius:12px;border-left:3px solid;background:var(--card-soft);}
   .diag-item.dc{border-left-color:var(--bad);}
   .diag-item.dw{border-left-color:var(--warn);}
@@ -325,17 +332,19 @@
   .dd{font-size:11.5px;color:var(--ink-soft);line-height:1.5;}
 
   /* ── retornos ao decisor band ── */
-  .followup-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;}
+  .followup-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+  .followup-card .followup-grid{flex:1;}
+  .followup-card{display:flex;flex-direction:column;min-width:0;}
   .followup-metric{
     background:var(--card-soft);border:1px solid var(--line-soft);border-radius:14px;
-    padding:16px 12px 13px;display:flex;flex-direction:column;align-items:center;text-align:center;
-    min-height:190px;position:relative;overflow:hidden;
+    padding:12px 10px 11px;display:flex;flex-direction:column;align-items:center;text-align:center;
+    min-height:148px;position:relative;overflow:hidden;
   }
   .followup-metric::before{content:'';position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(180deg,var(--brand-light),var(--good));opacity:.8;}
-  .followup-label{font-size:10.5px;font-weight:700;color:var(--ink-soft);margin-bottom:10px;min-height:26px;display:flex;align-items:center;text-align:center;}
-  .followup-val{font-size:26px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;}
-  .followup-sub{font-size:10px;color:var(--ink-faint);font-weight:600;margin-top:auto;padding-top:8px;}
-  .followup-dial{width:84px;margin:0 auto 10px;}
+  .followup-label{font-size:10px;font-weight:700;color:var(--ink-soft);margin-bottom:7px;min-height:24px;display:flex;align-items:center;text-align:center;line-height:1.2;}
+  .followup-val{font-size:24px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;}
+  .followup-sub{font-size:9.5px;color:var(--ink-faint);font-weight:600;margin-top:auto;padding-top:6px;}
+  .followup-dial{width:72px;margin:0 auto 7px;}
 
   .followup-insight{
     margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--brand-wash2);
@@ -390,10 +399,15 @@
   /* ───────────────── RESPONSIVE ───────────────── */
   @media (max-width:1180px){
     .kpi-strip{grid-template-columns:repeat(4,minmax(0,1fr));}
-    .followup-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+    .row-funnel{grid-template-columns:minmax(0,1.35fr) minmax(0,.95fr);}
+    .row-funnel > .followup-card{grid-column:1 / -1;}
+    .followup-grid{grid-template-columns:repeat(5,minmax(0,1fr));}
+    .row-radar{grid-template-columns:minmax(0,1.15fr) minmax(0,.95fr);}
+    .row-radar > .objections-card{grid-column:1 / -1;}
   }
   @media (max-width:1020px){
     .row-funnel,.row-radar,.row-bottom{grid-template-columns:1fr;}
+    .row-funnel > .followup-card,.row-radar > .objections-card{grid-column:auto;}
   }
   @media (max-width:860px){
     .shell{grid-template-columns:1fr;}
@@ -408,6 +422,7 @@
     .main{padding:18px 16px 48px;}
     .kpi-strip{grid-template-columns:repeat(2,minmax(0,1fr));}
     .followup-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .followup-card .followup-insight{margin-top:10px;}
   }
   @media (max-width:520px){
     .topbar{flex-direction:column;align-items:stretch;}
@@ -416,7 +431,7 @@
     .range-body{grid-template-columns:1fr;}
     .range-presets{flex-direction:row;flex-wrap:wrap;border-right:none;border-bottom:1px solid var(--line-soft);padding-right:0;padding-bottom:10px;}
     .funnel-chart{height:218px;padding-top:44px;gap:8px;}
-    .funnel-badge{font-size:10px;padding:3px 8px;top:-11px;}
+    .funnel-badge{font-size:10.5px;padding:3px 8px;top:-28px;}
     .funnel-capsule{width:52%;}
   }
 </style>
@@ -513,7 +528,10 @@
               </div>
             </div>
             <div class="range-footer">
-              <div class="range-summary" id="range-summary">Selecione um período</div>
+              <div>
+                <div class="range-summary" id="range-summary">Selecione um período</div>
+                <div class="range-hint">1º toque = início • 2º toque = fim • toque no mesmo dia para selecionar só 1 dia</div>
+              </div>
               <div class="range-footer-btns">
                 <button class="btn btn-ghost" onclick="closeRangePanel()">Cancelar</button>
                 <button class="btn btn-primary" id="range-apply" onclick="applyPendingRange()">Aplicar</button>
@@ -532,7 +550,7 @@
     <!-- KPI STRIP -->
     <div class="kpi-strip" id="kpi-strip"></div>
 
-    <!-- FUNIL + META DE FECHAMENTO -->
+    <!-- PRIMEIRA LINHA ANALÍTICA: FUNIL + RETORNOS + DIAGNÓSTICO -->
     <div class="row row-funnel" id="sec-funil">
       <div class="card">
         <div class="card-head">
@@ -544,10 +562,51 @@
         <div class="funnel-chart" id="funnel"></div>
       </div>
 
+      <div class="card followup-card" id="sec-retornos">
+        <div class="card-head">
+          <div>
+            <div class="card-title"><span class="dot" style="background:var(--brand)"></span>Funil de retorno</div>
+            <div class="card-sub">Disciplina de follow-up no período</div>
+          </div>
+          <span class="card-badge" id="followup-badge">Sem base</span>
+        </div>
+        <div class="followup-grid" id="followup-grid"></div>
+        <div class="followup-insight" id="followup-insight">Aguardando dados de follow-up da planilha.</div>
+      </div>
+
+      <div class="card diag-card">
+        <div class="card-head">
+          <div>
+            <div class="card-title"><span class="dot" style="background:var(--warn)"></span>Diagnóstico</div>
+            <div class="card-sub">Onde focar primeiro</div>
+          </div>
+        </div>
+        <div class="diag-list" id="diag"></div>
+      </div>
+    </div>
+
+    <!-- SEGUNDA LINHA: RADAR + PROGRESSO + OBJEÇÕES -->
+    <div class="row row-radar" id="sec-radar">
       <div class="card">
         <div class="card-head">
           <div>
-            <div class="card-title"><span class="dot" style="background:var(--good)"></span>Meta de fechamento</div>
+            <div class="card-title"><span class="dot" style="background:#8B5CF6"></span>Performance do funil</div>
+            <div class="card-sub">Cada etapa comparada com a taxa ideal</div>
+          </div>
+        </div>
+        <div style="position:relative;height:230px">
+          <canvas id="radarC" role="img" aria-label="Radar comparando performance real vs ideal em cada etapa do funil"></canvas>
+        </div>
+        <div class="radar-legend">
+          <span><i style="background:var(--brand-light)"></i>Performance real</span>
+          <span><i style="background:#C7D6E4"></i>Ideal (100%)</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title"><span class="dot" style="background:var(--good)"></span>Progresso</div>
             <div class="card-sub">Vendas vs. meta do período</div>
           </div>
         </div>
@@ -569,60 +628,16 @@
           <div class="gauge-note" id="gauge-note">Aguardando dados…</div>
         </div>
       </div>
-    </div>
 
-    <!-- RADAR + DIAGNOSTICO + OBJECOES -->
-    <div class="row row-radar" id="sec-radar">
-      <div class="card">
+      <div class="card card-dark objections-card">
         <div class="card-head">
           <div>
-            <div class="card-title"><span class="dot" style="background:#8B5CF6"></span>Radar de performance</div>
-            <div class="card-sub">Cada etapa comparada com a taxa ideal</div>
+            <div class="card-title"><span class="dot" style="background:#F08C98"></span>Objeções mais frequentes</div>
+            <div class="card-sub">No período selecionado</div>
           </div>
         </div>
-        <div style="position:relative;height:240px">
-          <canvas id="radarC" role="img" aria-label="Radar comparando performance real vs ideal em cada etapa do funil"></canvas>
-        </div>
-        <div class="radar-legend">
-          <span><i style="background:var(--brand-light)"></i>Performance real</span>
-          <span><i style="background:#C7D6E4"></i>Ideal (100%)</span>
-        </div>
+        <div class="obj-list" id="obj-list"></div>
       </div>
-
-      <div class="diag-stack">
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <div class="card-title"><span class="dot" style="background:var(--warn)"></span>Diagnóstico de gargalos</div>
-              <div class="card-sub">Onde focar primeiro</div>
-            </div>
-          </div>
-          <div class="diag-list" id="diag"></div>
-        </div>
-
-        <div class="card card-dark">
-          <div class="card-head">
-            <div>
-              <div class="card-title"><span class="dot" style="background:#F08C98"></span>Objeções mais frequentes</div>
-              <div class="card-sub">No período selecionado</div>
-            </div>
-          </div>
-          <div class="obj-list" id="obj-list"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- RETORNOS AO DECISOR -->
-    <div class="card" id="sec-retornos" style="margin-bottom:14px;">
-      <div class="card-head">
-        <div>
-          <div class="card-title"><span class="dot" style="background:var(--brand)"></span>Retornos ao decisor</div>
-          <div class="card-sub">Disciplina de follow-up no período</div>
-        </div>
-        <span class="card-badge" id="followup-badge">Sem base</span>
-      </div>
-      <div class="followup-grid" id="followup-grid"></div>
-      <div class="followup-insight" id="followup-insight">Aguardando dados de follow-up da planilha.</div>
     </div>
 
     <!-- ULTIMOS LANCAMENTOS -->
@@ -1090,8 +1105,9 @@ function renderFunnel(t, rCL, rCD, rMM, rMR, rVR){
     return `
     <div class="funnel-col">
       <div class="funnel-capsule-wrap">
-        ${s.val>0 ? `<div class="funnel-badge">${s.val.toLocaleString('pt-BR')}</div>`:''}
-        <div class="funnel-capsule ${isEmpty?'empty':s.cls}" style="height:${isEmpty?150:h}px"></div>
+        <div class="funnel-capsule ${isEmpty?'empty':s.cls}" style="height:${isEmpty?150:h}px">
+          ${s.val>0 ? `<div class="funnel-badge">${s.val.toLocaleString('pt-BR')}</div>`:''}
+        </div>
       </div>
       <div class="funnel-value">${s.val.toLocaleString('pt-BR')}</div>
       <div class="funnel-label">${s.lbl}</div>
@@ -1358,21 +1374,32 @@ function renderCalendar(){
     } else if (pendStart && sameDay(d, pendStart)) {
       cls += ' single';
     }
-    html += `<div class="${cls}" onclick="pickCalDay(${d.getFullYear()},${d.getMonth()},${d.getDate()})">${d.getDate()}</div>`;
+    html += `<button type="button" class="${cls}" aria-label="${d.getDate()} de ${MONTHS[d.getMonth()]} de ${d.getFullYear()}" onclick="pickCalDay(${d.getFullYear()},${d.getMonth()},${d.getDate()})">${d.getDate()}</button>`;
   }
   document.getElementById('cal-grid').innerHTML = html;
 }
 
 function pickCalDay(y,m,day){
-  const picked = new Date(y,m,day);
+  const picked = stripTime(new Date(y,m,day));
   activePreset = null;
+
+  // 1º toque: inicia a seleção. 2º toque: fecha o período.
+  // Tocar novamente no mesmo dia cria explicitamente um período de 1 dia.
   if (!pendStart || (pendStart && pendEnd)) {
-    pendStart = picked; pendEnd = null;
+    pendStart = picked;
+    pendEnd = null;
   } else {
-    if (picked < pendStart) { pendEnd = pendStart; pendStart = picked; }
-    else pendEnd = picked;
+    if (sameDay(picked, pendStart)) {
+      pendEnd = picked;
+    } else if (picked < pendStart) {
+      pendEnd = pendStart;
+      pendStart = picked;
+    } else {
+      pendEnd = picked;
+    }
   }
-  if (pendStart && !pendEnd) pendEnd = null;
+
+  calView = new Date(picked.getFullYear(), picked.getMonth(), 1);
   renderCalendar();
   updateRangeSummary();
   markActivePreset();
