@@ -636,14 +636,14 @@
 <div class="modal-veil" id="help-veil">
   <div class="modal-box">
     <h3>Como conectar sua planilha</h3>
-    <p>No Google Sheets, use <b>Arquivo → Compartilhar → Publicar na web</b> e publique estas 4 abas em formato CSV:</p>
+    <p>O dashboard usa a aba <code>LANÇAMENTOS</code> como fonte dos dados diários. Não é necessário criar uma aba <code>DASHBOARD_DIARIO</code>.</p><p>As fontes utilizadas são:</p>
     <ol>
-      <li><code>DASHBOARD_DIARIO</code> — feed diário (alimenta o período personalizado)</li>
+      <li><code>LANÇAMENTOS</code> — lançamentos diários e dados do período</li>
       <li><code>DASHBOARD_METRICAS</code> — metas semanais por semana</li>
       <li><code>OBJECOES</code> — objeções registradas</li>
       <li><code>PARAMETROS_DIAGNOSTICO</code> — taxas mínima/ideal de cada etapa</li>
     </ol>
-    <p>Cole as 4 URLs geradas nas constantes no topo do <code>&lt;script&gt;</code> deste arquivo HTML (<code>DIARIO_CSV_URL</code>, <code>METRICAS_CSV_URL</code>, <code>OBJECTIONS_CSV_URL</code>, <code>PARAMETROS_CSV_URL</code>) e salve. Não publique as abas <code>LANCAMENTOS</code> nem <code>METAS_SEMANAIS</code> — elas ficam só na sua planilha.</p>
+    <p>A URL da aba <code>LANÇAMENTOS</code> já está configurada neste arquivo. Não crie nem publique uma aba <code>DASHBOARD_DIARIO</code> adicional.</p>
     <button class="btn btn-ghost modal-close" onclick="closeHelp()">Fechar</button>
   </div>
 </div>
@@ -654,9 +654,9 @@
 // ============================================================================
 
 // ── COLE AQUI AS 4 URLs PUBLICADAS COMO CSV (veja "Ver instruções" no menu) ──
-const DIARIO_CSV_URL     = "";
-const METRICAS_CSV_URL   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmp7XPUIaGXBj8OzytBlUmBybmRftoG2J2Iwfpn1ShSv5XBSkncbdpNeMDB_5-DuSRIgTQ-DXz0Rp2/pub?gid=548398166&single=true&output=csv";
-const OBJECTIONS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmp7XPUIaGXBj8OzytBlUmBybmRftoG2J2Iwfpn1ShSv5XBSkncbdpNeMDB_5-DuSRIgTQ-DXz0Rp2/pub?gid=71232552&single=true&output=csv";
+const LANCAMENTOS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmp7XPUIaGXBj8OzytBlUmBybmRftoG2J2Iwfpn1ShSv5XBSkncbdpNeMDB_5-DuSRIgTQ-DXz0Rp2/pub?output=csv&sheet=LAN%C3%87AMENTOS";
+const METRICAS_CSV_URL   = "";
+const OBJECTIONS_CSV_URL = "";
 const PARAMETROS_CSV_URL = "";
 
 // Faixas padrão (usadas até você configurar a aba PARAMETROS_DIAGNOSTICO)
@@ -1406,7 +1406,7 @@ document.addEventListener('click', (e) => {
 async function loadCSVAuto(){
   const dot = document.getElementById('csv-dot');
   const msg = document.getElementById('csv-msg');
-  if (!configured(DIARIO_CSV_URL)) {
+  if (!configured(LANCAMENTOS_CSV_URL)) {
     dot.className = 'sync-dot err';
     msg.textContent = 'Configure as URLs de CSV no arquivo (veja "Ver instruções")';
     if (!selStart) { applyPreset('Últimos 7 dias'); applyPendingRange(); }
@@ -1416,7 +1416,7 @@ async function loadCSVAuto(){
   msg.textContent = 'Sincronizando…';
   try {
     const [diario, metricas, objecoes, parametros] = await Promise.all([
-      fetchRows(DIARIO_CSV_URL),
+      fetchRows(LANCAMENTOS_CSV_URL),
       configured(METRICAS_CSV_URL) ? fetchRows(METRICAS_CSV_URL) : Promise.resolve([]),
       configured(OBJECTIONS_CSV_URL) ? fetchRows(OBJECTIONS_CSV_URL) : Promise.resolve([]),
       configured(PARAMETROS_CSV_URL) ? fetchRows(PARAMETROS_CSV_URL) : Promise.resolve([])
