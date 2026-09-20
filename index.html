@@ -232,16 +232,16 @@
   .kpi-trend svg{width:9px;height:9px;}
 
   .kpi-label{
-    font-size:11px;font-weight:750;letter-spacing:0.02em;color:var(--ink-soft);
-    margin-bottom:4px;min-height:0;display:flex;align-items:center;justify-content:center;line-height:1.2;
+    font-size:13.5px;font-weight:800;letter-spacing:0.01em;color:var(--ink);
+    margin-bottom:5px;min-height:0;display:flex;align-items:center;justify-content:center;line-height:1.2;
   }
-  .kpi.hero .kpi-label{color:rgba(255,255,255,0.88);}
+  .kpi.hero .kpi-label{color:#fff;}
 
   .kpi-val{font-size:30px;font-weight:800;letter-spacing:-0.01em;font-variant-numeric:tabular-nums;}
   .kpi.hero .kpi-val{color:#fff;}
 
-  .kpi-sub{font-size:12px;color:var(--ink);font-weight:800;line-height:1.25;min-height:18px;margin-bottom:4px;}
-  .kpi.hero .kpi-sub{color:rgba(255,255,255,0.93);}
+  .kpi-sub{font-size:10.5px;color:var(--ink-faint);font-weight:650;line-height:1.25;min-height:18px;margin-bottom:4px;}
+  .kpi.hero .kpi-sub{color:rgba(255,255,255,0.78);}
   .kpi-footer{margin-top:auto;padding-top:11px;width:100%;display:flex;justify-content:center;align-items:flex-end;}
 
   .dial{position:relative;width:106px;aspect-ratio:1;margin:0 auto 12px;display:grid;place-items:center;}
@@ -333,24 +333,35 @@
   .dok .dt{color:var(--good);}
   .dd{font-size:11.5px;color:var(--ink-soft);line-height:1.5;}
 
-  /* ── retornos ao decisor band ── */
-  .followup-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
-  .followup-card .followup-grid{flex:1;}
+  /* ── funil de retorno ── */
   .followup-card{display:flex;flex-direction:column;min-width:0;}
-  .followup-metric{
-    background:var(--card-soft);border:1px solid var(--line-soft);border-radius:14px;
-    padding:12px 10px 11px;display:flex;flex-direction:column;align-items:center;text-align:center;
-    min-height:148px;position:relative;overflow:hidden;
+  .followup-funnel{
+    display:flex;align-items:flex-end;gap:10px;height:220px;padding:16px 2px 0;
   }
-  .followup-metric::before{content:'';position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(180deg,var(--brand-light),var(--good));opacity:.8;}
-  .followup-label{font-size:10px;font-weight:700;color:var(--ink-soft);margin-bottom:7px;min-height:24px;display:flex;align-items:center;text-align:center;line-height:1.2;}
-  .followup-val{font-size:24px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;}
-  .followup-sub{font-size:9.5px;color:var(--ink-faint);font-weight:600;margin-top:auto;padding-top:6px;}
-  .followup-dial{width:72px;margin:0 auto 7px;}
-
+  .followup-funnel-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0;}
+  .followup-capsule-wrap{position:relative;width:100%;height:150px;display:flex;align-items:flex-end;justify-content:center;}
+  .followup-capsule{
+    width:56%;min-width:16px;border-radius:999px;position:relative;overflow:visible;
+    transition:height .85s cubic-bezier(.3,.8,.3,1);
+  }
+  .followup-capsule.filled{background:linear-gradient(180deg,var(--brand-light),var(--brand));}
+  .followup-capsule.top{background:linear-gradient(180deg,#69B4F0,var(--brand-deep));}
+  .followup-capsule.empty{background:repeating-linear-gradient(135deg,var(--line) 0 6px,transparent 6px 12px);}
+  .followup-badge{
+    position:absolute;top:-24px;left:50%;transform:translateX(-50%);white-space:nowrap;
+    background:var(--brand-wash);color:var(--brand-deep);font-size:9.5px;font-weight:800;
+    padding:3px 7px;border-radius:999px;line-height:1;z-index:3;border:1px solid var(--line-soft);
+  }
+  .followup-value{font-size:15px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;}
+  .followup-label{font-size:10px;color:var(--ink-soft);font-weight:700;text-align:center;line-height:1.2;max-width:72px;}
+  .followup-footer{
+    display:flex;align-items:center;justify-content:center;gap:14px;margin-top:4px;padding-top:10px;
+    border-top:1px solid var(--line-soft);font-size:10.5px;color:var(--ink-soft);font-weight:700;
+  }
+  .followup-footer b{color:var(--ink);}
   .followup-insight{
-    margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--brand-wash2);
-    border:1px solid var(--line-soft);font-size:12px;color:var(--ink-soft);line-height:1.55;
+    margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--brand-wash2);
+    border:1px solid var(--line-soft);font-size:11.5px;color:var(--ink-soft);line-height:1.5;
   }
 
   /* ── ultimos lancamentos ── */
@@ -403,7 +414,6 @@
     .kpi-strip{grid-template-columns:repeat(4,minmax(0,1fr));}
     .row-funnel{grid-template-columns:minmax(0,1.35fr) minmax(0,.95fr);}
     .row-funnel > .followup-card{grid-column:1 / -1;}
-    .followup-grid{grid-template-columns:repeat(5,minmax(0,1fr));}
     .row-radar{grid-template-columns:minmax(0,1.15fr) minmax(0,.95fr);}
     .row-radar > .objections-card{grid-column:1 / -1;}
   }
@@ -423,7 +433,6 @@
     .side-link{padding:9px;}
     .main{padding:18px 16px 48px;}
     .kpi-strip{grid-template-columns:repeat(2,minmax(0,1fr));}
-    .followup-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
     .followup-card .followup-insight{margin-top:10px;}
   }
   @media (max-width:520px){
@@ -435,6 +444,9 @@
     .funnel-chart{height:218px;padding-top:44px;gap:8px;}
     .funnel-badge{font-size:10.5px;padding:3px 8px;top:-28px;}
     .funnel-capsule{width:52%;}
+    .followup-funnel{height:214px;gap:8px;}
+    .followup-capsule{width:52%;}
+    .followup-label{font-size:9.5px;max-width:68px;}
   }
 </style>
 </head>
@@ -572,7 +584,8 @@
           </div>
           <span class="card-badge" id="followup-badge">Sem base</span>
         </div>
-        <div class="followup-grid" id="followup-grid"></div>
+        <div class="followup-funnel" id="followup-funnel"></div>
+        <div class="followup-footer" id="followup-footer"></div>
         <div class="followup-insight" id="followup-insight">Aguardando dados de follow-up da planilha.</div>
       </div>
 
@@ -1027,7 +1040,7 @@ function render(){
     const key = el.dataset.counter;
     animateCounter(el, Number(prevTotals[key]||0), Number(t[key]||0));
   });
-  document.querySelectorAll('.kpi, .followup-metric').forEach(card => {
+  document.querySelectorAll('.kpi').forEach(card => {
     card.classList.remove('pop'); void card.offsetWidth; card.classList.add('pop');
   });
   prevTotals = { ...t };
@@ -1102,12 +1115,12 @@ function renderFunnel(t, rCL, rCD, rMM, rMR, rVR){
     { key:'ven', lbl:'Vendas', val:t.ven, cls:'filled', rate:pct(rVR) }
   ];
   document.getElementById('funnel').innerHTML = steps.map(s => {
-    const h = Math.max(6, Math.round((s.val/base)*150));
-    const isEmpty = base <= 0;
+    const isEmpty = s.val <= 0;
+    const h = isEmpty ? 150 : Math.max(6, Math.round((s.val/base)*150));
     return `
     <div class="funnel-col">
       <div class="funnel-capsule-wrap">
-        <div class="funnel-capsule ${isEmpty?'empty':s.cls}" style="height:${isEmpty?150:h}px">
+        <div class="funnel-capsule ${isEmpty?'empty':s.cls}" style="height:${h}px">
           ${s.val>0 ? `<div class="funnel-badge">${s.val.toLocaleString('pt-BR')}</div>`:''}
         </div>
       </div>
@@ -1227,27 +1240,38 @@ function renderFollowups(t, rFU, rFUD){
   const hasBase = t.fuPrev > 0;
   const status = getFollowupStatus(rFU, hasBase);
   const badge = document.getElementById('followup-badge');
-  badge.textContent = hasBase ? `${status.icon} ${status.label} — ${pct(rFU)}` : '⚪ Sem base no período';
+  badge.textContent = hasBase ? `${status.icon} ${pct(rFU)} de execução` : '⚪ Sem base no período';
 
   const pending = Math.max(0, t.fuPrev - t.fuDone);
-  const metrics = [
-    { lbl:'Retornos previstos', val:t.fuPrev, sub:'base do período', key:'fuPrev', progress: hasBase?1:0, status:'neutral' },
-    { lbl:'Retornos feitos', val:t.fuDone, sub:'executados', key:'fuDone', progress: hasBase?rFU:0, status: status.cls },
-    { lbl:'Pendentes', val:pending, sub:'ainda em aberto', progress: hasBase? pending/Math.max(t.fuPrev,1):0,
-      status: pending===0?'ok':pending<=Math.max(1,Math.ceil(t.fuPrev*0.2))?'warn':'bad' },
-    { lbl:'Execução', val: hasBase?pct(rFU):'—', sub:'feitos ÷ previstos', progress: hasBase?rFU:0, status: status.cls, isText:true },
-    { lbl:'Decisores via retorno', val:t.fuDec, sub: t.fuDone>0?`${pct(rFUD)} dos retornos`:'sem retornos feitos', key:'fuDec',
-      progress: t.fuDone>0?rFUD:0, status: t.fuDone>0 ? (rFUD>=0.4?'ok':rFUD>=0.2?'warn':'bad') : 'neutral' }
+  const stages = [
+    { key:'prev', lbl:'Retornos previstos', val:t.fuPrev, cls:'top', rate:null },
+    { key:'done', lbl:'Retornos feitos', val:t.fuDone, cls:'filled', rate:hasBase?pct(rFU):null },
+    { key:'dec', lbl:'Decisores via retorno', val:t.fuDec, cls:'filled', rate:t.fuDone>0?pct(rFUD):null }
   ];
-  document.getElementById('followup-grid').innerHTML = metrics.map(m => `
-    <div class="followup-metric">
-      <div class="followup-label">${m.lbl}</div>
-      ${buildDial(`<div class="followup-val" ${m.key?`data-counter="${m.key}"`:''}>${m.val}</div>`, clamp01(m.progress), m.status, 'followup-dial')}
-      <div class="followup-sub">${m.sub}</div>
-    </div>`).join('');
+  const base = Math.max(1, t.fuPrev || t.fuDone || t.fuDec || 1);
+  const funnel = document.getElementById('followup-funnel');
+  funnel.innerHTML = stages.map(s => {
+    const isEmpty = s.val <= 0;
+    const h = isEmpty ? 150 : Math.max(8, Math.round((s.val/base)*150));
+    return `
+      <div class="followup-funnel-col">
+        <div class="followup-capsule-wrap">
+          <div class="followup-capsule ${isEmpty?'empty':s.cls}" style="height:${h}px">
+            ${s.rate ? `<div class="followup-badge">${s.rate}</div>` : ''}
+          </div>
+        </div>
+        <div class="followup-value">${s.val.toLocaleString('pt-BR')}</div>
+        <div class="followup-label">${s.lbl}</div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('followup-footer').innerHTML = `
+    <span>Pendentes <b>${pending.toLocaleString('pt-BR')}</b></span>
+    <span>Execução <b>${hasBase ? pct(rFU) : '—'}</b></span>
+    <span>Decisores <b>${t.fuDec.toLocaleString('pt-BR')}</b></span>`;
 
   let insight;
-  if (!hasBase) insight = 'Nenhum retorno previsto no período. Se você teve conexões que não chegaram ao decisor, considere sempre sair da ligação com um horário de retorno combinado.';
+  if (!hasBase) insight = 'Nenhum retorno previsto no período. Se você teve conexões que não chegaram ao decisor, combine sempre um horário de retorno.';
   else if (status.cls==='bad') insight = `Execução baixa: ${t.fuDone} de ${t.fuPrev} retornos feitos. Antes de mudar o roteiro, cumpra os retornos combinados.`;
   else if (status.cls==='warn') insight = `Execução mediana: ${t.fuDone} de ${t.fuPrev} retornos feitos. Ainda há oportunidades esfriando na mesa.`;
   else insight = t.fuDone>0 ? `Boa execução: ${t.fuDone} de ${t.fuPrev} retornos feitos, com ${t.fuDec} decisor(es) alcançados por esse caminho.` : 'Boa execução, mas ainda sem decisores via retorno neste período.';
