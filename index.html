@@ -1,7 +1,4 @@
 
-
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,1282 +6,645 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>Oceanic — Navegador de Prospecção</title>
-<link rel="icon" type="image/png" sizes="64x64" href="data:image/png;base64,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">
-<!-- Visual Oceanic atualizado: marca + animações + fundo oceânico escuro sem grade -->
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" sizes="64x64" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAANRklEQVR42u2be3Ad5XnGf9+3u+d+JB1dLVm2bF2wDb5CnKkn7QQYCgm0hIS2LiWktDR1UtpMmmam4zSZMlPidkI6GeiEJmnSDgy0lJmSBnACJUlLExMMGBEs45uwLVuSpXPRud939+sfu+dY8g3Jkmw3zjez/0i7Z/d99n2f97kvK5RS7cB3gJsBHZD8Yi8bMIEXgT8SSqmdwK2AAgRXxqrZ+rxQSikXFcmVtWxASheNK814XJtteQW5/dmWkFzh64oHQL9kNKzUac4oLkks6hfLWNtWrp0CKQVCiPOed65zFpwE1BmvYuGWZdsIQMqZkWbbikKxRKVqopTCY+j4/V50TTsrIIsIhloUACzbRptmdCyRZnBomMGhYQ4fGWUimiSTK1CpVAEwdJ1Q0Ed7a4S+FZ1suLqPa9cPsKyr7dRvWjaaJi9vAGylEK6bK6X4711v8d0f7OK1wQNE4yks20bXNHRdQ5Oy/laVUli2jWVZmKYFQtDcGGbj2j5uv3kLH7phM36/1/Ue+wyPuiwAmP6GXvjx63zriZ28te9dlFL4/V48uu4oDuUYfLabCiGoebppWhSKZSzbZmDlUu7dejN33XEDmqYtpDcsDAC1BxoZneTBrz3JS//7JoauEQz4QDgxP9fbCEBIiRBQLFUoFstct+EqvvjZu7lu/QChLA9QJnV+xoW42FE/CVhBAAmFF6RgQENgeVQTMuUtI9r0EAT+4d9BF95Vjbz11vv1BUyR9LcyqSF3NgVDvxQaB9dVLMoRNJl0xkVdBQBEDcCbGuu4S+HqAZ5A6Y7QAAAABJRU5ErkJggg==">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-  :root {
-    --navy:        #020811;
-    --navy2:       #06111F;
-    --navy3:       #0A1A2D;
-    --brand-blue:   #223D63;
-    --brand-blue-deep:#142845;
-    --ocean:       #1B5C9B;
-    --ocean-lt:    #4E94D6;
-    --ocean-pale:  #B7D5F2;
-    --teal:        #1D9E75;
-    --teal-lt:     #5DCAA5;
-    --teal-pale:   #9FE1CB;
-    --amber:       #BA7517;
-    --red:         #A32D2D;
-    --green:       #3B6D11;
-    --white:       #F8FBFF;
-    --text1:       #EAF4FD;
-    --text2:       rgba(183,213,242,0.76);
-    --text3:       rgba(183,213,242,0.46);
-    --border:      rgba(121,165,209,0.14);
-    --border2:     rgba(121,165,209,0.28);
-    --card:        rgba(6,17,31,0.78);
-    --card2:       rgba(9,24,42,0.94);
+  :root{
+    --bg:#F5F8FC;
+    --card:#FFFFFF;
+    --card-soft:#F4F8FC;
+    --ink:#0E2233;
+    --ink-soft:#5B7185;
+    --ink-faint:#93A7B9;
+    --line:#E7EEF5;
+    --line-soft:#F0F5FA;
+
+    --brand:#1B5C9B;
+    --brand-deep:#0F2E4F;
+    --brand-mid:#2E72AC;
+    --brand-light:#4E94D6;
+    --brand-wash:#EAF3FC;
+    --brand-wash2:#F4F9FD;
+
+    --good:#1D9E75;
+    --good-bg:#E4F6EF;
+    --warn:#BA7517;
+    --warn-bg:#FBF1E1;
+    --bad:#C6433F;
+    --bad-bg:#FCEAE9;
+    --neutral-bg:#EEF2F6;
+
+    --dark-card:#0E2A46;
+    --dark-card2:#123B62;
+    --white:#FFFFFF;
+
+    --radius-lg:20px;
+    --radius-md:14px;
+    --radius-sm:10px;
+    --shadow-card:0 1px 2px rgba(14,34,51,0.04), 0 10px 28px -14px rgba(15,46,79,0.16);
+    --shadow-pop:0 18px 40px -18px rgba(15,46,79,0.28);
   }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 
-  body {
-    background: var(--navy);
-    color: var(--text1);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
-    min-height: 100vh;
-  }
-
-  /* ── BACKGROUND ── */
-  .bg-wrap {
-    position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
-  }
-  .bg-gradient {
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 72% 56% at 14% -8%, rgba(37,68,108,0.16) 0%, transparent 66%),
-      radial-gradient(ellipse 58% 44% at 100% 100%, rgba(13,38,67,0.13) 0%, transparent 70%),
-      linear-gradient(160deg, #020811 0%, #06111F 52%, #020811 100%);
-  }
-  .bg-wave {
-    position: absolute; bottom: 0; left: 0; right: 0; height: 240px;
-    background: radial-gradient(ellipse at 50% 120%, rgba(17,43,74,0.10) 0%, transparent 72%);
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:14px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
   }
 
-  /* ── LAYOUT ── */
-  .page { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 24px 28px 48px; }
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;}
 
-  /* ── HEADER / MARCA ── */
-  .overview-shell {
-    margin-bottom: 18px;
-    background: transparent;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
-    overflow: visible;
-  }
-  .header {
-    display: flex; align-items: flex-start; justify-content: space-between; gap: 18px;
-    margin-bottom: 0; padding: 2px 0 0;
-    background: transparent;
-    border: 0; border-radius: 0;
-    box-shadow: none;
-  }
-  .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
-  .brand-logo {
-    width: 52px; height: 52px; border-radius: 14px; flex: 0 0 52px;
-    padding: 7px; display: flex; align-items: center; justify-content: center;
-    background: rgba(4,14,30,0.16); border: 1px solid rgba(255,255,255,0.18);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
-  }
-  .brand-logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
-  .brand-name {
-    font-family: 'DM Sans', sans-serif; font-size: 28px; font-weight: 700;
-    line-height: 0.94; letter-spacing: 0.045em; color: var(--white); text-transform: lowercase;
-  }
-  .brand-tagline { margin-top: 5px; font-size: 10px; color: rgba(248,251,255,0.70); letter-spacing: 0.13em; text-transform: uppercase; }
-  .header-right { display: flex; align-items: flex-end; gap: 10px; min-width: 0; max-width: 72%; padding-top: 8px; }
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:#C7D6E4;border-radius:4px;}
 
-  /* ── SELETOR DE PERÍODO ── */
-  .period-control { min-width: 0; width: 100%; display: flex; flex-direction: column; gap: 7px; }
-  .period-caption {
-    display: flex; align-items: center; gap: 6px; padding-left: 3px;
-    font-size: 9px; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase;
-    color: rgba(248,251,255,0.68);
-  }
-  .period-caption svg { width: 13px; height: 13px; flex: 0 0 13px; opacity: 0.9; }
-  .pill-group {
-    display: flex; align-items: flex-end; min-width: 0;
-    background: transparent; border: 0;
-    border-radius: 0; padding: 0 2px 0 0; gap: 8px; overflow-x: auto; overflow-y: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.9) transparent;
-    scrollbar-gutter: stable;
-  }
-  .pill-group::-webkit-scrollbar {
-    height: 8px;
-  }
-  .pill-group::-webkit-scrollbar-track {
-    background: transparent;
-    margin: 0 8px 2px;
-  }
-  .pill-group::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.88);
-    border-radius: 999px;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-  }
-  .pill {
-    min-width: 132px; min-height: 52px; padding: 11px 16px 14px; font-size: 12px; line-height: 1.2;
-    border: 1px solid transparent; border-radius: 14px 14px 0 0; cursor: pointer; background: transparent;
-    color: rgba(248,251,255,0.78); font-family: 'DM Sans', sans-serif; font-weight: 600;
-    transition: all 0.22s ease; white-space: normal; text-align: center; flex: 0 0 auto;
-  }
-  .pill:hover {
-    background: rgba(255,255,255,0.05); color: rgba(248,251,255,0.94);
-  }
-  .pill.active {
-    position: relative;
-    z-index: 3;
-    background: rgba(248,251,255,0.97);
-    color: var(--brand-blue-deep);
-    border-color: rgba(181,212,244,0.26);
-    border-bottom-color: transparent;
-    box-shadow: 0 -1px 0 rgba(255,255,255,0.03), 0 0 0 1px rgba(255,255,255,0.02);
-    transform: translateY(1px);
-  }
+  /* ───────────────── SHELL / SIDEBAR ───────────────── */
+  .shell{display:grid;grid-template-columns:236px 1fr;min-height:100vh;}
 
-  .kpi-stage {
-    position: relative;
-    margin-top: -1px;
-    padding: 12px 12px 14px;
-    background: transparent;
-    border: 1px solid rgba(181,212,244,0.18);
-    border-radius: 18px;
+  .sidebar{
+    background:var(--card);
+    border-right:1px solid var(--line);
+    padding:22px 16px 20px;
+    display:flex;flex-direction:column;gap:22px;
+    position:sticky;top:0;height:100vh;overflow-y:auto;
   }
-  .kpi-stage-caption {
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    padding: 0 4px 12px;
+  .side-brand{display:flex;align-items:center;gap:10px;padding:2px 6px;}
+  .side-logo{
+    width:40px;height:40px;border-radius:12px;flex:0 0 40px;
+    background:linear-gradient(150deg,var(--brand-light),var(--brand-deep));
+    display:flex;align-items:center;justify-content:center;padding:7px;
+    box-shadow:0 6px 14px -6px rgba(27,92,155,0.55);
   }
-  .kpi-stage-title {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
-    color: rgba(248,251,255,0.72);
-  }
-  .kpi-stage-subtitle {
-    font-size: 11px; color: rgba(183,213,242,0.64);
-  }
+  .side-logo img{width:100%;height:100%;object-fit:contain;display:block;}
+  .side-brand-text{line-height:1.15;}
+  .side-brand-name{font-weight:800;font-size:16px;letter-spacing:0.01em;color:var(--brand-deep);}
+  .side-brand-tag{font-size:10px;color:var(--ink-faint);letter-spacing:0.06em;text-transform:uppercase;margin-top:2px;}
 
-  /* ── TRANSIÇÕES DE SEMANA ── */
-  .kpi-val, .f-num { font-variant-numeric: tabular-nums; }
-  .kpi.metric-pop { animation: metricPop 0.58s cubic-bezier(.2,.75,.25,1) both; }
-  @keyframes metricPop {
-    0% { opacity: 0.42; transform: translateY(6px) scale(0.985); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
+  .side-section-label{
+    font-size:10px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;
+    color:var(--ink-faint);padding:0 10px;margin-bottom:2px;
   }
-  @media (max-width: 760px) {
-    .header { align-items: flex-start; flex-direction: column; }
-    .header-right, .period-control, .pill-group { width: 100%; max-width: none; }
-    .header-right { padding-top: 0; }
+  .side-nav{display:flex;flex-direction:column;gap:2px;}
+  .side-link{
+    display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;
+    font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer;
+    border:1px solid transparent;transition:background .15s,color .15s;
   }
+  .side-link svg{width:17px;height:17px;flex:0 0 17px;opacity:0.85;}
+  .side-link:hover{background:var(--brand-wash2);color:var(--brand-deep);}
+  .side-link.active{background:var(--brand-wash);color:var(--brand-deep);border-color:rgba(27,92,155,0.14);}
+  .side-link.active svg{opacity:1;}
 
-  /* ── CSV BAR ── */
-  .csv-section { margin-bottom: 16px; }
-  .csv-bar {
-    display: flex; align-items: center; gap: 10px;
-    background: var(--card2); border: 1px solid var(--border2);
-    border-radius: 12px; padding: 10px 14px;
+  .side-spacer{flex:1;}
+  .side-foot{display:flex;flex-direction:column;gap:8px;}
+  .side-card{
+    background:linear-gradient(160deg,var(--brand-deep),#0A203A);
+    border-radius:16px;padding:16px 14px;color:#EAF3FC;
   }
-  .csv-bar input {
-    flex: 1; background: rgba(255,255,255,0.06); border: 1px solid var(--border);
-    border-radius: 8px; color: var(--text1); font-size: 12px; font-family: 'DM Sans', sans-serif;
-    padding: 7px 12px; outline: none; transition: border-color 0.2s;
+  .side-card-title{font-size:13px;font-weight:700;margin-bottom:4px;}
+  .side-card-sub{font-size:11px;color:rgba(234,243,252,0.68);line-height:1.5;margin-bottom:12px;}
+  .side-card-btn{
+    width:100%;padding:8px;border-radius:9px;border:none;cursor:pointer;
+    background:rgba(255,255,255,0.12);color:#fff;font-size:12px;font-weight:700;
+    transition:background .15s;
   }
-  .csv-bar input:focus { border-color: var(--ocean-lt); }
-  .csv-bar input::placeholder { color: var(--text3); }
-  .csv-btn {
-    padding: 7px 18px; background: var(--ocean); color: #E6F1FB;
-    border: none; border-radius: 8px; font-size: 12px; font-family: 'DM Sans', sans-serif;
-    cursor: pointer; font-weight: 500; transition: background 0.2s; white-space: nowrap;
-  }
-  .csv-btn:hover { background: var(--ocean-lt); }
-  .csv-status { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 11px; color: var(--text3); padding-left: 4px; }
-  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); flex-shrink: 0; }
-  .status-dot.ok  { background: var(--green); box-shadow: 0 0 5px var(--green); }
-  .status-dot.err { background: var(--red); }
-  .csv-help { font-size: 11px; color: var(--text3); margin-top: 8px; line-height: 1.6; padding-left: 4px; }
-  .csv-help a { color: var(--ocean-lt); }
-  .csv-help code { background: rgba(255,255,255,0.07); padding: 1px 5px; border-radius: 4px; font-size: 10px; }
+  .side-card-btn:hover{background:rgba(255,255,255,0.2);}
 
-  /* ── KPI GRID ── */
-  .kpi-grid { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 10px; margin-bottom: 0; }
-  .kpi {
-    background: var(--card2); border: 1px solid var(--border);
-    border-radius: 12px; padding: 16px 12px 14px; position: relative; overflow: hidden;
-    transition: border-color 0.2s;
-    min-height: 228px;
-    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-    text-align: center;
-  }
-  .kpi::after {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, var(--ocean), var(--teal)); opacity: 0.5;
-  }
-  .kpi:hover { border-color: var(--border2); }
-  .kpi-label { width: 100%; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--white); margin-bottom: 10px; text-align: center; line-height: 1.35; min-height: 26px; display:flex; align-items:center; justify-content:center; }
-  .kpi-val {
-    font-family: 'DM Sans', sans-serif; font-size: 31px; font-weight: 700;
-    letter-spacing: -0.015em; line-height: 1; margin: 0;
-    text-align: center; color: var(--text1); font-variant-numeric: lining-nums tabular-nums;
-  }
-  .badge { display: inline-block; padding: 5px 10px; border-radius: 7px; font-size: 10px; font-weight: 600; line-height: 1.25; }
+  /* ───────────────── MAIN ───────────────── */
+  .main{padding:22px 28px 60px;max-width:1360px;}
 
-  .metric-dial {
-    --dial-fill: var(--ocean-lt);
-    --dial-rest: rgba(255,255,255,0.12);
-    --dial-size: 104px;
-    position: relative;
-    width: var(--dial-size);
-    aspect-ratio: 1 / 1;
-    margin: 0 auto 14px;
-    display: grid;
-    place-items: center;
-    flex: 1 0 auto;
-    border-radius: 50%;
+  .topbar{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:18px;
+    margin-bottom:22px;flex-wrap:wrap;
   }
-  .metric-dial-svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-    overflow: visible;
-  }
-  .metric-dial-bg {
-    fill: rgba(255,255,255,0.015);
-    stroke: rgba(255,255,255,0.055);
-    stroke-width: 1.25;
-  }
-  .metric-dial-tick {
-    stroke: var(--dial-rest);
-    stroke-width: 6;
-    stroke-linecap: round;
-  }
-  .metric-dial-tick.active {
-    stroke: var(--dial-fill);
-  }
-  .metric-dial-content {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-  }
-  .metric-dial .kpi-val,
-  .metric-dial .followup-value {
-    position: relative;
-    z-index: 2;
-  }
-  .kpi-footer,
-  .followup-footer {
-    width: 100%;
-    margin-top: auto;
-    display: flex;
-    justify-content: center;
-    padding-top: 4px;
-  }
-  .b-ok  { background: rgba(59,109,17,0.25); color: #9FE1CB; }
-  .b-warn{ background: rgba(186,117,23,0.25); color: #FAC775; }
-  .b-bad { background: rgba(163,45,45,0.25);  color: #F7C1C1; }
+  .topbar h1{font-size:26px;font-weight:800;letter-spacing:-0.01em;color:var(--ink);}
+  .topbar p{font-size:13px;color:var(--ink-soft);margin-top:4px;}
 
-  /* ── DOIS COLS ── */
-  .two-col { display: grid; grid-template-columns: 1fr 300px; gap: 16px; margin-bottom: 16px; }
+  .topbar-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 
-  /* ── CARD ── */
-  .card {
-    background: var(--card2); border: 1px solid var(--border);
-    border-radius: 14px; padding: 18px;
+  .btn{
+    display:inline-flex;align-items:center;gap:7px;padding:10px 16px;border-radius:11px;
+    font-size:13px;font-weight:700;cursor:pointer;border:1px solid transparent;
+    transition:filter .15s, background .15s;white-space:nowrap;
   }
-  .card-title {
-    font-size: 11px; font-weight: 500; text-transform: uppercase;
-    letter-spacing: 0.09em; color: var(--text2); margin-bottom: 14px;
-    display: flex; align-items: center; gap: 7px;
-  }
-  .ct-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .btn svg{width:15px;height:15px;}
+  .btn-primary{background:var(--brand);color:#fff;box-shadow:0 10px 22px -12px rgba(27,92,155,0.6);}
+  .btn-primary:hover{filter:brightness(1.06);}
+  .btn-ghost{background:var(--card);color:var(--ink);border-color:var(--line);}
+  .btn-ghost:hover{background:var(--card-soft);}
 
-  /* ── FUNIL ── */
-  .funnel { display: flex; flex-direction: column; gap: 0; }
-  .f-row { display: flex; align-items: center; gap: 10px; }
-  .f-lbl { font-size: 12px; color: var(--text2); min-width: 148px; }
-  .f-bar-wrap { flex: 1; height: 38px; background: rgba(255,255,255,0.04); border-radius: 7px; overflow: hidden; }
-  .f-bar {
-    height: 100%; border-radius: 7px; display: flex; align-items: center;
-    padding: 0 12px; transition: width 0.8s cubic-bezier(.4,0,.2,1);
+  /* ── date range picker ── */
+  .range-wrap{position:relative;}
+  .range-btn{
+    display:flex;align-items:center;gap:9px;padding:10px 14px;border-radius:11px;
+    background:var(--card);border:1px solid var(--line);cursor:pointer;font-size:13px;font-weight:700;
+    color:var(--ink);box-shadow:var(--shadow-card);
   }
-  .f-num { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: rgba(230,241,251,0.95); }
-  .f-pct { font-size: 10px; color: rgba(230,241,251,0.5); margin-left: 6px; }
-  .f-rate { font-size: 11px; color: var(--text3); min-width: 42px; text-align: right; }
-  .f-conn { height: 7px; width: 1px; background: var(--border2); margin: 0 auto; margin-left: 157px; }
+  .range-btn svg{width:16px;height:16px;color:var(--brand);flex:0 0 16px;}
+  .range-btn .care{width:10px;height:10px;color:var(--ink-faint);margin-left:2px;}
+  .sync-dot{width:7px;height:7px;border-radius:50%;background:var(--warn);flex:0 0 7px;}
+  .sync-dot.ok{background:var(--good);}
+  .sync-dot.err{background:var(--bad);}
 
-  /* ── DIAG ── */
-  .diag { display: flex; flex-direction: column; gap: 7px; }
-  .diag-item {
-    padding: 9px 11px; border-radius: 8px; border-left: 3px solid;
-    background: rgba(255,255,255,0.02); cursor: pointer; transition: background 0.15s;
-    border-right: none; border-top: none; border-bottom: none;
+  .range-panel{
+    position:absolute;top:calc(100% + 10px);right:0;z-index:40;
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow-pop);padding:14px;display:none;
+    width:min(560px,92vw);
   }
-  .diag-item:hover { background: rgba(255,255,255,0.05); }
-  .diag-item.dc { border-left-color: #E24B4A; }
-  .diag-item.dw { border-left-color: #BA7517; }
-  .diag-item.dok{ border-left-color: #3B6D11; }
-  .dt { font-size: 11px; font-weight: 500; margin-bottom: 3px; }
-  .dc .dt  { color: #F7C1C1; }
-  .dw .dt  { color: #FAC775; }
-  .dok .dt { color: #9FE1CB; }
-  .dd { font-size: 10px; color: var(--text3); line-height: 1.45; }
+  .range-panel.open{display:block;}
+  .range-body{display:grid;grid-template-columns:150px 1fr;gap:14px;}
+  .range-presets{display:flex;flex-direction:column;gap:2px;border-right:1px solid var(--line-soft);padding-right:12px;}
+  .preset-btn{
+    text-align:left;padding:8px 9px;border-radius:8px;border:none;background:transparent;
+    font-size:12.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;
+  }
+  .preset-btn:hover{background:var(--brand-wash2);color:var(--brand-deep);}
+  .preset-btn.active{background:var(--brand-wash);color:var(--brand-deep);}
 
-  /* ── RETORNOS AO DECISOR ── */
-  .followup-card { margin-bottom: 16px; }
-  .followup-head {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; margin-bottom: 14px;
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .cal-head strong{font-size:13px;font-weight:800;text-transform:capitalize;}
+  .cal-nav{display:flex;gap:4px;}
+  .cal-nav button{
+    width:26px;height:26px;border-radius:8px;border:1px solid var(--line);background:var(--card);
+    cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);
   }
-  .followup-head .card-title { margin-bottom: 0; }
-  .followup-grid {
-    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px;
+  .cal-nav button:hover{background:var(--card-soft);}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+  .cal-dow{font-size:10px;font-weight:700;color:var(--ink-faint);text-align:center;padding:4px 0;text-transform:uppercase;}
+  .cal-day{
+    aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;
+    border-radius:8px;cursor:pointer;color:var(--ink);font-weight:600;position:relative;
   }
-  .followup-metric {
-    position: relative; overflow: hidden;
-    padding: 18px 14px 14px; border-radius: 10px; min-height: 230px;
-    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-    text-align: center;
+  .cal-day:hover{background:var(--brand-wash2);}
+  .cal-day.muted{color:var(--ink-faint);opacity:0.4;pointer-events:none;}
+  .cal-day.in-range{background:var(--brand-wash);border-radius:0;}
+  .cal-day.range-start{background:var(--brand);color:#fff;border-radius:8px 0 0 8px;}
+  .cal-day.range-end{background:var(--brand);color:#fff;border-radius:0 8px 8px 0;}
+  .cal-day.single{background:var(--brand);color:#fff;border-radius:8px;}
+  .cal-day.today::after{
+    content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);
+    width:4px;height:4px;border-radius:50%;background:var(--brand-light);
   }
-  .followup-metric::before {
-    content: ''; position: absolute; inset: 0 auto 0 0; width: 2px;
-    background: linear-gradient(180deg, var(--ocean-lt), var(--teal)); opacity: 0.72;
-  }
-  .followup-label {
-    width: 100%; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.065em;
-    color: var(--white); margin-bottom: 10px; text-align: center; line-height: 1.35; min-height: 28px;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .followup-value {
-    font-family: 'DM Sans', sans-serif; font-size: 29px; font-weight: 700;
-    letter-spacing: -0.015em; line-height: 1; color: var(--text1);
-    text-align: center; font-variant-numeric: lining-nums tabular-nums;
-  }
-  .followup-sub { width: 100%; font-size: 10px; color: var(--text3); text-align: center; line-height: 1.35; }
-  .followup-insight {
-    margin-top: 10px; padding: 9px 11px; border-radius: 8px;
-    background: rgba(255,255,255,0.025); border: 1px solid var(--border);
-    font-size: 11px; color: var(--text2); line-height: 1.45;
-  }
-  .b-neutral { background: rgba(121,165,209,0.12); color: var(--ocean-pale); }
+  .cal-day.today.range-start::after,.cal-day.today.range-end::after,.cal-day.today.single::after{background:#fff;}
 
-  @media (max-width: 900px) {
-    .followup-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .range-footer{
+    display:flex;align-items:center;justify-content:space-between;margin-top:12px;
+    padding-top:12px;border-top:1px solid var(--line-soft);
   }
-  @media (max-width: 560px) {
-    .followup-grid { grid-template-columns: 1fr; }
-    .followup-head { align-items: flex-start; }
+  .range-summary{font-size:12px;color:var(--ink-soft);font-weight:600;}
+  .range-footer-btns{display:flex;gap:8px;}
+  .range-footer-btns .btn{padding:7px 13px;font-size:12.5px;}
+
+  /* ───────────────── KPI STRIP ───────────────── */
+  .kpi-strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin-bottom:16px;}
+  .kpi{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);
+    padding:16px 12px 14px;display:flex;flex-direction:column;align-items:center;text-align:center;
+    box-shadow:var(--shadow-card);position:relative;min-height:222px;
+  }
+  .kpi.hero{
+    background:linear-gradient(155deg,var(--brand),var(--brand-deep));
+    border-color:transparent;color:#fff;box-shadow:0 16px 32px -16px rgba(15,46,79,0.55);
+  }
+  .kpi-trend{
+    position:absolute;top:12px;right:12px;display:flex;align-items:center;gap:3px;
+    font-size:10px;font-weight:700;padding:3px 7px;border-radius:999px;
+  }
+  .kpi-trend.up{background:var(--good-bg);color:var(--good);}
+  .kpi-trend.down{background:var(--bad-bg);color:var(--bad);}
+  .kpi-trend.flat{background:var(--neutral-bg);color:var(--ink-soft);}
+  .kpi.hero .kpi-trend.up{background:rgba(255,255,255,0.22);color:#DFF6EC;}
+  .kpi.hero .kpi-trend.down{background:rgba(255,255,255,0.22);color:#FBDAD8;}
+  .kpi.hero .kpi-trend.flat{background:rgba(255,255,255,0.18);color:#EAF3FC;}
+  .kpi-trend svg{width:9px;height:9px;}
+
+  .kpi-label{
+    font-size:10.5px;font-weight:700;letter-spacing:0.02em;color:var(--ink-soft);
+    margin-bottom:10px;min-height:26px;display:flex;align-items:center;justify-content:center;
+  }
+  .kpi.hero .kpi-label{color:rgba(255,255,255,0.82);}
+
+  .kpi-val{font-size:30px;font-weight:800;letter-spacing:-0.01em;font-variant-numeric:tabular-nums;}
+  .kpi.hero .kpi-val{color:#fff;}
+
+  .kpi-footer{margin-top:auto;padding-top:10px;width:100%;}
+  .kpi-sub{font-size:10.5px;color:var(--ink-faint);font-weight:600;}
+  .kpi.hero .kpi-sub{color:rgba(255,255,255,0.7);}
+
+  .dial{position:relative;width:106px;aspect-ratio:1;margin:0 auto 12px;display:grid;place-items:center;}
+  .dial svg{width:100%;height:100%;overflow:visible;}
+  .dial-bg{fill:none;stroke:var(--line-soft);stroke-width:1.4;}
+  .kpi.hero .dial-bg{stroke:rgba(255,255,255,0.16);}
+  .dial-tick{stroke:var(--line);stroke-width:6;stroke-linecap:round;}
+  .kpi.hero .dial-tick{stroke:rgba(255,255,255,0.22);}
+  .dial-tick.active{stroke:var(--brand-light);}
+  .dial-tick.active.status-ok{stroke:var(--good);}
+  .dial-tick.active.status-warn{stroke:var(--warn);}
+  .dial-tick.active.status-bad{stroke:var(--bad);}
+  .dial-tick.active.status-neutral{stroke:var(--ink-faint);}
+  .kpi.hero .dial-tick.active{stroke:#fff;}
+  .dial-content{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+
+  /* ───────────────── ROWS / CARDS ───────────────── */
+  .row{display:grid;gap:14px;margin-bottom:14px;}
+  .row-funnel{grid-template-columns:1.6fr 1fr;}
+  .row-radar{grid-template-columns:1.55fr 1fr;}
+  .row-bottom{grid-template-columns:1fr 1fr;}
+
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);
+    padding:20px;box-shadow:var(--shadow-card);
+  }
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;}
+  .card-title{font-size:15px;font-weight:800;color:var(--ink);display:flex;align-items:center;gap:8px;}
+  .card-title .dot{width:8px;height:8px;border-radius:50%;flex:0 0 8px;}
+  .card-sub{font-size:11.5px;color:var(--ink-faint);font-weight:600;margin-top:2px;}
+  .card-badge{
+    font-size:11px;font-weight:700;padding:5px 11px;border-radius:999px;background:var(--neutral-bg);color:var(--ink-soft);
   }
 
-  /* ── TRÊS COLS ── */
-  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  /* ── funnel (capsule bars, inspired by the reference chart) ── */
+  .funnel-chart{display:flex;align-items:flex-end;gap:10px;height:206px;padding-top:30px;}
+  .funnel-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:9px;min-width:0;}
+  .funnel-capsule-wrap{position:relative;width:100%;height:150px;display:flex;align-items:flex-end;justify-content:center;}
+  .funnel-capsule{width:58%;min-width:14px;border-radius:999px;transition:height .85s cubic-bezier(.3,.8,.3,1);position:relative;}
+  .funnel-capsule.filled{background:linear-gradient(180deg,var(--brand-light),var(--brand));}
+  .funnel-capsule.top{background:linear-gradient(180deg,#69B4F0,var(--brand-deep));}
+  .funnel-capsule.empty{background:repeating-linear-gradient(135deg,var(--line) 0 6px,transparent 6px 12px);}
+  .funnel-badge{
+    position:absolute;top:-28px;left:50%;transform:translateX(-50%);white-space:nowrap;
+    background:var(--ink);color:#fff;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;
+  }
+  .funnel-badge::after{
+    content:'';position:absolute;bottom:-3px;left:50%;transform:translateX(-50%) rotate(45deg);
+    width:6px;height:6px;background:var(--ink);
+  }
+  .funnel-value{font-size:14px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;}
+  .funnel-label{font-size:10.5px;color:var(--ink-soft);font-weight:600;text-align:center;line-height:1.25;}
+  .funnel-rate{font-size:9.5px;color:var(--ink-faint);font-weight:700;}
 
-  /* ── OBJEÇÕES ── */
-  .obj-list { display: flex; flex-direction: column; gap: 6px; }
-  .obj-item {
-    display: flex; align-items: center; gap: 9px; padding: 8px 10px;
-    background: rgba(255,255,255,0.03); border-radius: 8px;
-    border: 1px solid transparent; cursor: pointer; transition: all 0.15s; font-size: 12px;
-  }
-  .obj-item:hover { background: rgba(255,255,255,0.06); border-color: var(--border); }
-  .obj-rank { font-size: 10px; font-weight: 700; color: var(--ocean-lt); min-width: 18px; }
-  .obj-text { flex: 1; color: var(--text1); }
-  .obj-bar-bg { width: 56px; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
-  .obj-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--ocean), var(--teal)); }
-  .obj-n { font-size: 11px; color: var(--text3); min-width: 24px; text-align: right; }
+  /* ── meta de fechamento (gauge donut) ── */
+  .gauge-wrap{display:flex;flex-direction:column;align-items:center;}
+  .gauge-ring{position:relative;width:176px;height:176px;margin:4px auto 6px;}
+  .gauge-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+  .gauge-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .gauge-pct{font-size:32px;font-weight:800;color:var(--ink);letter-spacing:-0.01em;}
+  .gauge-tag{font-size:10.5px;color:var(--ink-faint);font-weight:700;margin-top:2px;text-align:center;}
+  .gauge-legend{display:flex;flex-direction:column;gap:8px;width:100%;margin-top:6px;}
+  .gauge-legend-row{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:600;color:var(--ink-soft);}
+  .gauge-legend-row .lg{display:flex;align-items:center;gap:7px;}
+  .gauge-legend-row .sw{width:9px;height:9px;border-radius:3px;flex:0 0 9px;}
+  .gauge-legend-row b{color:var(--ink);font-variant-numeric:tabular-nums;}
+  .gauge-note{font-size:11px;color:var(--ink-faint);text-align:center;margin-top:10px;line-height:1.5;}
 
-  /* ── METAS EDIT (mantido no código, oculto no frontend) ── */
-  .meta-panel { display: none !important; }
-  .meta-form { display: flex; flex-direction: column; gap: 10px; }
-  .mf-row { display: flex; align-items: center; gap: 10px; }
-  .mf-lbl { font-size: 12px; color: var(--text2); min-width: 172px; }
-  .mf-slider { flex: 1; accent-color: var(--ocean-lt); }
-  .mf-val {
-    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600;
-    color: var(--text1); min-width: 38px; text-align: right;
-  }
-  .mf-min, .mf-ideal { font-size: 10px; color: var(--text3); min-width: 28px; }
+  /* ── radar ── */
+  .radar-legend{display:flex;gap:14px;margin-top:10px;justify-content:center;flex-wrap:wrap;}
+  .radar-legend span{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-soft);font-weight:600;}
+  .radar-legend i{width:16px;height:2.5px;border-radius:2px;display:inline-block;}
 
-  .apply-btn {
-    margin-top: 14px; width: 100%; padding: 10px;
-    background: linear-gradient(135deg, var(--ocean), var(--teal));
-    border: none; border-radius: 9px; color: var(--white);
-    font-size: 13px; font-family: 'Syne', sans-serif; font-weight: 600;
-    cursor: pointer; letter-spacing: 0.05em; transition: opacity 0.2s;
-  }
-  .apply-btn:hover { opacity: 0.88; }
+  /* ── diagnostico ── */
+  .diag-list{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;padding-right:2px;}
+  .diag-item{padding:11px 12px;border-radius:12px;border-left:3px solid;background:var(--card-soft);}
+  .diag-item.dc{border-left-color:var(--bad);}
+  .diag-item.dw{border-left-color:var(--warn);}
+  .diag-item.dok{border-left-color:var(--good);}
+  .dt{font-size:12px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:6px;}
+  .dc .dt{color:var(--bad);}
+  .dw .dt{color:var(--warn);}
+  .dok .dt{color:var(--good);}
+  .dd{font-size:11.5px;color:var(--ink-soft);line-height:1.5;}
 
-  /* ── LEGEND PROJEÇÃO ── */
-  .proj-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
-  .pl-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text2); }
+  /* ── retornos ao decisor band ── */
+  .followup-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;}
+  .followup-metric{
+    background:var(--card-soft);border:1px solid var(--line-soft);border-radius:14px;
+    padding:16px 12px 13px;display:flex;flex-direction:column;align-items:center;text-align:center;
+    min-height:190px;position:relative;overflow:hidden;
+  }
+  .followup-metric::before{content:'';position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(180deg,var(--brand-light),var(--good));opacity:.8;}
+  .followup-label{font-size:10.5px;font-weight:700;color:var(--ink-soft);margin-bottom:10px;min-height:26px;display:flex;align-items:center;text-align:center;}
+  .followup-val{font-size:26px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;}
+  .followup-sub{font-size:10px;color:var(--ink-faint);font-weight:600;margin-top:auto;padding-top:8px;}
+  .followup-dial{width:84px;margin:0 auto 10px;}
 
-  /* scrollbar */
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: var(--navy2); }
-  ::-webkit-scrollbar-thumb { background: var(--ocean); border-radius: 3px; }
-
-  .mf-header {
-    display: grid; grid-template-columns: 172px 1fr 38px;
-    gap: 10px; font-size: 10px; color: var(--text3);
-    text-transform: uppercase; letter-spacing: 0.06em;
-    padding-bottom: 6px; border-bottom: 1px solid var(--border); margin-bottom: 4px;
-  }
-
-  /* ── CONTROLES RESPONSIVOS ── */
-  .week-select-wrap {
-    position: relative; width: 100%; display: flex; align-items: center;
-  }
-  .week-select-wrap::after {
-    content: '⌄'; position: absolute; right: 13px; top: 50%; transform: translateY(-56%);
-    color: rgba(248,251,255,0.92); font-size: 17px; line-height: 1; pointer-events: none;
-  }
-  .week-select {
-    width: 100%; max-width: 100%; padding: 10px 38px 10px 12px; border-radius: 9px;
-    border: 1px solid rgba(255,255,255,0.16);
-    background: rgba(27,92,155,0.78); color: #F8FBFF; font: 600 13px 'DM Sans', sans-serif;
-    outline: none; cursor: pointer; appearance: none; -webkit-appearance: none;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
-  }
-  .week-select:focus { border-color: rgba(183,213,242,0.55); }
-  .sync-bar {
-    display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; align-items: center; gap: 10px;
-    padding: 8px 14px; background: var(--card2); border: 1px solid var(--border); border-radius: 12px;
-  }
-  .sync-icon { font-size: 16px; }
-  .sync-message { min-width: 0; font-size: 12px; color: var(--text2); overflow-wrap: anywhere; }
-  .sync-btn {
-    padding: 6px 12px; background: rgba(24,95,165,0.3); border: 1px solid var(--border2);
-    border-radius: 7px; color: var(--ocean-pale); font-size: 11px; cursor: pointer;
-    font-family: 'DM Sans', sans-serif; white-space: nowrap;
+  .followup-insight{
+    margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--brand-wash2);
+    border:1px solid var(--line-soft);font-size:12px;color:var(--ink-soft);line-height:1.55;
   }
 
-  @media (max-width: 1100px) {
-    .kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .kpi { min-height: 220px; }
-    .followup-metric { min-height: 222px; }
-    .three-col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .three-col > .card:last-child { grid-column: 1 / -1; }
+  /* ── ultimos lancamentos ── */
+  .log-list{display:flex;flex-direction:column;gap:7px;}
+  .log-row{
+    display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:var(--card-soft);
   }
-
-  @media (max-width: 900px) {
-    .two-col { grid-template-columns: 1fr; }
-    .kpi { min-height: 214px; }
-    .followup-metric { min-height: 216px; }
-    .three-col { grid-template-columns: 1fr; }
-    .three-col > .card:last-child { grid-column: auto; }
-    .kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .followup-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .log-date{
+    width:42px;height:42px;border-radius:10px;background:var(--brand-wash);color:var(--brand-deep);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 42px;
   }
+  .log-date b{font-size:14px;font-weight:800;line-height:1;}
+  .log-date span{font-size:8.5px;font-weight:700;text-transform:uppercase;margin-top:1px;}
+  .log-mid{flex:1;min-width:0;}
+  .log-stats{font-size:12.5px;font-weight:700;color:var(--ink);}
+  .log-tag{font-size:10.5px;color:var(--ink-faint);font-weight:600;margin-top:2px;}
+  .log-metric{text-align:right;flex:0 0 auto;}
+  .log-metric b{font-size:14px;font-weight:800;color:var(--brand-deep);}
+  .log-metric div{font-size:9.5px;color:var(--ink-faint);font-weight:700;text-transform:uppercase;}
+  .log-empty{font-size:12.5px;color:var(--ink-faint);text-align:center;padding:30px 10px;}
 
-  @media (max-width: 760px) {
-    body { overflow-x: hidden; }
-    .page { padding: 14px 12px 32px; }
-    .overview-shell { margin-bottom: 14px; }
-    .header { margin-bottom: 0; padding: 0; gap: 12px; }
-    .brand-logo { width: 46px; height: 46px; flex-basis: 46px; border-radius: 12px; }
-    .brand-name { font-size: 25px; }
-    .brand-tagline { font-size: 9px; }
-    .header-right, .period-control, .pill-group { width: 100%; max-width: none; }
-    .period-caption { font-size: 9px; margin-top: 1px; }
-    .pill-group { overflow: visible; padding-bottom: 0; }
-    .week-select { width: 100%; }
-    .csv-section { margin-bottom: 12px; }
-    .kpi-stage { margin-top: 0; padding: 10px 8px 10px; border-radius: 16px; }
-    .kpi-stage-caption { flex-direction: column; align-items: flex-start; gap: 2px; padding: 0 2px 10px; }
-    .sync-bar { grid-template-columns: auto auto minmax(0, 1fr); padding: 10px 12px; }
-    .sync-btn { grid-column: 1 / -1; width: 100%; }
-    .card { padding: 14px; }
+  /* ── objecoes (dark card) ── */
+  .card-dark{
+    background:linear-gradient(160deg,var(--dark-card),var(--dark-card2));
+    border:none;color:#EAF3FC;
   }
+  .card-dark .card-title{color:#fff;}
+  .card-dark .card-sub{color:rgba(234,243,252,0.55);}
+  .obj-list{display:flex;flex-direction:column;gap:7px;}
+  .obj-item{display:flex;align-items:center;gap:10px;padding:9px 11px;background:rgba(255,255,255,0.06);border-radius:11px;}
+  .obj-rank{font-size:10.5px;font-weight:800;color:#9FCBF2;min-width:16px;}
+  .obj-text{flex:1;color:#EAF3FC;font-size:12.5px;font-weight:600;min-width:0;}
+  .obj-bar-bg{width:54px;height:5px;background:rgba(255,255,255,0.12);border-radius:3px;overflow:hidden;flex:0 0 54px;}
+  .obj-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#4E94D6,#9FE1CB);}
+  .obj-n{font-size:11px;color:rgba(234,243,252,0.65);font-weight:700;min-width:22px;text-align:right;}
+  .obj-empty{font-size:12.5px;color:rgba(234,243,252,0.55);text-align:center;padding:30px 10px;}
 
-  @media (max-width: 620px) {
-    .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-    .kpi { min-height: 206px; padding: 16px 10px 12px; }
-    .kpi-label { font-size: 9px; line-height: 1.35; min-height: 24px; margin-bottom: 8px; }
-    .kpi-val { font-size: 27px; }
-    .metric-dial { --dial-size: 88px; margin-bottom: 11px; }
-    .badge { max-width: 100%; white-space: normal; line-height: 1.25; }
-    .followup-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-    .followup-head { align-items: flex-start; flex-direction: column; gap: 8px; }
-    .followup-metric { min-height: 206px; padding: 16px 10px 12px; }
-    .followup-value { font-size: 26px; }
-    .f-row { display: grid; grid-template-columns: 86px minmax(0, 1fr) 38px; gap: 7px; }
-    .f-lbl { min-width: 0; font-size: 11px; line-height: 1.2; }
-    .f-rate { min-width: 0; font-size: 10px; }
-    .f-bar-wrap { height: 36px; }
-    .f-bar { padding: 0 8px; }
-    .f-conn { margin-left: 94px; }
-    .mf-header { display: none; }
-    .mf-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
-    .mf-row:last-child { border-bottom: 0; }
-    .mf-lbl { min-width: 0; grid-column: 1 / -1; }
-    .mf-row > :nth-child(2) { grid-column: 1; min-width: 0; overflow-wrap: anywhere; }
-    .mf-val { grid-column: 2; min-width: 32px; }
+  /* ── help modal ── */
+  .modal-veil{position:fixed;inset:0;background:rgba(14,34,51,0.42);z-index:80;display:none;align-items:center;justify-content:center;padding:20px;}
+  .modal-veil.open{display:flex;}
+  .modal-box{background:var(--card);border-radius:18px;max-width:560px;width:100%;padding:22px;box-shadow:var(--shadow-pop);max-height:84vh;overflow-y:auto;}
+  .modal-box h3{font-size:16px;font-weight:800;margin-bottom:10px;}
+  .modal-box p, .modal-box li{font-size:12.5px;color:var(--ink-soft);line-height:1.65;}
+  .modal-box ol{padding-left:18px;margin:8px 0;display:flex;flex-direction:column;gap:6px;}
+  .modal-box code{background:var(--card-soft);padding:1px 6px;border-radius:5px;font-size:11px;}
+  .modal-close{margin-top:16px;}
+
+  /* ───────────────── RESPONSIVE ───────────────── */
+  @media (max-width:1180px){
+    .kpi-strip{grid-template-columns:repeat(4,minmax(0,1fr));}
+    .followup-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
   }
-
-  @media (max-width: 390px) {
-    .page { padding-left: 10px; padding-right: 10px; }
-    .kpi-grid { gap: 7px; }
-    .kpi { min-height: 198px; padding: 15px 8px 12px; }
-    .metric-dial { --dial-size: 82px; }
-    .followup-metric { min-height: 198px; }
-    .f-row { grid-template-columns: 76px minmax(0, 1fr) 34px; gap: 6px; }
-    .f-conn { margin-left: 82px; }
+  @media (max-width:1020px){
+    .row-funnel,.row-radar,.row-bottom{grid-template-columns:1fr;}
   }
-
+  @media (max-width:860px){
+    .shell{grid-template-columns:1fr;}
+    .sidebar{
+      position:sticky;top:0;height:auto;flex-direction:row;align-items:center;
+      overflow-x:auto;padding:12px 14px;gap:14px;z-index:30;
+    }
+    .side-nav{flex-direction:row;}
+    .side-section-label,.side-spacer,.side-foot{display:none;}
+    .side-link span{display:none;}
+    .side-link{padding:9px;}
+    .main{padding:18px 16px 48px;}
+    .kpi-strip{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .followup-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  }
+  @media (max-width:520px){
+    .topbar{flex-direction:column;align-items:stretch;}
+    .topbar-actions{justify-content:space-between;}
+    .range-panel{right:auto;left:0;width:94vw;}
+    .range-body{grid-template-columns:1fr;}
+    .range-presets{flex-direction:row;flex-wrap:wrap;border-right:none;border-bottom:1px solid var(--line-soft);padding-right:0;padding-bottom:10px;}
+  }
 </style>
 </head>
 <body>
 
-<div class="bg-wrap">
-  <div class="bg-gradient"></div>
-  <div class="bg-wave"></div>
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="side-brand">
+      <div class="side-logo">
+        <img alt="Oceanic" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAA6wklEQVR42u19eZhcV3Xn71a3dtnansYtWZI3vI09YMdmC5ux8QIz9pcBYobBfCyBAQYwOJPJEHtmssgOJmPvhoAxCAgxuxljExsvhCAvkm1JVrfW7pZa3ep9r+p6+/2m6r3W6+p6VfWqu1uSm/7O93XL3f1e3XvvOfeec845Q34AACAgIBAQEBAICAgEBAQEBAICAgIBAQEBgYCAQEBAICAgEBAQEAgICAQEBAQCAgIBAQGBgIBAQEAgICAQEBAQCAgIBAQEBAICAgEBgYCAQEBAICAgIBAQCAgIBAICAgEBAQGBgIBAQCAgIBAQEAgICAgEBAQCAgIBAQGBgIBAQCAgIBAQEAgICAQEBAICAgEBgYCAQEBAICAgIBAQCAgIBAQEAgICAYGAgEBAQCAgIBAQCAgIBAQEAgICAQGBgIBAQCAgIBAQCAgIBAQEAgICAQGBgIBAQCAgIBAQCAgIBAQEAgICAYGAgEBAQCAgIBAQCAgIBAQEAgICAYGAgEBAQCAgIBAQEAgICAQEAgICAQGBgIBAQCAgIBAQEAgICAQEBAICAgEBgYCAQEBAICAgEBAQCAgIBAQEBAQCAgIBgYCAQEBAICAgEBAQCAgIBAQEAgICAQGBgIBAQEAgICAQEAgICAQEBAICAgGBgIBAQEAgICAQEAgICAgEBAQCAgIBAYGAgEBAQCAgIBAQEAgICAQEAgKCJv8HXKjbAGxlqLYAAAAASUVORK5CYII=">
+      </div>
+      <div class="side-brand-text">
+        <div class="side-brand-name">oceanic</div>
+        <div class="side-brand-tag">Navegador de prospecção</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="side-section-label">Painel</div>
+      <nav class="side-nav" id="side-nav">
+        <a class="side-link active" data-target="#top" href="#top">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>
+          <span>Visão geral</span>
+        </a>
+        <a class="side-link" data-target="#sec-funil" href="#sec-funil">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16l-6 8v6l-4 2v-8L4 4Z"/></svg>
+          <span>Funil &amp; meta</span>
+        </a>
+        <a class="side-link" data-target="#sec-radar" href="#sec-radar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 4v16M4 12h16"/></svg>
+          <span>Diagnóstico</span>
+        </a>
+        <a class="side-link" data-target="#sec-retornos" href="#sec-retornos">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 2l4 4-4 4M21 6H8a4 4 0 0 0-4 4v1M7 22l-4-4 4-4M3 18h13a4 4 0 0 0 4-4v-1"/></svg>
+          <span>Retornos</span>
+        </a>
+        <a class="side-link" data-target="#sec-bottom" href="#sec-bottom">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M14 3v5h5M8 13h8M8 17h5"/></svg>
+          <span>Lançamentos</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="side-spacer"></div>
+
+    <div class="side-foot">
+      <div class="side-card">
+        <div class="side-card-title">Como conectar a planilha</div>
+        <div class="side-card-sub">Veja o passo a passo para publicar as 4 abas e colar as URLs de CSV aqui no dashboard.</div>
+        <button class="side-card-btn" onclick="openHelp()">Ver instruções</button>
+      </div>
+      <a class="side-link" href="#" onclick="loadCSVAuto();return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg>
+        <span>Atualizar dados</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main" id="top">
+
+    <div class="topbar">
+      <div>
+        <h1>Dashboard</h1>
+        <p>Acompanhe sua prospecção com clareza, por qualquer período que você escolher.</p>
+      </div>
+      <div class="topbar-actions">
+        <div class="range-wrap" id="range-wrap">
+          <button class="range-btn" id="range-btn" onclick="toggleRangePanel()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4M17 3v4M3 10h18"/></svg>
+            <span id="range-label">Carregando período…</span>
+            <svg class="care" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+
+          <div class="range-panel" id="range-panel">
+            <div class="range-body">
+              <div class="range-presets" id="range-presets"></div>
+              <div>
+                <div class="cal-head">
+                  <div class="cal-nav"><button onclick="calShiftMonth(-1)">‹</button></div>
+                  <strong id="cal-month-label">—</strong>
+                  <div class="cal-nav"><button onclick="calShiftMonth(1)">›</button></div>
+                </div>
+                <div class="cal-grid" id="cal-dow"></div>
+                <div class="cal-grid" id="cal-grid"></div>
+              </div>
+            </div>
+            <div class="range-footer">
+              <div class="range-summary" id="range-summary">Selecione um período</div>
+              <div class="range-footer-btns">
+                <button class="btn btn-ghost" onclick="closeRangePanel()">Cancelar</button>
+                <button class="btn btn-primary" id="range-apply" onclick="applyPendingRange()">Aplicar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-ghost" onclick="loadCSVAuto()" title="Sincronizar com a planilha">
+          <span class="sync-dot" id="csv-dot"></span>
+          <span id="csv-msg">Sincronizando…</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI STRIP -->
+    <div class="kpi-strip" id="kpi-strip"></div>
+
+    <!-- FUNIL + META DE FECHAMENTO -->
+    <div class="row row-funnel" id="sec-funil">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title"><span class="dot" style="background:var(--brand)"></span>Funil de prospecção</div>
+            <div class="card-sub">Ligações até vendas, no período selecionado</div>
+          </div>
+        </div>
+        <div class="funnel-chart" id="funnel"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title"><span class="dot" style="background:var(--good)"></span>Meta de fechamento</div>
+            <div class="card-sub">Vendas vs. meta do período</div>
+          </div>
+        </div>
+        <div class="gauge-wrap">
+          <div class="gauge-ring">
+            <svg viewBox="0 0 200 200">
+              <circle class="gauge-bg" cx="100" cy="100" r="85" stroke="#E7EEF5" stroke-width="20" fill="none"/>
+              <circle id="gauge-fg" cx="100" cy="100" r="85" stroke="var(--good)" stroke-width="20" fill="none" stroke-linecap="round"/>
+            </svg>
+            <div class="gauge-center">
+              <div class="gauge-pct" id="gauge-pct">—</div>
+              <div class="gauge-tag">da meta batida</div>
+            </div>
+          </div>
+          <div class="gauge-legend">
+            <div class="gauge-legend-row"><span class="lg"><i class="sw" style="background:var(--good)"></i>Vendas fechadas</span><b id="gauge-ven">0</b></div>
+            <div class="gauge-legend-row"><span class="lg"><i class="sw" style="background:#E7EEF5"></i>Meta restante</span><b id="gauge-rest">0</b></div>
+          </div>
+          <div class="gauge-note" id="gauge-note">Aguardando dados…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RADAR + DIAGNOSTICO -->
+    <div class="row row-radar" id="sec-radar">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title"><span class="dot" style="background:#8B5CF6"></span>Radar de performance</div>
+            <div class="card-sub">Cada etapa comparada com a taxa ideal</div>
+          </div>
+        </div>
+        <div style="position:relative;height:240px">
+          <canvas id="radarC" role="img" aria-label="Radar comparando performance real vs ideal em cada etapa do funil"></canvas>
+        </div>
+        <div class="radar-legend">
+          <span><i style="background:var(--brand-light)"></i>Performance real</span>
+          <span><i style="background:#C7D6E4"></i>Ideal (100%)</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title"><span class="dot" style="background:var(--warn)"></span>Diagnóstico de gargalos</div>
+            <div class="card-sub">Onde focar primeiro</div>
+          </div>
+        </div>
+        <div class="diag-list" id="diag"></div>
+      </div>
+    </div>
+
+    <!-- RETORNOS AO DECISOR -->
+    <div class="card" id="sec-retornos" style="margin-bottom:14px;">
+      <div class="card-head">
+        <div>
+          <div class="card-title"><span class="dot" style="background:var(--brand)"></span>Retornos ao decisor</div>
+          <div class="card-sub">Disciplina de follow-up no período</div>
+        </div>
+        <span class="card-badge" id="followup-badge">Sem base</span>
+      </div>
+      <div class="followup-grid" id="followup-grid"></div>
+      <div class="followup-insight" id="followup-insight">Aguardando dados de follow-up da planilha.</div>
+    </div>
+
+    <!-- LANCAMENTOS + OBJECOES -->
+    <div class="row row-bottom" id="sec-bottom">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title"><span class="dot" style="background:var(--brand)"></span>Últimos lançamentos</div>
+            <div class="card-sub">Dias mais recentes do período selecionado</div>
+          </div>
+        </div>
+        <div class="log-list" id="log-list"></div>
+      </div>
+
+      <div class="card card-dark">
+        <div class="card-head">
+          <div>
+            <div class="card-title"><span class="dot" style="background:#F08C98"></span>Objeções mais frequentes</div>
+            <div class="card-sub">No período selecionado</div>
+          </div>
+        </div>
+        <div class="obj-list" id="obj-list"></div>
+      </div>
+    </div>
+
+  </main>
 </div>
 
-<div class="page">
-
-  <!-- CSV CONNECTION -->
-  <section class="csv-section">
-    <div class="sync-bar">
-      <span class="sync-icon">🌊</span>
-      <span class="status-dot" id="csv-dot"></span>
-      <span class="sync-message" id="csv-msg">Carregando dados da planilha...</span>
-      <button class="sync-btn" onclick="loadCSVAuto()">↻ Atualizar agora</button>
-    </div>
-    <input type="hidden" id="csv-url" value="">
-  </section>
-
-  <section class="overview-shell">
-  <!-- HEADER -->
-  <header class="header">
-    <div class="brand">
-      <div class="brand-logo">
-        <img src="data:image/png;base64,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" alt="Símbolo Oceanic">
-      </div>
-      <div>
-        <div class="brand-name">oceanic</div>
-        <div class="brand-tagline">Navegador de Prospecção</div>
-      </div>
-    </div>
-    <div class="header-right">
-      <div class="period-control">
-        <div class="period-caption">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <rect x="3" y="5" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.8"/>
-            <path d="M7 3v4M17 3v4M3 10h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
-          <span>Período analisado</span>
-        </div>
-        <div class="pill-group" id="week-pills"></div>
-      </div>
-    </div>
-  </header>
-
-  <div class="kpi-stage">
-    <div class="kpi-stage-caption">
-      <div class="kpi-stage-title">Métricas do período selecionado</div>
-      <div class="kpi-stage-subtitle">As 7 métricas abaixo mudam conforme a semana escolhida.</div>
-    </div>
-    <!-- KPI CARDS -->
-    <div class="kpi-grid" id="kpi-grid"></div>
+<!-- HELP MODAL -->
+<div class="modal-veil" id="help-veil">
+  <div class="modal-box">
+    <h3>Como conectar sua planilha</h3>
+    <p>No Google Sheets, use <b>Arquivo → Compartilhar → Publicar na web</b> e publique estas 4 abas em formato CSV:</p>
+    <ol>
+      <li><code>DASHBOARD_DIARIO</code> — feed diário (alimenta o período personalizado)</li>
+      <li><code>DASHBOARD_METRICAS</code> — metas semanais por semana</li>
+      <li><code>OBJECOES</code> — objeções registradas</li>
+      <li><code>PARAMETROS_DIAGNOSTICO</code> — taxas mínima/ideal de cada etapa</li>
+    </ol>
+    <p>Cole as 4 URLs geradas nas constantes no topo do <code>&lt;script&gt;</code> deste arquivo HTML (<code>DIARIO_CSV_URL</code>, <code>METRICAS_CSV_URL</code>, <code>OBJECTIONS_CSV_URL</code>, <code>PARAMETROS_CSV_URL</code>) e salve. Não publique as abas <code>LANCAMENTOS</code> nem <code>METAS_SEMANAIS</code> — elas ficam só na sua planilha.</p>
+    <button class="btn btn-ghost modal-close" onclick="closeHelp()">Fechar</button>
   </div>
-  </section>
-
-  <!-- FUNIL + DIAGNÓSTICO -->
-  <div class="two-col">
-    <div class="card">
-      <div class="card-title">
-        <span class="ct-dot" style="background:var(--teal)"></span>
-        Funil de prospecção
-      </div>
-      <div class="funnel" id="funnel"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">
-        <span class="ct-dot" style="background:var(--amber)"></span>
-        Diagnóstico de gargalos
-      </div>
-      <div class="diag" id="diag"></div>
-    </div>
-  </div>
-
-  <!-- RETORNOS AO DECISOR -->
-  <div class="card followup-card">
-    <div class="followup-head">
-      <div class="card-title">
-        <span class="ct-dot" style="background:var(--teal)"></span>
-        Retornos ao decisor
-      </div>
-      <span class="badge b-neutral" id="followup-badge">Sem base</span>
-    </div>
-    <div class="followup-grid" id="followup-grid"></div>
-    <div class="followup-insight" id="followup-insight">
-      Aguardando dados de follow-up da planilha.
-    </div>
-  </div>
-
-  <!-- RADAR + PROJEÇÃO + OBJEÇÕES -->
-  <div class="three-col">
-
-    <div class="card">
-      <div class="card-title">
-        <span class="ct-dot" style="background:#9b59b6"></span>
-        Radar de performance
-      </div>
-      <div style="position:relative;height:230px">
-        <canvas id="radarC" role="img" aria-label="Radar comparando performance real vs ideal em cada etapa do funil"></canvas>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">
-        <span class="ct-dot" style="background:var(--ocean-lt)"></span>
-        Projeção: meta vs realidade
-      </div>
-      <div style="position:relative;height:200px">
-        <canvas id="projC" role="img" aria-label="Gráfico de linha com 4 séries: meta execução (círculo/sólido), meta resultado (quadrado/tracejado), realidade execução (triângulo/sólido), realidade resultado (triângulo invertido/tracejado)"></canvas>
-      </div>
-      <div class="proj-legend" id="proj-legend">
-        <div class="pl-item">
-          <svg width="30" height="12"><line x1="0" y1="6" x2="30" y2="6" stroke="#185FA5" stroke-width="2"/><circle cx="15" cy="6" r="4" fill="#185FA5"/></svg>
-          Meta execução
-        </div>
-        <div class="pl-item">
-          <svg width="30" height="12"><line x1="0" y1="6" x2="30" y2="6" stroke="#378ADD" stroke-width="2" stroke-dasharray="5,3"/><rect x="11" y="2" width="8" height="8" fill="#378ADD"/></svg>
-          Meta resultado
-        </div>
-        <div class="pl-item">
-          <svg width="30" height="12"><line x1="0" y1="6" x2="30" y2="6" stroke="#1D9E75" stroke-width="2"/><polygon points="15,2 19,10 11,10" fill="#1D9E75"/></svg>
-          Real. execução
-        </div>
-        <div class="pl-item">
-          <svg width="30" height="12"><line x1="0" y1="6" x2="30" y2="6" stroke="#5DCAA5" stroke-width="2" stroke-dasharray="5,3"/><polygon points="15,10 19,2 11,2" fill="#5DCAA5"/></svg>
-          Real. resultado
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">
-        <span class="ct-dot" style="background:var(--red)"></span>
-        Objeções mais frequentes
-      </div>
-      <div class="obj-list" id="obj-list"></div>
-    </div>
-  </div>
-
-</div><!-- /page -->
+</div>
 
 <script>
-// ─── CONFIGURAÇÃO ─────────────────────────────────────────
-// Cole abaixo os links CSV publicados das abas DASHBOARD_METRICAS e OBJECOES.
-// O tutorial entregue junto explica exatamente como gerar esses dois links.
-const METRICS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmp7XPUIaGXBj8OzytBlUmBybmRftoG2J2Iwfpn1ShSv5XBSkncbdpNeMDB_5-DuSRIgTQ-DXz0Rp2/pub?gid=548398166&single=true&output=csv";
-const OBJECTIONS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmp7XPUIaGXBj8OzytBlUmBybmRftoG2J2Iwfpn1ShSv5XBSkncbdpNeMDB_5-DuSRIgTQ-DXz0Rp2/pub?gid=71232552&single=true&output=csv";
-
-const DEFAULT_METAS = { lig:80, con:30, dec:0, rmk:0, rre:2, ven:1 };
-let WEEKS = {};
-let OBJECTIONS_BY_WEEK = {};
-let metas = { ...DEFAULT_METAS };
-let curWeek = null;
-let radarCh = null, projCh = null;
-let secondsLeft = 300;
-let previousTotals = zeroTotals();
-
-const CONV_RULES = {
-  con: { min: 0.20, ideal: 0.50, label: 'Lig→Conexão' },
-  dec: { min: 0.20, ideal: 0.50, label: 'Con→Decisor' },
-  rmk: { min: 0.05, ideal: 0.10, label: 'Dec→R.Marc.' },
-  rre: { min: 0.30, ideal: 0.50, label: 'Marc→Real.' },
-  ven: { min: 0.10, ideal: 0.15, label: 'Real→Venda' }
-};
-
-const DIAG_MSGS = {
-  lig: { 1: 'Volume crítico. Estruture um bloco fixo de prospecção na agenda. Sem volume, nada funciona.', 2: 'Abaixo da meta. Revise quanto tempo está dedicando por dia à prospecção ativa.', 3: 'Volume ok. Mantenha o ritmo.' },
-  con: { 1: 'Problema com a lista. Qualifique melhor o ICP e teste horários entre 8–9h e 17–18h.', 2: 'Aumente o número de ligações ou ajuste horários de contato.', 3: 'Mantenha o ritmo.' },
-  dec: { 1: 'Melhore a argumentação com a atendente. Use autoridade, senso de urgência e peça o nome do decisor logo.', 2: 'Crie urgência e autoridade na abordagem. Pratique o script de contorno de gatekeeper.', 3: 'Mantenha o ritmo.' },
-  rmk: { 1: 'Melhore sua argumentação e clareza da dor. O pitch está gerando interesse? Teste diferentes CTAs.', 2: 'Crie maior urgência e micro-compromisso. Pergunte: “Você tem 20 min na quinta às 10h?”', 3: 'Mantenha o ritmo.' },
-  rre: { 1: 'Ajuste argumento na prospecção e faça follow-up. Confirme a reunião 24h antes.', 2: 'Otimize follow-up e confirmações. Adicione lembrete no dia com breve reforço de valor.', 3: 'Mantenha o ritmo.' },
-  ven: { 1: 'Analise reuniões e melhore o diagnóstico. O decisor está presente? A dor está mapeada?', 2: 'Ajuste proposta, ancoragem de valor e CTA. Qual é o próximo passo claro ao final da reunião?', 3: 'Mantenha o ritmo.' }
-};
-
-// ─── UTILITÁRIOS ───────────────────────────────────────────
-function pct(v) { return Math.round((Number(v) || 0) * 100) + '%'; }
-function zeroTotals() { return { lig:0, con:0, dec:0, rmk:0, rre:0, ven:0, fuPrev:0, fuDone:0, fuDec:0 }; }
-function getLevel(rate, min, ideal) { return rate >= ideal ? 3 : rate >= min ? 2 : 1; }
-function getFollowupStatus(rate, hasBase) {
-  if (!hasBase) return { level:0, cls:'neutral', icon:'⚪', label:'Sem base' };
-  if (rate >= 0.80) return { level:3, cls:'ok', icon:'🟢', label:'Bom' };
-  if (rate >= 0.50) return { level:2, cls:'warn', icon:'🟡', label:'Médio' };
-  return { level:1, cls:'bad', icon:'🔴', label:'Baixo' };
-}
-function escapeHTML(value) {
-  return String(value ?? '').replace(/[&<>'"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#039;', '"':'&quot;' }[c]));
-}
-function normalKey(value) {
-  return String(value ?? '').trim().toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
-}
-function numeric(value) {
-  if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
-  let v = String(value ?? '').trim().replace(/\s/g, '');
-  if (!v) return 0;
-  if (v.includes(',') && v.includes('.')) {
-    v = v.lastIndexOf(',') > v.lastIndexOf('.') ? v.replace(/\./g, '').replace(',', '.') : v.replace(/,/g, '');
-  } else if (v.includes(',')) {
-    v = v.replace(',', '.');
-  }
-  const parsed = Number(v.replace(/[^0-9.-]/g, ''));
-  return Number.isFinite(parsed) ? parsed : 0;
-}
-function field(row, ...names) {
-  for (const name of names) {
-    const value = row[normalKey(name)];
-    if (value !== undefined && value !== null && String(value).trim() !== '') return value;
-  }
-  return '';
-}
-
-function parseCSV(text) {
-  const firstLine = text.split(/\r?\n/).find(line => /semana_id/i.test(line)) || (text.match(/^.*$/m) || [''])[0];
-  const delimiter = (firstLine.split(';').length > firstLine.split(',').length) ? ';' : ',';
-  const rows = [];
-  let row = [], cell = '', quoted = false;
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i];
-    const next = text[i + 1];
-    if (char === '"') {
-      if (quoted && next === '"') { cell += '"'; i++; }
-      else quoted = !quoted;
-    } else if (char === delimiter && !quoted) {
-      row.push(cell.trim()); cell = '';
-    } else if ((char === '\n' || char === '\r') && !quoted) {
-      if (char === '\r' && next === '\n') i++;
-      row.push(cell.trim());
-      if (row.some(v => v !== '')) rows.push(row);
-      row = []; cell = '';
-    } else {
-      cell += char;
-    }
-  }
-  row.push(cell.trim());
-  if (row.some(v => v !== '')) rows.push(row);
-  if (!rows.length) return [];
-  // As abas do modelo têm título nas linhas 1–2; procura automaticamente a linha real de cabeçalhos.
-  const headerIndex = rows.findIndex(row => row.map(normalKey).includes('semana_id'));
-  if (headerIndex < 0) return [];
-  const headers = rows[headerIndex].map(normalKey);
-  return rows.slice(headerIndex + 1).map(values => Object.fromEntries(headers.map((header, index) => [header, values[index] ?? ''])));
-}
-
-async function fetchRows(url) {
-  const separator = url.includes('?') ? '&' : '?';
-  const response = await fetch(url + separator + 't=' + Date.now(), { cache: 'no-store' });
-  if (!response.ok) throw new Error('HTTP ' + response.status);
-  return parseCSV(await response.text());
-}
-function configured(url) { return /^https:\/\//i.test(url); }
-function weekSort(a, b) {
-  const aa = WEEKS[a]?.start || a;
-  const bb = WEEKS[b]?.start || b;
-  return String(aa).localeCompare(String(bb));
-}
-
-// ─── LEITURA DA PLANILHA ───────────────────────────────────
-function ingestMetrics(rows) {
-  WEEKS = {};
-  rows.forEach(row => {
-    const id = String(field(row, 'semana_id', 'inicio')).trim();
-    if (!id) return;
-    const totals = {
-      lig: numeric(field(row, 'ligacoes')),
-      con: numeric(field(row, 'conexoes')),
-      dec: numeric(field(row, 'decisores')),
-      rmk: numeric(field(row, 'reunioes_marcadas')),
-      rre: numeric(field(row, 'reunioes_realizadas')),
-      ven: numeric(field(row, 'vendas')),
-      fuPrev: numeric(field(row, 'followups_previstos', 'follow_ups_previstos', 'retornos_previstos')),
-      fuDone: numeric(field(row, 'followups_realizados', 'follow_ups_realizados', 'retornos_realizados')),
-      fuDec: numeric(field(row, 'decisores_via_followup', 'decisores_via_follow_up', 'decisores_via_retorno'))
-    };
-    const weekMetas = {
-      lig: numeric(field(row, 'meta_ligacoes')),
-      con: numeric(field(row, 'meta_conexoes')),
-      dec: numeric(field(row, 'meta_decisores')),
-      rmk: numeric(field(row, 'meta_reunioes_marcadas')),
-      rre: numeric(field(row, 'meta_reunioes_realizadas')),
-      ven: numeric(field(row, 'meta_vendas'))
-    };
-    WEEKS[id] = {
-      id,
-      label: String(field(row, 'semana_label') || id),
-      start: String(field(row, 'inicio') || id),
-      totals,
-      metas: { ...DEFAULT_METAS, ...weekMetas }
-    };
-  });
-  const ids = Object.keys(WEEKS).sort(weekSort);
-  if (!curWeek || !WEEKS[curWeek]) curWeek = ids.at(-1) || null;
-}
-
-function ingestObjections(rows) {
-  OBJECTIONS_BY_WEEK = {};
-  rows.forEach(row => {
-    const week = String(field(row, 'semana_id')).trim();
-    const objection = String(field(row, 'objecao', 'objecoes', 'objeção', 'objeções')).trim();
-    const quantity = numeric(field(row, 'quantidade')) || 1;
-    if (!week || !objection) return;
-    if (!OBJECTIONS_BY_WEEK[week]) OBJECTIONS_BY_WEEK[week] = {};
-    OBJECTIONS_BY_WEEK[week][objection] = (OBJECTIONS_BY_WEEK[week][objection] || 0) + quantity;
-  });
-}
-
-function setWeek(weekId) {
-  if (!WEEKS[weekId] || weekId === curWeek) return;
-  previousTotals = WEEKS[curWeek] ? { ...WEEKS[curWeek].totals } : zeroTotals();
-  curWeek = weekId;
-  render();
-}
-
-function isIgnorableWeekLabel(label) {
-  const text = String(label || '').trim().toLowerCase();
-  if (!text) return true;
-  return text.includes('esta aba e calculada automaticamente')
-    || text.includes('esta aba é calculada automaticamente')
-    || text.includes('publique-a como csv')
-    || text.includes('publique como csv')
-    || text.includes('mas nao a edite')
-    || text.includes('mas não a edite');
-}
-
-function getVisibleWeekIds() {
-  return Object.keys(WEEKS)
-    .filter(id => !isIgnorableWeekLabel(WEEKS[id]?.label || id))
-    .sort(weekSort);
-}
-
-function renderWeekSelector() {
-  const holder = document.getElementById('week-pills');
-  const ids = getVisibleWeekIds();
-  if (!ids.length) {
-    holder.innerHTML = '<span style="font-size:11px;color:var(--text3);padding:7px 9px">Sem períodos sincronizados</span>';
-    return;
-  }
-
-  if (!ids.includes(curWeek)) curWeek = ids[ids.length - 1];
-
-  const isMobile = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
-  if (isMobile) {
-    holder.innerHTML = `<div class="week-select-wrap"><select class="week-select" aria-label="Selecionar período analisado" onchange="setWeek(this.value)">
-      ${ids.map(id => `<option value="${escapeHTML(id)}" ${id === curWeek ? 'selected' : ''}>${escapeHTML(WEEKS[id].label)}</option>`).join('')}
-    </select></div>`;
-  } else {
-    holder.innerHTML = ids.map(id => `<button class="pill ${id === curWeek ? 'active' : ''}" type="button" aria-pressed="${id === curWeek ? 'true' : 'false'}" onclick="setWeek('${escapeHTML(id)}')">${escapeHTML(WEEKS[id].label)}</button>`).join('');
-    requestAnimationFrame(() => holder.querySelector('.pill.active')?.scrollIntoView({behavior:'smooth', block:'nearest', inline:'nearest'}));
-  }
-}
-
-// ─── RENDER ────────────────────────────────────────────────
-function render() {
-  const visibleWeekIds = getVisibleWeekIds();
-  if (visibleWeekIds.length && !visibleWeekIds.includes(curWeek)) {
-    curWeek = visibleWeekIds[visibleWeekIds.length - 1];
-  }
-  const current = WEEKS[curWeek];
-  const t = current ? current.totals : zeroTotals();
-  metas = current ? current.metas : { ...DEFAULT_METAS };
-  const { lig, con, dec, rmk, rre, ven, fuPrev, fuDone, fuDec } = t;
-  const rCL = lig > 0 ? con / lig : 0;
-  const rCD = con > 0 ? dec / con : 0;
-  const rMM = dec > 0 ? rmk / dec : 0;
-  const rMR = rmk > 0 ? rre / rmk : 0;
-  const rVR = rre > 0 ? ven / rre : 0;
-  const rFU = fuPrev > 0 ? fuDone / fuPrev : 0;
-  const rFUD = fuDone > 0 ? fuDec / fuDone : 0;
-
-  renderWeekSelector();
-  renderKPIs(t, rCL, rCD, rMM, rMR, rVR);
-  renderFunnel(t, rCL, rCD, rMM, rMR, rVR);
-  renderFollowups(t, rFU, rFUD);
-  renderDiag(t, rCL, rCD, rMM, rMR, rVR, rFU, rFUD);
-  renderRadar(t, rCL, rCD, rMM, rMR, rVR);
-  renderProj(t);
-  renderObjList();
-  renderMetaForm();
-  animateDashboardCounters(t);
-}
-
-function animateCounter(element, from, to, duration = 850) {
-  if (!element) return;
-  const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reducedMotion || from === to) {
-    element.textContent = Number(to || 0).toLocaleString('pt-BR');
-    return;
-  }
-
-  const startedAt = performance.now();
-  const easeOutQuart = progress => 1 - Math.pow(1 - progress, 4);
-
-  function tick(now) {
-    const progress = Math.min(1, (now - startedAt) / duration);
-    const current = Math.round(from + (to - from) * easeOutQuart(progress));
-    element.textContent = current.toLocaleString('pt-BR');
-    if (progress < 1) requestAnimationFrame(tick);
-    else element.textContent = Number(to || 0).toLocaleString('pt-BR');
-  }
-
-  requestAnimationFrame(tick);
-}
-
-function animateDashboardCounters(targetTotals) {
-  document.querySelectorAll('[data-counter-key]').forEach(element => {
-    const key = element.dataset.counterKey;
-    animateCounter(element, Number(previousTotals[key] || 0), Number(targetTotals[key] || 0), 820);
-  });
-
-  document.querySelectorAll('[data-funnel-counter-key]').forEach(element => {
-    const key = element.dataset.funnelCounterKey;
-    animateCounter(element, Number(previousTotals[key] || 0), Number(targetTotals[key] || 0), 930);
-  });
-
-  document.querySelectorAll('.kpi').forEach(card => {
-    card.classList.remove('metric-pop');
-    void card.offsetWidth;
-    card.classList.add('metric-pop');
-  });
-
-  previousTotals = { ...targetTotals };
-}
-
-function clamp01(value) {
-  return Math.max(0, Math.min(1, Number(value) || 0));
-}
-
-function getDialColors(cls) {
-  if (cls === 'ok') return { fill: '#58C8FF', rest: 'rgba(88,200,255,0.14)' };
-  if (cls === 'warn') return { fill: '#FAC775', rest: 'rgba(250,199,117,0.14)' };
-  if (cls === 'bad') return { fill: '#F08C98', rest: 'rgba(240,140,152,0.14)' };
-  return { fill: '#79A5D1', rest: 'rgba(121,165,209,0.14)' };
-}
-
-function buildMetricDial(valueHtml, progress, cls, extraClass = '') {
-  const colors = getDialColors(cls);
-  const totalTicks = 18;
-  const activeTicks = Math.round(clamp01(progress) * totalTicks);
-  const size = 120;
-  const center = size / 2;
-  const radiusOuter = 49;
-  const radiusInner = 39;
-  const step = 360 / totalTicks;
-  let ticks = '';
-
-  for (let index = 0; index < totalTicks; index++) {
-    const angle = (index * step) * Math.PI / 180;
-    const x1 = center + Math.cos(angle) * radiusInner;
-    const y1 = center + Math.sin(angle) * radiusInner;
-    const x2 = center + Math.cos(angle) * radiusOuter;
-    const y2 = center + Math.sin(angle) * radiusOuter;
-    const active = index < activeTicks;
-    ticks += `<line x1="${x1.toFixed(2)}" y1="${y1.toFixed(2)}" x2="${x2.toFixed(2)}" y2="${y2.toFixed(2)}" class="metric-dial-tick${active ? ' active' : ''}" ${active ? `style="stroke:${colors.fill}"` : ''} />`;
-  }
-
-  return `<div class="metric-dial ${extraClass}" style="--dial-fill:${colors.fill}; --dial-rest:${colors.rest};">
-    <svg class="metric-dial-svg" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
-      <circle class="metric-dial-bg" cx="60" cy="60" r="57"></circle>
-      ${ticks}
-    </svg>
-    <div class="metric-dial-content">${valueHtml}</div>
-  </div>`;
-}
-
-function renderKPIs(t, rCL, rCD, rMM, rMR, rVR) {
-  const pLig = metas.lig > 0 ? t.lig / metas.lig : 0;
-  const hasFollowupBase = t.fuPrev > 0;
-  const rFU = hasFollowupBase ? t.fuDone / t.fuPrev : 0;
-  const fuStatus = getFollowupStatus(rFU, hasFollowupBase);
-  const kpis = [
-    { key:'lig', lbl:'Ligações', val:t.lig, cls:pLig>=1?'ok':pLig>=0.7?'warn':'bad', sub:metas.lig>0?(t.lig>=metas.lig?'Meta ✓':`${Math.max(0, metas.lig-t.lig)} p/ meta`):'—', progress: metas.lig > 0 ? t.lig / metas.lig : 0 },
-    { key:'con', lbl:'Conexões', val:t.con, cls:rCL>=0.5?'ok':rCL>=0.2?'warn':'bad', sub:metas.con>0?`${t.con}/${metas.con} da meta`:pct(rCL)+' conv.', progress: metas.con > 0 ? t.con / metas.con : rCL / 0.5 },
-    { key:'dec', lbl:'C. c/ Decisor', val:t.dec, cls:rCD>=0.5?'ok':rCD>=0.2?'warn':'bad', sub:metas.dec>0?`${t.dec}/${metas.dec} da meta`:pct(rCD)+' conv.', progress: metas.dec > 0 ? t.dec / metas.dec : rCD / 0.5 },
-    { key:'fuDone', lbl:'Follow-ups feitos', val:t.fuDone, cls:fuStatus.cls, sub:hasFollowupBase?`${t.fuDone}/${t.fuPrev} • ${pct(rFU)}`:'Sem base', progress: hasFollowupBase ? rFU : 0 },
-    { key:'rmk', lbl:'R. Marcadas', val:t.rmk, cls:rMM>=0.1?'ok':rMM>=0.05?'warn':'bad', sub:metas.rmk>0?`${t.rmk}/${metas.rmk} da meta`:pct(rMM)+' conv.', progress: metas.rmk > 0 ? t.rmk / metas.rmk : rMM / 0.1 },
-    { key:'rre', lbl:'R. Realizadas', val:t.rre, cls:rMR>=0.5?'ok':rMR>=0.3?'warn':'bad', sub:metas.rre>0?`${t.rre}/${metas.rre} da meta`:pct(rMR)+' comp.', progress: metas.rre > 0 ? t.rre / metas.rre : rMR / 0.5 },
-    { key:'ven', lbl:'Vendas', val:t.ven, cls:rVR>=0.15?'ok':rVR>=0.1?'warn':'bad', sub:metas.ven>0?`${t.ven}/${metas.ven} da meta`:pct(rVR)+' fecha.', progress: metas.ven > 0 ? t.ven / metas.ven : rVR / 0.15 }
-  ];
-  document.getElementById('kpi-grid').innerHTML = kpis.map(k => `
-    <div class="kpi">
-      <div class="kpi-label">${k.lbl}</div>
-      ${buildMetricDial(`<div class="kpi-val" data-counter-key="${k.key}">${k.val}</div>`, k.progress, k.cls, 'kpi-dial')}
-      <div class="kpi-footer"><span class="badge b-${k.cls}">${k.sub}</span></div>
-    </div>`).join('');
-}
-
-function renderFunnel(t, rCL, rCD, rMM, rMR, rVR) {
-  const base = t.lig || 1;
-  const colors = ['#0C447C','#185FA5','#1D9E75','#0F6E56','#085041','#04342C'];
-  const steps = [
-    { key:'lig', lbl:'Ligações', val:t.lig, pct:100, rate:null },
-    { key:'con', lbl:'Conexões', val:t.con, pct:Math.round(t.con/base*100), rate:pct(rCL) },
-    { key:'dec', lbl:'C. c/ Decisor', val:t.dec, pct:Math.round(t.dec/base*100), rate:pct(rCD) },
-    { key:'rmk', lbl:'R. Marcadas', val:t.rmk, pct:Math.round(t.rmk/base*100), rate:pct(rMM) },
-    { key:'rre', lbl:'R. Realizadas', val:t.rre, pct:Math.round(t.rre/base*100), rate:pct(rMR) },
-    { key:'ven', lbl:'Vendas', val:t.ven, pct:Math.round(t.ven/base*100), rate:pct(rVR) }
-  ];
-  document.getElementById('funnel').innerHTML = steps.map((s, i) => `
-    ${i > 0 ? '<div class="f-conn"></div>' : ''}
-    <div class="f-row"><div class="f-lbl">${s.lbl}</div><div class="f-bar-wrap"><div class="f-bar" style="width:${Math.max(s.pct,3)}%;background:${colors[i]}"><span class="f-num" data-funnel-counter-key="${s.key}">${s.val}</span>${s.pct>7?`<span class="f-pct">${s.pct}%</span>`:''}</div></div><div class="f-rate">${s.rate?'→ '+s.rate:''}</div></div>`).join('');
-}
-
-function renderFollowups(t, rFU, rFUD) {
-  const hasBase = t.fuPrev > 0;
-  const status = getFollowupStatus(rFU, hasBase);
-  const badge = document.getElementById('followup-badge');
-  badge.className = `badge b-${status.cls}`;
-  badge.textContent = hasBase ? `${status.icon} ${status.label} — ${pct(rFU)}` : '⚪ Sem base';
-
-  const pending = Math.max(0, t.fuPrev - t.fuDone);
-  const metrics = [
-    { key:'fuPrev', label:'Retornos previstos', value:t.fuPrev, sub:'base total da semana', cls:'neutral', progress: hasBase ? 1 : 0, isText:false },
-    { key:'fuDone', label:'Todos realizados', value:t.fuDone, sub:'retornos executados', cls:status.cls, progress: hasBase ? rFU : 0, isText:false },
-    { key:null, label:'Retornos pendentes', value:pending, sub:pending === 1 ? '1 retorno ainda em aberto' : `${pending} retornos ainda em aberto`, cls:pending === 0 ? 'ok' : pending <= Math.max(1, Math.ceil(t.fuPrev * 0.2)) ? 'warn' : 'bad', progress: hasBase ? pending / Math.max(t.fuPrev, 1) : 0, isText:false },
-    { key:null, label:'Execução', value:hasBase ? pct(rFU) : '—', sub:'realizados ÷ previstos', cls:status.cls, progress: hasBase ? rFU : 0, isText:true },
-    { key:'fuDec', label:'Decisores via retorno', value:t.fuDec, sub:t.fuDone > 0 ? `${pct(rFUD)} dos retornos` : 'nenhum retorno executado', cls:t.fuDone > 0 ? (rFUD >= 0.4 ? 'ok' : rFUD >= 0.2 ? 'warn' : 'bad') : 'neutral', progress:t.fuDone > 0 ? rFUD : 0, isText:false }
-  ];
-
-  document.getElementById('followup-grid').innerHTML = metrics.map(item => {
-    const valueHtml = item.isText
-      ? `<div class="followup-value">${item.value}</div>`
-      : `<div class="followup-value" ${item.key ? `data-counter-key="${item.key}"` : ''}>${item.value}</div>`;
-    return `
-    <div class="followup-metric">
-      <div class="followup-label">${item.label}</div>
-      ${buildMetricDial(valueHtml, item.progress, item.cls, 'followup-dial')}
-      <div class="followup-footer"><div class="followup-sub">${item.sub}</div></div>
-    </div>`;
-  }).join('');
-
-  let insight;
-  if (!hasBase) {
-    insight = t.con > t.dec
-      ? 'Nenhum retorno foi previsto, apesar de existirem conexões sem acesso ao decisor. Verifique se você está saindo da conversa com nome, número direto ou horário definido.'
-      : 'Nenhum retorno estava previsto nesta semana. A execução fica sem classificação até existir pelo menos um retorno devido.';
-  } else if (status.level === 1) {
-    insight = `Execução baixa: ${t.fuDone} de ${t.fuPrev} retornos realizados. O principal ajuste é cumprir os retornos antes de mudar o roteiro.`;
-  } else if (status.level === 2) {
-    insight = `Execução média: ${t.fuDone} de ${t.fuPrev} retornos realizados. Há oportunidades abertas, mas parte delas ainda está ficando na mesa.`;
-  } else {
-    insight = t.fuDone > 0
-      ? `Execução boa: ${t.fuDone} de ${t.fuPrev} retornos realizados. ${t.fuDec} decisor(es) foram alcançados por esse caminho.`
-      : 'Execução boa, mas ainda sem retornos registrados como realizados.';
-  }
-  document.getElementById('followup-insight').textContent = insight;
-}
-
-function getDecisorDiagnosis(level, t, rCD, rFU) {
-  if (t.con <= 0) return DIAG_MSGS.dec[level];
-
-  if (level === 3) {
-    return t.fuDec > 0
-      ? `Boa taxa de acesso ao decisor. ${t.fuDec} contato(s) vieram de follow-up; mantenha a disciplina de retorno.`
-      : 'Boa taxa de acesso ao decisor. Mantenha a abordagem e continue registrando os retornos para medir a contribuição deles.';
-  }
-
-  if (t.fuPrev <= 0) {
-    return `Você teve ${t.con} conexão(ões) e chegou a ${t.dec} decisor(es), mas não registrou retornos previstos. O gargalo pode estar em encerrar a conversa com a gatekeeper sem nome, número direto ou horário definido.`;
-  }
-
-  if (rFU < 0.50) {
-    return `Gargalo principal: falta de follow-up. Você tinha ${t.fuPrev} retorno(s) previsto(s), mas executou ${t.fuDone} (${pct(rFU)}). Antes de mudar a argumentação com a atendente, cumpra os retornos combinados.`;
-  }
-
-  if (rFU < 0.80) {
-    return `A execução de follow-up está em ${pct(rFU)}. Você está retornando, mas ainda deixa parte das oportunidades sem tentativa. Complete os retornos antes de concluir que o problema é o roteiro.`;
-  }
-
-  return `A execução de follow-up está boa (${pct(rFU)}), então a falta de retorno não parece ser o gargalo principal. Revise a qualidade dos horários e números obtidos e a abertura usada no retorno. Foram ${t.fuDec} decisor(es) alcançados em ${t.fuDone} retorno(s).`;
-}
-
-function getFollowupDiagnosis(t, rFU) {
-  const status = getFollowupStatus(rFU, t.fuPrev > 0);
-  if (status.level === 1) return `Você executou ${t.fuDone} de ${t.fuPrev} retornos. Prioridade: zerar os retornos vencidos antes de aumentar o volume de novas ligações.`;
-  if (status.level === 2) return `Você executou ${t.fuDone} de ${t.fuPrev} retornos. A disciplina está parcial; leve a execução para pelo menos 80%.`;
-  return `Boa disciplina de follow-up: ${t.fuDone} de ${t.fuPrev} retornos executados. Agora acompanhe quantos realmente levam ao decisor.`;
-}
-
-function renderDiag(t, rCL, rCD, rMM, rMR, rVR, rFU, rFUD) {
-  const pLig = metas.lig > 0 ? t.lig / metas.lig : 1;
-  const items = [
-    { key:'lig', rate:pLig, min:0.7, ideal:1.0, lbl:'Volume de ligações' },
-    { key:'con', rate:rCL, min:CONV_RULES.con.min, ideal:CONV_RULES.con.ideal, lbl:'Taxa de conexão' },
-    { key:'dec', rate:rCD, min:CONV_RULES.dec.min, ideal:CONV_RULES.dec.ideal, lbl:'Taxa chegar ao decisor' },
-    { key:'rmk', rate:rMM, min:CONV_RULES.rmk.min, ideal:CONV_RULES.rmk.ideal, lbl:'Taxa reuniões marcadas' },
-    { key:'rre', rate:rMR, min:CONV_RULES.rre.min, ideal:CONV_RULES.rre.ideal, lbl:'Taxa de comparecimento' },
-    { key:'ven', rate:rVR, min:CONV_RULES.ven.min, ideal:CONV_RULES.ven.ideal, lbl:'Taxa de fechamento' }
-  ];
-
-  if (t.fuPrev > 0) {
-    items.splice(3, 0, { key:'fup', rate:rFU, min:0.50, ideal:0.80, lbl:'Execução de follow-ups' });
-  }
-
-  document.getElementById('diag').innerHTML = items.map(item => {
-    const level = getLevel(item.rate, item.min, item.ideal);
-    const cls = level === 1 ? 'dc' : level === 2 ? 'dw' : 'dok';
-    const icon = level === 1 ? '🔴' : level === 2 ? '🟡' : '🟢';
-    let message = DIAG_MSGS[item.key]?.[level] || '';
-    if (item.key === 'dec') message = getDecisorDiagnosis(level, t, rCD, rFU);
-    if (item.key === 'fup') message = getFollowupDiagnosis(t, rFU);
-    return `<div class="diag-item ${cls}"><div class="dt">${icon} ${item.lbl} — ${pct(item.rate)}</div><div class="dd">${message}</div></div>`;
-  }).join('');
-}
-
-function renderRadar(t, rCL, rCD, rMM, rMR, rVR) {
-  const pLig = metas.lig > 0 ? Math.min(1, t.lig / metas.lig) : 0;
-  const scores = [
-    Math.round(pLig*100), Math.round(pLig*100),
-    Math.round(Math.min(1, rCL/CONV_RULES.con.ideal)*100),
-    Math.round(Math.min(1, rCD/CONV_RULES.dec.ideal)*100),
-    Math.round(Math.min(1, rMM/CONV_RULES.rmk.ideal)*100),
-    Math.round(Math.min(1, rMR/CONV_RULES.rre.ideal)*100),
-    Math.round(Math.min(1, rVR/CONV_RULES.ven.ideal)*100)
-  ];
-  if (radarCh) radarCh.destroy();
-  radarCh = new Chart(document.getElementById('radarC'), {
-    type:'radar',
-    data:{ labels:['Lista/Qualif.','Volume Lig.','Conexões','Decisor','R. Marcadas','R. Realizadas','Vendas'], datasets:[
-      { label:'Ideal', data:[100,100,100,100,100,100,100], borderColor:'rgba(55,138,221,0.3)', backgroundColor:'rgba(55,138,221,0.05)', borderWidth:1.5, pointRadius:2, borderDash:[4,4] },
-      { label:'Performance', data:scores, borderColor:'#1D9E75', backgroundColor:'rgba(29,158,117,0.12)', borderWidth:2, pointRadius:4, pointBackgroundColor:'#1D9E75' }
-    ]},
-    options:{ animation:{ duration:850, easing:'easeOutQuart' }, responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{ r:{ min:0, max:100, ticks:{ stepSize:25, color:'rgba(181,212,244,0.35)', font:{size:9}, backdropColor:'transparent' }, grid:{ color:'rgba(55,138,221,0.12)' }, angleLines:{ color:'rgba(55,138,221,0.1)' }, pointLabels:{ color:'rgba(181,212,244,0.65)', font:{size:10, family:"'DM Sans',sans-serif"} } } } }
-  });
-}
-
-function renderProj(t) {
-  const labels = ['Ligações','Conexões','Decisor','R.Marc.','R.Real.','Vendas'];
-  const mE = [metas.lig, metas.con, metas.dec || 12, metas.rmk || 3, metas.rre, metas.ven];
-  const mR = [
-    Math.round(metas.lig),
-    Math.round(metas.lig * CONV_RULES.con.ideal),
-    Math.round((metas.con || 0) * CONV_RULES.dec.ideal),
-    Math.round((metas.dec || 12) * CONV_RULES.rmk.ideal),
-    Math.round((metas.rmk || 3) * CONV_RULES.rre.ideal),
-    Math.round((metas.rre || 0) * CONV_RULES.ven.ideal)
-  ];
-  const rE = [t.lig, t.con, t.dec, t.rmk, t.rre, t.ven];
-  const rR = rE.map(v => Math.round(v * 0.9));
-  if (projCh) projCh.destroy();
-  projCh = new Chart(document.getElementById('projC'), {
-    type:'line',
-    data:{ labels, datasets:[
-      { label:'Meta execução', data:mE, borderColor:'#185FA5', backgroundColor:'#185FA5', borderWidth:2, tension:0.3, pointStyle:'circle', pointRadius:5, pointBorderColor:'#185FA5', pointBackgroundColor:'#185FA5' },
-      { label:'Meta resultado', data:mR, borderColor:'#378ADD', backgroundColor:'#378ADD', borderWidth:2, tension:0.3, borderDash:[5,4], pointStyle:'rect', pointRadius:5, pointBorderColor:'#378ADD', pointBackgroundColor:'#378ADD' },
-      { label:'Real. execução', data:rE, borderColor:'#1D9E75', backgroundColor:'#1D9E75', borderWidth:2, tension:0.3, pointStyle:'triangle', pointRadius:6, pointBorderColor:'#1D9E75', pointBackgroundColor:'#1D9E75' },
-      { label:'Real. resultado', data:rR, borderColor:'#5DCAA5', backgroundColor:'#5DCAA5', borderWidth:2, tension:0.3, borderDash:[5,4], pointStyle:'triangle', pointRotation:180, pointRadius:6, pointBorderColor:'#5DCAA5', pointBackgroundColor:'#5DCAA5' }
-    ]},
-    options:{ animation:{ duration:850, easing:'easeOutQuart' }, responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{ x:{ ticks:{ color:'rgba(181,212,244,0.5)', font:{size:10} }, grid:{ color:'rgba(55,138,221,0.08)' }, border:{ color:'transparent' } }, y:{ ticks:{ color:'rgba(181,212,244,0.5)', font:{size:10} }, grid:{ color:'rgba(55,138,221,0.08)' }, border:{ color:'transparent' } } } }
-  });
-}
-
-function renderObjList() {
-  const entries = Object.entries(OBJECTIONS_BY_WEEK[curWeek] || {}).sort((a, b) => b[1] - a[1]).slice(0, 5);
-  const target = document.getElementById('obj-list');
-  if (!entries.length) {
-    target.innerHTML = '<div style="font-size:12px;color:var(--text3);padding:10px 2px">Nenhuma objeção registrada nesta semana.</div>';
-    return;
-  }
-  const top = entries[0][1] || 1;
-  target.innerHTML = entries.map(([text, count], index) => `
-    <div class="obj-item"><span class="obj-rank">#${index+1}</span><span class="obj-text">${escapeHTML(text)}</span><div class="obj-bar-bg"><div class="obj-bar-fill" style="width:${Math.round(count/top*100)}%"></div></div><span class="obj-n">${count}x</span></div>`).join('');
-}
-
-function renderMetaForm() {
-  // As metas continuam sendo lidas da planilha, mas o painel visual foi removido do frontend.
-  const header = document.querySelector('.mf-header');
-  const target = document.getElementById('meta-form');
-  if (!header || !target) return;
-
-  const fields = [
-    { key:'lig', lbl:'Meta de ligações / semana' }, { key:'con', lbl:'Meta de conexões' },
-    { key:'dec', lbl:'Meta conexões c/ decisor' }, { key:'rmk', lbl:'Meta reuniões marcadas' },
-    { key:'rre', lbl:'Meta reuniões realizadas' }, { key:'ven', lbl:'Meta de vendas' }
-  ];
-  header.innerHTML = '<span>Etapa</span><span>Origem</span><span>Valor</span>';
-  target.innerHTML = fields.map(f => `
-    <div class="mf-row"><div class="mf-lbl">${f.lbl}</div><div style="flex:1;font-size:11px;color:var(--text3)">METAS_SEMANAIS</div><div class="mf-val">${metas[f.key] || 0}</div></div>`).join('');
-}
-
-function configureMetaPanel() {
-  const button = document.querySelector('.apply-btn');
-  if (!button) return;
-  button.textContent = 'Edite as metas na aba METAS_SEMANAIS';
-  button.onclick = () => alert('As metas do dashboard são lidas da aba METAS_SEMANAIS. Edite a semana desejada e aguarde a sincronização.');
-}
-
-// ─── SINCRONIZAÇÃO ─────────────────────────────────────────
-async function loadCSV() { return loadCSVAuto(); }
-async function loadCSVAuto() {
-  const dot = document.getElementById('csv-dot');
-  const msg = document.getElementById('csv-msg');
-  if (!configured(METRICS_CSV_URL)) {
-    dot.className = 'status-dot err';
-    msg.textContent = 'Configure METRICS_CSV_URL no arquivo HTML antes de publicar.';
-    render();
-    return;
-  }
-  dot.className = 'status-dot';
-  msg.textContent = 'Sincronizando dados da planilha...';
-  try {
-    const metricsPromise = fetchRows(METRICS_CSV_URL);
-    const objectionsPromise = configured(OBJECTIONS_CSV_URL) ? fetchRows(OBJECTIONS_CSV_URL) : Promise.resolve([]);
-    const [metricRows, objectionRows] = await Promise.all([metricsPromise, objectionsPromise]);
-    ingestMetrics(metricRows);
-    ingestObjections(objectionRows);
-    dot.className = 'status-dot ok';
-    const now = new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
-    msg.textContent = `Sincronizado às ${now} — próxima atualização em 5min`;
-    secondsLeft = 300;
-    render();
-  } catch (error) {
-    dot.className = 'status-dot err';
-    msg.textContent = 'Erro ao sincronizar: ' + error.message + '. Confira as URLs CSV e a publicação das abas.';
-  }
-}
-
-let lastCompactWeekSelector = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
-window.addEventListener('resize', () => {
-  const isCompact = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
-  if (isCompact !== lastCompactWeekSelector) {
-    lastCompactWeekSelector = isCompact;
-    renderWeekSelector();
-  }
-});
-
-function init() {
-  configureMetaPanel();
-  render();
-  loadCSVAuto();
-  setInterval(loadCSVAuto, 5 * 60 * 1000);
-  setInterval(() => {
-    secondsLeft = Math.max(0, secondsLeft - 1);
-    if (secondsLeft === 0) secondsLeft = 300;
-    const el = document.getElementById('csv-msg');
-    if (el && el.textContent.includes('Sincronizado')) {
-      const minutes = Math.floor(secondsLeft / 60);
-      const seconds = String(secondsLeft % 60).padStart(2, '0');
-      const prefix = el.textContent.split(' — ')[0];
-      el.textContent = `${prefix} — próxima atualização em ${minutes}m${seconds}s`;
-    }
-  }, 1000);
-}
-
-init();
-
 </script>
 </body>
 </html>
