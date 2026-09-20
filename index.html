@@ -152,10 +152,11 @@
   .sync-dot.err{background:var(--bad);}
 
   .range-panel{
-    position:absolute;top:calc(100% + 10px);right:0;z-index:40;
+    position:absolute;top:calc(100% + 10px);right:0;z-index:100;
     background:var(--card);border:1px solid var(--line);border-radius:16px;
     box-shadow:var(--shadow-pop);padding:14px;display:none;
-    width:min(560px,92vw);
+    width:min(560px,92vw);max-height:min(680px,calc(100vh - 96px));
+    overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
   }
   .range-panel.open{display:block;}
   .range-body{display:grid;grid-template-columns:150px 1fr;gap:14px;}
@@ -180,12 +181,13 @@
   .cal-day{
     appearance:none;-webkit-appearance:none;
     width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;
-    border:0;border-radius:8px;cursor:pointer;color:var(--ink);font-weight:600;position:relative;
-    background:transparent;font-family:inherit;padding:0;touch-action:manipulation;
+    border:0;border-radius:8px;cursor:pointer;color:var(--ink);font-weight:600;position:relative;z-index:2;
+    background:transparent;font-family:inherit;padding:0;touch-action:manipulation;pointer-events:auto;
+    -webkit-tap-highlight-color:transparent;
   }
   .cal-day:hover{background:var(--brand-wash2);}
   .cal-day:focus-visible{outline:2px solid var(--brand-light);outline-offset:1px;}
-  .cal-day.muted{color:var(--ink-faint);opacity:0.4;pointer-events:none;}
+  .cal-day.muted{color:var(--ink-faint);opacity:0.4;}
   .cal-day.in-range{background:var(--brand-wash);border-radius:0;}
   .cal-day.range-start{background:var(--brand);color:#fff;border-radius:8px 0 0 8px;}
   .cal-day.range-end{background:var(--brand);color:#fff;border-radius:0 8px 8px 0;}
@@ -427,7 +429,7 @@
   @media (max-width:520px){
     .topbar{flex-direction:column;align-items:stretch;}
     .topbar-actions{justify-content:space-between;}
-    .range-panel{right:auto;left:0;width:94vw;}
+    .range-panel{position:fixed;left:3vw;right:3vw;top:96px;width:auto;max-height:calc(100vh - 112px);z-index:200;}
     .range-body{grid-template-columns:1fr;}
     .range-presets{flex-direction:row;flex-wrap:wrap;border-right:none;border-bottom:1px solid var(--line-soft);padding-right:0;padding-bottom:10px;}
     .funnel-chart{height:218px;padding-top:44px;gap:8px;}
@@ -1374,9 +1376,24 @@ function renderCalendar(){
     } else if (pendStart && sameDay(d, pendStart)) {
       cls += ' single';
     }
-    html += `<button type="button" class="${cls}" aria-label="${d.getDate()} de ${MONTHS[d.getMonth()]} de ${d.getFullYear()}" onclick="pickCalDay(${d.getFullYear()},${d.getMonth()},${d.getDate()})">${d.getDate()}</button>`;
+    html += `<button type="button" class="${cls}" data-cal-day="1" data-year="${d.getFullYear()}" data-month="${d.getMonth()}" data-day="${d.getDate()}" aria-label="${d.getDate()} de ${MONTHS[d.getMonth()]} de ${d.getFullYear()}">${d.getDate()}</button>`;
   }
   document.getElementById('cal-grid').innerHTML = html;
+}
+
+// Eventos do calendário via delegação: funciona de forma consistente em mouse e toque
+// mesmo após o calendário ser redesenhado dinamicamente.
+function bindCalendarEvents(){
+  const grid = document.getElementById('cal-grid');
+  if (!grid || grid.dataset.bound === '1') return;
+  grid.dataset.bound = '1';
+  grid.addEventListener('click', (e) => {
+    const btn = e.target.closest('.cal-day[data-cal-day]');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    pickCalDay(Number(btn.dataset.year), Number(btn.dataset.month), Number(btn.dataset.day));
+  });
 }
 
 function pickCalDay(y,m,day){
@@ -1499,6 +1516,7 @@ function closeHelp(){ document.getElementById('help-veil').classList.remove('ope
 // INIT
 // ============================================================================
 function init(){
+  bindCalendarEvents();
   loadCSVAuto();
   refreshTimer = setInterval(loadCSVAuto, 5*60*1000);
 }
