@@ -299,7 +299,7 @@
   .funnel-label{font-size:10.5px;color:var(--ink-soft);font-weight:600;text-align:center;line-height:1.25;}
   .funnel-rate{font-size:9.5px;color:var(--ink-faint);font-weight:700;}
 
-  /* ── consistência (dias prospectados no(s) mês(es) do período) ── */
+  /* ── consistência (histórico visual de 4 meses de prospecção) ── */
   .consistency-wrap{margin-top:18px;padding-top:15px;border-top:1px solid var(--line-soft);}
   .consistency-block + .consistency-block{margin-top:16px;}
   .consistency-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px;}
@@ -1258,24 +1258,21 @@ function buildHeatmap(targetId, start, end, mode){
 }
 
 function renderConsistency(){
-  if (!selStart || !selEnd) return;
+  if (!selEnd) return;
 
-  // A consistência acompanha o(s) mês(es) que contêm o período selecionado.
-  // Ex.: seleção de 16–19/09 => mostramos o mês inteiro de setembro (01–30).
-  const monthStart = new Date(selStart.getFullYear(), selStart.getMonth(), 1);
-  const monthEnd = new Date(selEnd.getFullYear(), selEnd.getMonth() + 1, 0);
+  // A consistência agora funciona como um histórico visual contínuo de 4 meses.
+  // O mês final é o mês da data final selecionada; os 3 meses anteriores também aparecem.
+  // Ex.: período dentro de setembro/2026 => junho, julho, agosto e setembro/2026.
+  const anchor = new Date(selEnd.getFullYear(), selEnd.getMonth(), 1);
+  const monthStart = new Date(anchor.getFullYear(), anchor.getMonth() - 3, 1);
+  const monthEnd = new Date(anchor.getFullYear(), anchor.getMonth() + 1, 0);
 
   const p = buildHeatmap('prospected-heatmap', monthStart, monthEnd, 'prospected') || {activeCount:0, totalDays:0};
   const pMeta = document.getElementById('prospected-meta');
   const pTitle = document.getElementById('prospected-title');
 
   if (pMeta) pMeta.textContent = `${p.activeCount} de ${p.totalDays} dias`;
-  if (pTitle) {
-    const sameMonth = selStart.getFullYear() === selEnd.getFullYear() && selStart.getMonth() === selEnd.getMonth();
-    const startLabel = `${MONTHS[selStart.getMonth()]} de ${selStart.getFullYear()}`;
-    const endLabel = `${MONTHS[selEnd.getMonth()]} de ${selEnd.getFullYear()}`;
-    pTitle.textContent = sameMonth ? `Dias prospectados — ${startLabel}` : `Dias prospectados — ${startLabel} até ${endLabel}`;
-  }
+  if (pTitle) pTitle.textContent = 'Dias prospectados — últimos 4 meses';
 }
 
 function renderGauge(t, metas, hasGoals){
